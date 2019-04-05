@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from pydantic import BaseSettings
 
@@ -24,6 +25,7 @@ TASK_FILEREAD_MAX_OFFSET: int = int(
 
 class Settings(BaseSettings):
 
+    MESOS_API_URLS: List[str]
     DB_URL: str
 
     class Config:
