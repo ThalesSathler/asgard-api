@@ -48,17 +48,29 @@ INSERT INTO user_has_account (account_id, user_id) VALUES (
 INSERT INTO user_has_account (account_id, user_id) VALUES (
   (SELECT id from account where name = 'Asgard/Core'),
   (SELECT id from "user" where tx_email='vitor.asantos@b2wdigital.com'),
-  (SELECT id from "user" where tx_email='thales.lima@b2wdigital.com')
 );
 
 INSERT INTO user_has_account (account_id, user_id) VALUES (
   (SELECT id from account where name = 'Asgard/DEV'),
   (SELECT id from "user" where tx_email='vitor.asantos@b2wdigital.com'),
+);
+
+INSERT INTO user_has_account (account_id, user_id) VALUES (
+  (SELECT id from account where name = 'Asgard/INFRA'),
+  (SELECT id from "user" where tx_email='vitor.asantos@b2wdigital.com')
+);
+
+INSERT INTO user_has_account (account_id, user_id) VALUES (
+  (SELECT id from account where name = 'Asgard/Core'),
+  (SELECT id from "user" where tx_email='thales.lima@b2wdigital.com')
+);
+
+INSERT INTO user_has_account (account_id, user_id) VALUES (
+  (SELECT id from account where name = 'Asgard/DEV'),
   (SELECT id from "user" where tx_email='thales.lima@b2wdigital.com')
 );
 
 INSERT INTO user_has_account (account_id, user_id) VALUES (
   (SELECT id from account where name = 'Asgard/INFRA'),
-  (SELECT id from "user" where tx_email='vitor.asantos@b2wdigital.com'),
   (SELECT id from "user" where tx_email='thales.lima@b2wdigital.com')
 );
