@@ -25,4 +25,8 @@ os.environ["TEST_MESOS_API_URLS"] = os.getenv(
     "TEST_MESOS_API_URLS", json.dumps(MESOS_API_URLS)
 )
 
+os.environ["TEST_ASGARD_API_ADDRESS"] = os.getenv(
+    "TEST_ASGARD_API_ADDRESS", "http://localhost:5000"
+)
+
 assert os.environ["ENV"] == "TEST"
