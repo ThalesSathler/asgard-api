@@ -29,3 +29,12 @@ class Autoscaler:
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps"
             )
             return await response.json()
+
+    async def get_all_scalable_apps(self):
+        def app_filter (app):
+            if 'labels' in app:
+                return self.should_scale(app['labels'])
+            return False
+
+        all_apps = await self.fetch_all_apps()
+        return list(filter(app_filter, all_apps))
