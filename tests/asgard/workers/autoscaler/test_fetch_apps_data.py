@@ -1,12 +1,12 @@
 from asynctest import TestCase
-from asgard.workers.base import Autoscaler
+from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 from aioresponses import aioresponses
 from asgard.conf import settings
 
 
 class FetchAppsDataTest(TestCase):
     async def test_get_all_apps_data(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             rsps.get(
@@ -28,7 +28,7 @@ class FetchAppsDataTest(TestCase):
         self.assertEqual("test_app4", apps[3]["id"])
 
     async def test_get_all_apps_data_no_data_found(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             rsps.get(
@@ -40,7 +40,7 @@ class FetchAppsDataTest(TestCase):
         self.assertEqual([], apps)
 
     async def test_get_all_apps_which_should_be_scaled_all_apps_should(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             fixture = [
@@ -75,7 +75,7 @@ class FetchAppsDataTest(TestCase):
             self.assertEqual(fixture, apps)
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             fixture = [
@@ -112,7 +112,7 @@ class FetchAppsDataTest(TestCase):
             self.assertEqual(0, len(apps))
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             fixture = [
@@ -149,7 +149,7 @@ class FetchAppsDataTest(TestCase):
 
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             fixture = [
@@ -185,7 +185,7 @@ class FetchAppsDataTest(TestCase):
 
 
     async def test_get_all_apps_which_should_be_scaled_some_apps_should(self):
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         with aioresponses() as rsps:
             fixture = [

@@ -2,7 +2,7 @@ from asgard.http.client import http_client
 from asgard.conf import settings
 
 
-class Autoscaler:
+class AsgardInterface:
     def should_scale(self, labels):
         meets_criteria = False
 

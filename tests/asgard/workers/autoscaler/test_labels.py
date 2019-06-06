@@ -1,12 +1,12 @@
 from asynctest import TestCase
-from asgard.workers.base import Autoscaler
+from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 
 
-class AutoscalerTest(TestCase):
+class LabelsTest(TestCase):
     def test_application_should_be_scaled(self):
         fixture = {"asgard.autoscale.cpu": 0.3, "asgard.autoscale.mem": 0.8}
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -15,7 +15,7 @@ class AutoscalerTest(TestCase):
     def test_application_should_be_scaled_cpu(self):
         fixture = {"asgard.autoscale.cpu": 0.3}
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -24,7 +24,7 @@ class AutoscalerTest(TestCase):
     def test_application_should_be_scaled_mem(self):
         fixture = {"asgard.autoscale.mem": 0.8}
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -33,7 +33,7 @@ class AutoscalerTest(TestCase):
     def test_application_should_not_be_scaled_missing_needed_labels(self):
         fixture = {}
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -46,7 +46,7 @@ class AutoscalerTest(TestCase):
             "asgard.autoscale.ignore": "all",
         }
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -61,7 +61,7 @@ class AutoscalerTest(TestCase):
             "asgard.autoscale.ignore": "cpu;mem",
         }
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -75,7 +75,7 @@ class AutoscalerTest(TestCase):
             "asgard.autoscale.ignore": "cpu",
         }
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
@@ -89,7 +89,7 @@ class AutoscalerTest(TestCase):
             "asgard.autoscale.ignore": "mem",
         }
 
-        scaler = Autoscaler()
+        scaler = AsgardInterface()
 
         should_scale = scaler.should_scale(fixture)
 
