@@ -1,26 +1,205 @@
 from asynctest import TestCase
-from asgard.workers.autoscaler.cloudinterface import AsgardCloudInterface
+from aioresponses import aioresponses
+from asgard.conf import settings
+
+from asgard.workers.autoscaler.cloudinterface import AsgardInterface as AsgardCloudInterface
 from asgard.workers.autoscaler.decisioncomponent import DecisionComponent
 from asgard.workers.autoscaler.periodicstatechecker import PeriodicStateChecker
 
 
 class AutoscalerTest(TestCase):
-    def test_scale_one_app(self):
+    async def test_scale_one_app(self):
         cloud_interface = AsgardCloudInterface()
         state_checker = PeriodicStateChecker(cloud_interface)
         decision_maker = DecisionComponent()
 
-        apps_stats = state_checker.get_scalable_apps_stats()
-        scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
-        cloud_interface.scale_apps(scaling_decision)
+        with aioresponses() as rsps:
+            stats_fixture = {
+                "stats": {
+                    "type": "ASGARD",
+                    "errors": {},
+                    "cpu_pct": "0",
+                    "ram_pct": "0",
+                    "cpu_thr_pct": "0"
+                }
+            }
 
-        self.assertTrue(False)
+            apps_fixture = [
+                {
+                    'id': 'test_app1',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.3,
+                        "asgard.autoscale.mem": 0.8,
+                        "asgard.autoscale.ignore": "all"
+                    }
+                },
+                {
+                    'id': 'test_app2',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.1,
+                        "asgard.autoscale.mem": 0.1,
+                        "asgard.autoscale.ignore": ""
+                    }
+                }
+            ]
 
-    def test_decide_to_scale_all_apps(self):
-        self.assertTrue(False)
+            app_id = "app_test1"
 
-    def test_decide_to_scale_some_apps(self):
-        self.assertTrue(False)
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=apps_fixture)
 
-    def test_decide_to_scale_no_app(self):
-        self.assertTrue(False)
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats", status=200, payload=stats_fixture)
+
+            apps_stats = await state_checker.get_scalable_apps_stats()
+            scaling_decision = await decision_maker.decide_scaling_actions(apps_stats)
+        # cloud_interface.scale_apps(scaling_decision)
+
+            self.assertEqual(1, len(scaling_decision))
+
+    async def test_decide_to_scale_all_apps(self):
+        cloud_interface = AsgardCloudInterface()
+        state_checker = PeriodicStateChecker(cloud_interface)
+        decision_maker = DecisionComponent()
+
+        with aioresponses() as rsps:
+            stats_fixture = {
+                "stats": {
+                    "type": "ASGARD",
+                    "errors": {},
+                    "cpu_pct": "0",
+                    "ram_pct": "0",
+                    "cpu_thr_pct": "0"
+                }
+            }
+
+            apps_fixture = [
+                {
+                    'id': 'test_app1',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.3,
+                        "asgard.autoscale.mem": 0.8,
+                        "asgard.autoscale.ignore": "cpu"
+                    }
+                },
+                {
+                    'id': 'test_app2',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.1,
+                        "asgard.autoscale.mem": 0.6,
+                        "asgard.autoscale.ignore": "mem"
+                    }
+                }
+            ]
+
+            app_id = "app_test1"
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=apps_fixture)
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats", status=200, payload=stats_fixture)
+
+            apps_stats = state_checker.get_scalable_apps_stats()
+            scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
+        # cloud_interface.scale_apps(scaling_decision)
+
+        self.assertEqual(len(apps_stats), len(scaling_decision))
+
+    async def test_decide_to_scale_some_apps(self):
+        cloud_interface = AsgardCloudInterface()
+        state_checker = PeriodicStateChecker(cloud_interface)
+        decision_maker = DecisionComponent()
+
+        with aioresponses() as rsps:
+            stats_fixture = {
+                "stats": {
+                    "type": "ASGARD",
+                    "errors": {},
+                    "cpu_pct": "0",
+                    "ram_pct": "0",
+                    "cpu_thr_pct": "0"
+                }
+            }
+
+            apps_fixture = [
+                {
+                    'id': 'test_app1',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.3,
+                        "asgard.autoscale.mem": 0.8,
+                        "asgard.autoscale.ignore": "all"
+                    }
+                },
+                {
+                    'id': 'test_app2',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.1,
+                        "asgard.autoscale.mem": 0.1,
+                        "asgard.autoscale.ignore": ""
+                    }
+                },
+                {
+                    'id': 'test_app3',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.5,
+                        "asgard.autoscale.mem": 0.7,
+                        "asgard.autoscale.ignore": "mem"
+                    }
+                }
+            ]
+
+            app_id = "app_test1"
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=apps_fixture)
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats", status=200, payload=stats_fixture)
+
+            apps_stats = state_checker.get_scalable_apps_stats()
+            scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
+        # cloud_interface.scale_apps(scaling_decision)
+
+        self.assertEqual(2, len(scaling_decision))
+
+    async def test_decide_to_scale_no_app(self):
+        cloud_interface = AsgardCloudInterface()
+        state_checker = PeriodicStateChecker(cloud_interface)
+        decision_maker = DecisionComponent()
+
+        with aioresponses() as rsps:
+            stats_fixture = {
+                "stats": {
+                    "type": "ASGARD",
+                    "errors": {},
+                    "cpu_pct": "0",
+                    "ram_pct": "0",
+                    "cpu_thr_pct": "0"
+                }
+            }
+
+            apps_fixture = [
+                {
+                    'id': 'test_app1',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.3,
+                        "asgard.autoscale.mem": 0.8,
+                        "asgard.autoscale.ignore": "all"
+                    }
+                },
+                {
+                    'id': 'test_app2',
+                    'labels': {
+                        "asgard.autoscale.cpu": 0.1,
+                        "asgard.autoscale.mem": 0.1,
+                        "asgard.autoscale.ignore": "cpu,mem"
+                    }
+                }
+            ]
+
+            app_id = "app_test1"
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=apps_fixture)
+
+            rsps.get(f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats", status=200, payload=stats_fixture)
+
+            apps_stats = state_checker.get_scalable_apps_stats()
+            scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
+        # cloud_interface.scale_apps(scaling_decision)
+
+        self.assertEqual(None, scaling_decision)
