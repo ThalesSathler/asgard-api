@@ -38,3 +38,18 @@ class AsgardInterface:
 
         all_apps = await self.fetch_all_apps()
         return list(filter(app_filter, all_apps))
+
+    async def get_app_stats(self, app_id):
+        async with http_client as client:
+            http_response = await client.get(
+                f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats"
+            )
+
+            response = await http_response.json()
+
+            if response["stats"]["ram_pct"] == "0" and response["stats"]["cpu_pct"] == "0":
+                return None
+            elif len(response["stats"]["errors"]) > 0:
+                return None
+            else:
+                return response
