@@ -31,9 +31,9 @@ class AsgardInterface:
             return await response.json()
 
     async def get_all_scalable_apps(self):
-        def app_filter (app):
-            if 'labels' in app:
-                return self.should_scale(app['labels'])
+        def app_filter(app):
+            if "labels" in app:
+                return self.should_scale(app["labels"])
             return False
 
         all_apps = await self.fetch_all_apps()
@@ -47,7 +47,10 @@ class AsgardInterface:
 
             response = await http_response.json()
 
-            if response["stats"]["ram_pct"] == "0" and response["stats"]["cpu_pct"] == "0":
+            if (
+                response["stats"]["ram_pct"] == "0"
+                and response["stats"]["cpu_pct"] == "0"
+            ):
                 return None
             elif len(response["stats"]["errors"]) > 0:
                 return None

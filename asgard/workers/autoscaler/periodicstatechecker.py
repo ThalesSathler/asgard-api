@@ -1,5 +1,3 @@
-
-
 class PeriodicStateChecker:
     def __init__(self, cloudinterface):
         self.cloud_interface = cloudinterface
@@ -7,4 +5,11 @@ class PeriodicStateChecker:
     async def get_scalable_apps_stats(self):
         apps = await self.cloud_interface.get_all_scalable_apps()
 
-        return map(lambda app: await self.cloud_interface.get_app_stats(app["id"]), apps)
+        resp = []
+        for app in apps:
+            app_stats = await self.cloud_interface.get_app_stats(app["id"])
+            app_dict = dict()
+            app_dict[app["id"]] = app_stats
+            resp.append(app_dict)
+
+        return resp
