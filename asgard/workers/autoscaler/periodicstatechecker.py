@@ -1,5 +1,8 @@
+from asgard.workers.autoscaler.cloudinterface import CloudInterface
+
+
 class PeriodicStateChecker:
-    def __init__(self, cloudinterface):
+    def __init__(self, cloudinterface: CloudInterface) -> None:
         self.cloud_interface = cloudinterface
 
     async def get_scalable_apps_stats(self):

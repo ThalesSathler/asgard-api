@@ -1,7 +1,7 @@
-from asynctest import TestCase
 from aioresponses import aioresponses
-from asgard.conf import settings
+from asynctest import TestCase
 
+from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import (
     AsgardInterface as AsgardCloudInterface,
 )

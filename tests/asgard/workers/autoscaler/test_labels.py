@@ -1,4 +1,5 @@
 from asynctest import TestCase
+
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 
 

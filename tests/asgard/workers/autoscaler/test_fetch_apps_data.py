@@ -1,7 +1,8 @@
-from asynctest import TestCase
-from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 from aioresponses import aioresponses
+from asynctest import TestCase
+
 from asgard.conf import settings
+from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 
 
 class FetchAppsDataTest(TestCase):

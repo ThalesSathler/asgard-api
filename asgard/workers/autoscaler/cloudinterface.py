@@ -1,8 +1,28 @@
-from asgard.http.client import http_client
+from abc import ABC, abstractmethod
+
 from asgard.conf import settings
+from asgard.http.client import http_client
 
 
-class AsgardInterface:
+class CloudInterface(ABC):
+    @abstractmethod
+    def should_scale(self, labels):
+        pass
+
+    @abstractmethod
+    async def fetch_all_apps(self):
+        pass
+
+    @abstractmethod
+    async def get_all_scalable_apps(self):
+        pass
+
+    @abstractmethod
+    async def get_app_stats(self, app_id):
+        pass
+
+
+class AsgardInterface(CloudInterface):
     def should_scale(self, labels):
         meets_criteria = False
 
