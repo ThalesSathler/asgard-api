@@ -58,6 +58,14 @@
 
 
 <div class="viewcode-block" id="ModelFactory"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.base.ModelFactory">[docs]</a><span class="k">def</span> <span class="nf">ModelFactory</span><span class="p">(</span><span class="n">subclass_marker</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Função usada apenas para modelos que são abstratos, ou seja,</span>
+<span class="sd">    modelos onde temos múltiplos backends possíveis.</span>
+<span class="sd">    Agent é um exemplo: Podemos ter múltiplos backends para um Agent (Mesos, etc).</span>
+<span class="sd">    Quando o retorno dessa função é usada em um modelo serializável, cada implementação do modelo</span>
+<span class="sd">    deve definit o valor do atributo `type`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">class</span> <span class="nc">_ModelFactory</span><span class="p">(</span><span class="n">PydanticBaseModel</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
             <span class="n">type_</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>

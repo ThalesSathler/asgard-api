@@ -25,6 +25,14 @@ class BaseModel(PydanticBaseModel):
 
 
 def ModelFactory(subclass_marker: Type[BaseModel]):
+    """
+    Função usada apenas para modelos que são abstratos, ou seja,
+    modelos onde temos múltiplos backends possíveis.
+    Agent é um exemplo: Podemos ter múltiplos backends para um Agent (Mesos, etc).
+    Quando o retorno dessa função é usada em um modelo serializável, cada implementação do modelo
+    deve definit o valor do atributo `type`.
+    """
+
     class _ModelFactory(PydanticBaseModel):
         def __new__(cls, *args, **kwargs) -> BaseModel:
             type_ = kwargs.pop("type")

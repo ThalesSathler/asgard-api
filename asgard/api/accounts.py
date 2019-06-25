@@ -1,6 +1,7 @@
 from aiohttp import web
 from asyncworker import RouteTypes
 
+from asgard.api.resources.accounts import AccountsResource
 from asgard.app import app
 from asgard.backends.accounts import AccountsBackend
 from asgard.http.auth import auth_required
@@ -30,3 +31,10 @@ async def change_account(request: web.Request):
         return web.json_response(data={"jwt": new_token.decode("utf-8")})
 
     return web.json_response(status=403)
+
+
+@app.route(["/accounts"], type=RouteTypes.HTTP, methods=["GET"])
+@auth_required
+async def index(r: web.Request):
+    accounts = await AccountsService.get_accounts(AccountsBackend())
+    return web.json_response(AccountsResource(accounts=accounts).dict())

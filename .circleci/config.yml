@@ -13,6 +13,16 @@ commands:
     description: "Confirma que a ordem dos imports está correta"
     steps:
       - run: "pipenv run isort-check"
+  typehint-cov:
+    description: "Upload de coverage de typehint"
+    steps:
+      - run:
+          name: "Typehint coverage report"
+          command: |
+            mkdir -p .mypy/xml/cov
+            pipenv run lint --cobertura-xml-report .mypy/xml/cov
+            pipenv run codecov --flags typehint --file .mypy/xml/cov/cobertura.xml
+            rm -rf .mypy/
   all-tests:
     description: "Roda todos os testes do projeto (unitários e integração)"
     steps:
@@ -22,6 +32,9 @@ jobs:
   py368: &template
     docker:
       - image: circleci/python:3.6.8
+        environment:
+          TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
+          TEST_STATS_API_URL: "http://127.0.0.1:9200"
       - image: postgres:9.4
       - image: elasticsearch:5.5-alpine
     steps:
@@ -40,20 +53,27 @@ jobs:
       - fmt-check
       - isort-check
       - lint
+      - typehint-cov
       - all-tests
       - run:
           when: on_success
-          command: pipenv run codecov
+          command: pipenv run codecov --flags unittest
   py37x:
       <<: *template
       docker:
         - image: circleci/python:3.7
+          environment:
+            TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
+            TEST_STATS_API_URL: "http://127.0.0.1:9200"
         - image: postgres:9.4
         - image: elasticsearch:5.5-alpine
   py36x:
       <<: *template
       docker:
         - image: circleci/python:3.6
+          environment:
+            TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
+            TEST_STATS_API_URL: "http://127.0.0.1:9200"
         - image: postgres:9.4
         - image: elasticsearch:5.5-alpine
 workflows:

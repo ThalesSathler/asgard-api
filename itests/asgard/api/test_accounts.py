@@ -13,6 +13,8 @@ from itests.util import (
     ACCOUNT_DEV_DICT,
     ACCOUNT_INFRA_DICT,
     ACCOUNT_INFRA_ID,
+    ACCOUNT_WITH_NO_USERS_DICT,
+    USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
 )
 
 
@@ -63,4 +65,25 @@ class AccountsApiTest(BaseTestCase):
         self.assertDictEqual(
             Account(**ACCOUNT_INFRA_DICT).dict(),
             returned_token["current_account"],
+        )
+
+    async def test_accounts_list_all(self):
+        resp = await self.client.get(
+            f"/accounts",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(200, resp.status)
+        data = await resp.json()
+        dev_account = Account(**ACCOUNT_DEV_DICT)
+        self.assertEqual(
+            {
+                "accounts": [
+                    Account(**ACCOUNT_DEV_DICT).dict(),
+                    Account(**ACCOUNT_INFRA_DICT).dict(),
+                    Account(**ACCOUNT_WITH_NO_USERS_DICT).dict(),
+                ]
+            },
+            data,
         )

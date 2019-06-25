@@ -59,6 +59,3 @@ class Account(BaseModel):
                 .exists()
             )
         return has_permission
-
-
-AccountFactory = ModelFactory(Account)

@@ -166,7 +166,12 @@
 <dl class="function">
 <dt id="asgard.models.base.ModelFactory">
 <code class="descclassname">asgard.models.base.</code><code class="descname">ModelFactory</code><span class="sig-paren">(</span><em>subclass_marker: Type[asgard.models.base.BaseModel]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/models/base.html#ModelFactory"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.base.ModelFactory" title="Link permanente para esta definição">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Função usada apenas para modelos que são abstratos, ou seja,
+modelos onde temos múltiplos backends possíveis.
+Agent é um exemplo: Podemos ter múltiplos backends para um Agent (Mesos, etc).
+Quando o retorno dessa função é usada em um modelo serializável, cada implementação do modelo
+deve definit o valor do atributo <cite>type</cite>.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-asgard.models.task">
@@ -268,7 +273,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code/organization.html">Organização do código</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contrib/index.html">Contribuindo com o projeto</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog/0.83.0.html">0.83.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
 </ul>
 
 <div class="relations">

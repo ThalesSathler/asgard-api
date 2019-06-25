@@ -18,3 +18,7 @@ class AccountsBackendTest(BaseTestCase):
     async def test_account_by_id_account_exists(self):
         account = await self.backend.get_account_by_id(ACCOUNT_DEV_ID)
         self.assertEqual(Account(**ACCOUNT_DEV_DICT), account)
+
+    async def test_account_list_all_accounts_empty_result(self):
+        accounts = await self.backend.get_accounts()
+        self.assertEquals(3, len(accounts))

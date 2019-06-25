@@ -1,0 +1,11 @@
+0.84.0
+======
+
+Asgard API
+----------
+
+- [`PR #121 <https://github.com/B2W-BIT/asgard-api/pull/121>`_] Adicionando flag `unittest` para o coverage dos testes
+- [`PR #120 <https://github.com/B2W-BIT/asgard-api/pull/120>`_] Corrigindo problema no sql de users
+- [`PR #119 <https://github.com/B2W-BIT/asgard-api/pull/119>`_] Feature/list all accounts endpoint
+- [`PR #122 <https://github.com/B2W-BIT/asgard-api/pull/122>`_] Removendo as opções com valor `auto` do codecov
+- [`PR #123 <https://github.com/B2W-BIT/asgard-api/pull/123>`_] Adicionando badge de typehint coverage

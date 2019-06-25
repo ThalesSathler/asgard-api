@@ -34,13 +34,13 @@
             
   <div class="section" id="organizacao-do-codigo">
 <h1>Organização do código<a class="headerlink" href="#organizacao-do-codigo" title="Permalink to this headline">¶</a></h1>
-<p>Esse documento dá uma visão geral de como o código do asgard está organziado.</p>
-<p>O pacote principal é o <a class="reference internal" href="../src/asgard/asgard.html#module-asgard" title="asgard"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard</span></code></a>. Dentro desse pacote temos algumas macro-subdivisões.</p>
+<p>Esse documento dá uma visão geral de como o código do asgard está organizado.</p>
+<p>O pacote principal é o <a class="reference internal" href="../src/asgard/asgard.html#module-asgard" title="asgard"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard</span></code></a>. Dentro deste pacote temos algumas macro-subdivisões.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">asgard/api</span></code>: Contém todo o código que lida com a camada HTTP, ou seja, são os endpoints da API;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard/services</span></code>: Esse é o código que faz a “ponte” entre os enpoints HTTP e o restante do código do projeto. A ideia principal é que os endpoints HTTP não conheçam nada além dessa camadad e services.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard/backends</span></code>: Aqui está as implementações concretas de todos os backend que o Asgard suporta. Backend são serviços com os quais a Asgard API consegue se comunicar. Atualmente a Asgard API se comunica com a API do Mesos e do Marathon para prover suas funcionalidades;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard/models</span></code>: Contém os objetos que são usados para passar dados engre as camadas (http, service, backends) do projeto;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard/services</span></code>: É o código que faz a “ponte” entre os enpoints HTTP e o restante do código do projeto. A ideia principal é que os endpoints HTTP não conheçam nada além dessa camada de services.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard/backends</span></code>: Aqui estão as implementações concretas de todos os backends que o Asgard suporta. Backend são serviços com os quais a Asgard API consegue se comunicar. Atualmente a Asgard API se comunica com a API do Mesos e do Marathon para prover suas funcionalidades.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard/models</span></code>: Contém os objetos que são usados para passar dados entre as camadas (http, service, backends) do projeto.</p></li>
 </ul>
 <p>Conteúdo:</p>
 <div class="toctree-wrapper compound">
@@ -96,7 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contrib/index.html">Contribuindo com o projeto</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog/0.83.0.html">0.83.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index.html">Changelog</a></li>
 </ul>
 
 <div class="relations">
