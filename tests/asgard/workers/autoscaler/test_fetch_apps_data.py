@@ -3,6 +3,7 @@ from asynctest import TestCase
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
+from asgard.workers.models.scalable_app import ScalableApp
 
 
 class FetchAppsDataTest(TestCase):
@@ -23,10 +24,10 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.fetch_all_apps()
 
         self.assertEqual(4, len(apps))
-        self.assertEqual("test_app", apps[0]["id"])
-        self.assertEqual("test_app2", apps[1]["id"])
-        self.assertEqual("test_app3", apps[2]["id"])
-        self.assertEqual("test_app4", apps[3]["id"])
+        self.assertEqual("test_app", apps[0].id)
+        self.assertEqual("test_app2", apps[1].id)
+        self.assertEqual("test_app3", apps[2].id)
+        self.assertEqual("test_app4", apps[3].id)
 
     async def test_get_all_apps_data_no_data_found(self):
         scaler = AsgardInterface()
@@ -44,7 +45,7 @@ class FetchAppsDataTest(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            fixture = [
+            payload = [
                 {
                     "id": "test_app1",
                     "labels": {
@@ -68,10 +69,16 @@ class FetchAppsDataTest(TestCase):
                 },
             ]
 
+            fixture = [
+                ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8),
+                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
+                ScalableApp("test_app3", autoscale_cpu=0.5, autoscale_mem=0.7),
+            ]
+
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload=fixture,
+                payload=payload,
             )
 
             apps = await scaler.get_all_scalable_apps()
@@ -124,7 +131,7 @@ class FetchAppsDataTest(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            fixture = [
+            payload = [
                 {
                     "id": "test_app1",
                     "labels": {
@@ -149,10 +156,23 @@ class FetchAppsDataTest(TestCase):
                 },
             ]
 
+            fixture = [
+                ScalableApp(
+                    "test_app1",
+                    autoscale_cpu=0.3,
+                    autoscale_mem=0.8,
+                    autoscale_ignore="all",
+                ),
+                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
+                ScalableApp(
+                    "test_app3", autoscale_cpu=0.5, autoscale_ignore="cpu"
+                ),
+            ]
+
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload=fixture,
+                payload=payload,
             )
 
             apps = await scaler.get_all_scalable_apps()
@@ -164,7 +184,7 @@ class FetchAppsDataTest(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            fixture = [
+            payload = [
                 {
                     "id": "test_app1",
                     "labels": {
@@ -188,10 +208,18 @@ class FetchAppsDataTest(TestCase):
                 },
             ]
 
+            fixture = [
+                ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8),
+                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
+                ScalableApp(
+                    "test_app3", autoscale_cpu=0.5, autoscale_ignore="cpu"
+                ),
+            ]
+
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload=fixture,
+                payload=payload,
             )
 
             apps = await scaler.get_all_scalable_apps()
@@ -203,7 +231,7 @@ class FetchAppsDataTest(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            fixture = {
+            payload = {
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
@@ -217,7 +245,11 @@ class FetchAppsDataTest(TestCase):
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats",
                 status=200,
-                payload=fixture,
+                payload=payload,
+            )
+
+            fixture = ScalableAppStats(
+                errors={}, cpu_pct="0", ram_pct="0", cpu_thr_pct="0"
             )
 
             stats = await scaler.get_app_stats(app_id)
