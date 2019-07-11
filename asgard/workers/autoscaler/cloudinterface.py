@@ -3,6 +3,7 @@ from typing import Dict, List, Any
 
 from asgard.conf import settings
 from asgard.http.client import http_client
+from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 
 
@@ -57,7 +58,7 @@ class AsgardInterface(CloudInterface):
                 if "asgard.autoscale.cpu" in json["labels"]:
                     app.autoscale_cpu = json["labels"]["asgard.autoscale.cpu"]
 
-                elif "asgard.autoscale.mem" in json["labels"]:
+                if "asgard.autoscale.mem" in json["labels"]:
                     app.autoscale_mem = json["labels"]["asgard.autoscale.mem"]
 
             return app
@@ -71,16 +72,11 @@ class AsgardInterface(CloudInterface):
             apps = list(map(to_scalable_app, data))
             return apps
 
-    async def get_all_scalable_apps(self):
-        def app_filter(app):
-            if "labels" in app:
-                return self.should_scale(app)
-            return False
-
+    async def get_all_scalable_apps(self) -> List[ScalableApp]:
         all_apps = await self.fetch_all_apps()
-        return list(filter(app_filter, all_apps))
+        return list(filter(self.should_scale, all_apps))
 
-    async def get_app_stats(self, app_id):
+    async def get_app_stats(self, app_id: int) -> AppStats:
         async with http_client as client:
             http_response = await client.get(
                 f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats"
@@ -96,4 +92,4 @@ class AsgardInterface(CloudInterface):
             elif len(response["stats"]["errors"]) > 0:
                 return None
             else:
-                return response
+                return AppStats(app_id, response["stats"]["type"], response["stats"]["cpu_pct"], response["stats"]["ram_pct"], response["stats"]["cpu_thr_pct"])

@@ -3,6 +3,7 @@ from asynctest import TestCase
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
+from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 
 
@@ -84,7 +85,7 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(3, len(apps))
-            self.assertEqual(fixture, apps)
+            self.assertListEqual(fixture, apps)
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
         scaler = AsgardInterface()
@@ -178,7 +179,7 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(1, len(apps))
-            self.assertEqual(fixture[1], apps[0])
+            self.assertEquals(fixture[1], apps[0])
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
         scaler = AsgardInterface()
@@ -225,7 +226,7 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(2, len(apps))
-            self.assertEqual(fixture[:2], apps)
+            self.assertEquals(fixture[:2], apps)
 
     async def test_get_app_stats_existing_app_id(self):
         scaler = AsgardInterface()
@@ -248,9 +249,7 @@ class FetchAppsDataTest(TestCase):
                 payload=payload,
             )
 
-            fixture = ScalableAppStats(
-                errors={}, cpu_pct="0", ram_pct="0", cpu_thr_pct="0"
-            )
+            fixture = AppStats(app_id, type="ASGARD", cpu_pct="0.93", ram_pct="8.91", cpu_thr_pct="0.06")
 
             stats = await scaler.get_app_stats(app_id)
 
@@ -279,4 +278,4 @@ class FetchAppsDataTest(TestCase):
 
             stats = await scaler.get_app_stats(app_id)
 
-            self.assertEqual(None, stats)
+            self.assertEquals(None, stats)
