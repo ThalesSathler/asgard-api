@@ -69,12 +69,18 @@ class AsgardInterface(CloudInterface):
             )
             data = await response.json()
 
-            apps = list(map(to_scalable_app, data))
-            return apps
+            if data:
+                apps = list(map(to_scalable_app, data))
+                return apps
+
+            return None
 
     async def get_all_scalable_apps(self) -> List[ScalableApp]:
         all_apps = await self.fetch_all_apps()
-        return list(filter(self.should_scale, all_apps))
+        if all_apps:
+            return list(filter(self.should_scale, all_apps))
+
+        return None
 
     async def get_app_stats(self, app_id: int) -> AppStats:
         async with http_client as client:
