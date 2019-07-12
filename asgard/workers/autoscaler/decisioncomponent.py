@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from asgard.workers.models.app_stats import AppStats
+
 
 class DecisionComponentInterface(ABC):
     @abstractmethod
@@ -8,5 +10,5 @@ class DecisionComponentInterface(ABC):
 
 
 class DecisionComponent(DecisionComponentInterface):
-    def decide_scaling_actions(self, apps_stats):
-        return {"ok": True}
+    def decide_scaling_actions(self, apps_stats: AppStats):
+        raise NotImplementedError
