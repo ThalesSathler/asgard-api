@@ -37,8 +37,10 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
     ) -> List[ScheduledJob]:
         filter_prefix = f"{account.namespace}-"
         chronos_jobs = await self.client.search(name=filter_prefix)
-        return [
+        all_jobs = [
             ChronosScheduledJobConverter.to_asgard_model(job)
             for job in chronos_jobs
             if job.name.startswith(filter_prefix)
         ]
+        all_jobs.sort(key=lambda job: job.id)
+        return all_jobs

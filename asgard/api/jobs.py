@@ -3,7 +3,10 @@ from http import HTTPStatus
 from aiohttp import web
 from asyncworker import RouteTypes
 
-from asgard.api.resources.jobs import ScheduledJobResource
+from asgard.api.resources.jobs import (
+    ScheduledJobResource,
+    ScheduledJobsListResource,
+)
 from asgard.app import app
 from asgard.backends.chronos.impl import ChronosScheduledJobsBackend
 from asgard.http.auth import auth_required
@@ -27,3 +30,16 @@ async def index_jobs(request: web.Request):
     return web.json_response(
         ScheduledJobResource(job=scheduled_job).dict(), status=status_code
     )
+
+
+@app.route(["/jobs"], type=RouteTypes.HTTP, methods=["GET"])
+@auth_required
+async def list_jobs(request: web.Request):
+    user = await User.from_alchemy_obj(request["user"])
+    account = await Account.from_alchemy_obj(request["user"].current_account)
+
+    jobs = await ScheduledJobsService.list_jobs(
+        user, account, ChronosScheduledJobsBackend()
+    )
+
+    return web.json_response(ScheduledJobsListResource(jobs=jobs).dict())

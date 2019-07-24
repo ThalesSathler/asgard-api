@@ -3,7 +3,6 @@ import asyncio
 import aiohttp
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock
-from tests.utils import with_json_fixture
 
 from asgard.backends.chronos.impl import ChronosScheduledJobsBackend
 from asgard.backends.chronos.models.converters import (
@@ -21,6 +20,7 @@ from itests.util import (
     ACCOUNT_INFRA_DICT,
     _load_jobs_into_chronos,
 )
+from tests.utils import with_json_fixture
 
 
 class ChronosScheduledJobsBackendTest(TestCase):
