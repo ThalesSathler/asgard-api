@@ -4,8 +4,9 @@ from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
 from asgard.backends.jobs import ScheduledJobsBackend
-from asgard.clients.chronos import ChronosClient, Http404
+from asgard.clients.chronos import ChronosClient
 from asgard.conf import settings
+from asgard.http.exceptions import HTTPNotFound
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
 from asgard.models.user import User
@@ -27,6 +28,6 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
                 )
                 scheduled_job.remove_namespace(account)
                 return scheduled_job
-        except Http404:
+        except HTTPNotFound:
             return None
         return None
