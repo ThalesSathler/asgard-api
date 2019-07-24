@@ -1,4 +1,3 @@
-import asyncio
 from http import HTTPStatus
 
 from asgard.api import jobs
@@ -11,8 +10,6 @@ from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
 from asgard.clients.chronos.models.job import ChronosJob
-from asgard.conf import settings
-from asgard.http.client import http_client
 from asgard.models.account import Account
 from asgard.models.user import User
 from itests.util import (
@@ -20,7 +17,6 @@ from itests.util import (
     USER_WITH_MULTIPLE_ACCOUNTS_DICT,
     ACCOUNT_DEV_DICT,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
-    USER_WITH_NO_ACCOUNTS_AUTH_KEY,
     ACCOUNT_INFRA_ID,
     _load_jobs_into_chronos,
     _cleanup_chronos,
