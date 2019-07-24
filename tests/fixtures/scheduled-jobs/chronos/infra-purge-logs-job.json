@@ -62,7 +62,7 @@
    "lastError" : "",
    "lastSuccess" : "",
    "mem" : 64,
-   "name" : "asgard-scheduled-job",
+   "name" : "infra-puge-logs-job",
    "owner" : "",
    "ownerName" : "",
    "retries" : 2,
