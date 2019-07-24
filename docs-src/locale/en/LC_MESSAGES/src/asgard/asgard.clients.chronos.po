@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 10:55-0300\n"
+"POT-Creation-Date: 2019-07-24 12:10-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,11 +29,9 @@ msgstr ""
 msgid "Module contents"
 msgstr ""
 
-#: asgard.clients.chronos.ChronosClient:1 of
-msgid "Base: :class:`object`"
-msgstr ""
+#~ msgid "Base: :class:`object`"
+#~ msgstr ""
 
-#: asgard.clients.chronos.Http404:1 of
-msgid "Base: :class:`Exception`"
-msgstr ""
+#~ msgid "Base: :class:`Exception`"
+#~ msgstr ""
 
