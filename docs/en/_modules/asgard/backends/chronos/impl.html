@@ -37,8 +37,9 @@
     <span class="n">ChronosScheduledJobConverter</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.jobs</span> <span class="k">import</span> <span class="n">ScheduledJobsBackend</span>
-<span class="kn">from</span> <span class="nn">asgard.clients.chronos</span> <span class="k">import</span> <span class="n">ChronosClient</span><span class="p">,</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">asgard.clients.chronos</span> <span class="k">import</span> <span class="n">ChronosClient</span>
 <span class="kn">from</span> <span class="nn">asgard.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">asgard.http.exceptions</span> <span class="k">import</span> <span class="n">HTTPNotFound</span>
 <span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
 <span class="kn">from</span> <span class="nn">asgard.models.job</span> <span class="k">import</span> <span class="n">ScheduledJob</span>
 <span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
@@ -60,7 +61,7 @@
                 <span class="p">)</span>
                 <span class="n">scheduled_job</span><span class="o">.</span><span class="n">remove_namespace</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">scheduled_job</span>
-        <span class="k">except</span> <span class="n">Http404</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">HTTPNotFound</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>
