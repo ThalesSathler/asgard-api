@@ -3,7 +3,6 @@ import os
 import random
 import string
 from collections import defaultdict
-from importlib import reload
 from typing import Any, Dict, List, Type, Set
 
 import asyncworker
@@ -16,9 +15,9 @@ from sqlalchemy import Table
 from sqlalchemy.sql.ddl import CreateTable
 
 import asgard.backends.users
-import asgard.db
 from asgard.conf import settings
 from asgard.db import _SessionMaker
+from asgard.http.client import http_client
 from asgard.models.account import AccountDB as Account
 from asgard.models.user import UserDB as User
 from asgard.models.user_has_account import UserHasAccount
@@ -267,3 +266,19 @@ class BaseTestCase(TestCase):
             )
         # para dar tempo do Elasticsearch local indexar os dados recém inseridos
         await asyncio.sleep(3)
+
+
+async def _load_jobs_into_chronos(jobs_list):
+    base_url = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
+    async with http_client as http:
+        all_jobs = await http.get(f"{base_url}/jobs")
+        all_jobs_json = await all_jobs.json()
+        [
+            await http.delete(f"{base_url}/job/{job['name']}")
+            for job in all_jobs_json
+        ]
+
+        for job in jobs_list:
+            await http.post(f"{base_url}/iso8601", json=job)
+
+    await asyncio.sleep(1)

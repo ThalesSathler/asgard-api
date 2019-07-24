@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
@@ -31,3 +31,14 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         except HTTPNotFound:
             return None
         return None
+
+    async def list_jobs(
+        self, user: User, account: Account
+    ) -> List[ScheduledJob]:
+        filter_prefix = f"{account.namespace}-"
+        chronos_jobs = await self.client.search(name=filter_prefix)
+        return [
+            ChronosScheduledJobConverter.to_asgard_model(job)
+            for job in chronos_jobs
+            if job.name.startswith(filter_prefix)
+        ]

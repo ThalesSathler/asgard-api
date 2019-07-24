@@ -5,12 +5,21 @@ from asynctest import TestCase
 from asynctest.mock import CoroutineMock
 
 from asgard.backends.chronos.impl import ChronosScheduledJobsBackend
+from asgard.backends.chronos.models.converters import (
+    ChronosScheduledJobConverter,
+)
 from asgard.clients.chronos import ChronosClient
+from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
 from asgard.http.client import http_client
 from asgard.models.account import Account
 from asgard.models.user import User
-from itests.util import USER_WITH_MULTIPLE_ACCOUNTS_DICT, ACCOUNT_DEV_DICT
+from itests.util import (
+    USER_WITH_MULTIPLE_ACCOUNTS_DICT,
+    ACCOUNT_DEV_DICT,
+    ACCOUNT_INFRA_DICT,
+    _load_jobs_into_chronos,
+)
 from tests.utils import with_json_fixture
 
 
@@ -71,3 +80,53 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
         with self.assertRaises(aiohttp.ClientConnectionError):
             await self.backend.get_job_by_id("job-id", user, account)
+
+    @with_json_fixture("scheduled-jobs/chronos/infra-some-scheduled-job.json")
+    @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")
+    async def test_list_jobs_no_not_include_jobs_from_other_namespaces(
+        self, infra_job_fixture, dev_job_fixture
+    ):
+        await _load_jobs_into_chronos([infra_job_fixture, dev_job_fixture])
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+        jobs = await self.backend.list_jobs(user, account)
+
+        expected_asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+        self.assertCountEqual([expected_asgard_job], jobs)
+
+    async def test_list_jobs_empty_result(self):
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+        account.namespace = "namespace-does-not-have-any-jobs"
+        jobs = await self.backend.list_jobs(user, account)
+
+        self.assertCountEqual([], jobs)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    @with_json_fixture("scheduled-jobs/chronos/infra-some-scheduled-job.json")
+    async def test_list_jobs_do_not_include_jobs_from_another_ns_that_has_my_ns_in_name(
+        self, dev_with_infra_job_fixture, infra_job_fixture
+    ):
+        """
+        O Namespace só vale se estiver no ínicio do nome do job. Dado dois jobs:
+         - asgard-curator-delete-indices-asgard-app-logs
+         - infra-my-job-has-asgard-in-the-name
+
+        Quando buscarmos os jobs namespace "asgard", temos que
+        retornar apenas o primeiro.
+        """
+        await _load_jobs_into_chronos(
+            [dev_with_infra_job_fixture, infra_job_fixture]
+        )
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_INFRA_DICT)
+        jobs = await self.backend.list_jobs(user, account)
+
+        expected_asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**infra_job_fixture)
+        )
+        self.assertCountEqual([expected_asgard_job], jobs)

@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import List
 
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.http.client import http_client
@@ -19,3 +20,16 @@ class ChronosClient:
                 raise HTTPNotFound()
             data = await resp.json()
             return ChronosJob(**data)
+
+    async def search(self, name: str) -> List[ChronosJob]:
+        """
+        Procura por todos os jobs que contenham o temo `name` em seu nome.
+        """
+        async with http_client as client:
+            resp = await client.get(
+                f"{self.address}/v1/scheduler/jobs/search",
+                params={"name": name},
+            )
+            data = await resp.json()
+            jobs = [ChronosJob(**job) for job in data]
+            return jobs
