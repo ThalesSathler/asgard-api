@@ -268,7 +268,7 @@ class BaseTestCase(TestCase):
         await asyncio.sleep(3)
 
 
-async def _load_jobs_into_chronos(jobs_list):
+async def _load_jobs_into_chronos(*jobs_list):
     base_url = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
     async with http_client as http:
         all_jobs = await http.get(f"{base_url}/jobs")

@@ -1,6 +1,8 @@
 import asyncio
 from http import HTTPStatus
 
+from tests.utils import with_json_fixture
+
 from asgard.api import jobs
 from asgard.api.resources.jobs import ScheduledJobResource
 from asgard.app import app
@@ -17,8 +19,8 @@ from itests.util import (
     USER_WITH_MULTIPLE_ACCOUNTS_DICT,
     ACCOUNT_DEV_DICT,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
+    _load_jobs_into_chronos,
 )
-from tests.utils import with_json_fixture
 
 
 class JobsEndpointTestCase(BaseTestCase):
@@ -35,18 +37,11 @@ class JobsEndpointTestCase(BaseTestCase):
         resp = await self.client.get("/jobs/job-does-not-exist")
         self.assertEqual(HTTPStatus.UNAUTHORIZED, resp.status)
 
-    @with_json_fixture("scheduled-jobs/chronos/infra-purge-logs-job.json")
+    @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")
     async def test_jobs_get_by_id_job_exist(self, chronos_job_fixture):
 
-        chronos_job_fixture["name"] = f"{self.account.namespace}-my-job"
-        async with http_client as client:
-            await client.post(
-                f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler/iso8601",
-                json=chronos_job_fixture,
-            )
+        _load_jobs_into_chronos(chronos_job_fixture)
 
-        # Para dar tempo do chronos registra e responder no request log abaixo
-        await asyncio.sleep(1)
         asgard_job = ChronosScheduledJobConverter.to_asgard_model(
             ChronosJob(**chronos_job_fixture)
         )

@@ -3,6 +3,7 @@ import asyncio
 import aiohttp
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock
+from tests.utils import with_json_fixture
 
 from asgard.backends.chronos.impl import ChronosScheduledJobsBackend
 from asgard.backends.chronos.models.converters import (
@@ -20,7 +21,6 @@ from itests.util import (
     ACCOUNT_INFRA_DICT,
     _load_jobs_into_chronos,
 )
-from tests.utils import with_json_fixture
 
 
 class ChronosScheduledJobsBackendTest(TestCase):
@@ -86,7 +86,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
     async def test_list_jobs_no_not_include_jobs_from_other_namespaces(
         self, infra_job_fixture, dev_job_fixture
     ):
-        await _load_jobs_into_chronos([infra_job_fixture, dev_job_fixture])
+        await _load_jobs_into_chronos(infra_job_fixture, dev_job_fixture)
 
         user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
         account = Account(**ACCOUNT_DEV_DICT)
@@ -119,7 +119,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
         retornar apenas o primeiro.
         """
         await _load_jobs_into_chronos(
-            [dev_with_infra_job_fixture, infra_job_fixture]
+            dev_with_infra_job_fixture, infra_job_fixture
         )
 
         user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
