@@ -26,7 +26,7 @@ class CloudInterface(ABC):
         pass
 
     @abstractmethod
-    async def apply_decisions(self, scaling_decisions: Decision) -> List[AppStats]:
+    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
         pass
 
 
@@ -105,5 +105,25 @@ class AsgardInterface(CloudInterface):
             else:
                 return AppStats(app_id, response["stats"]["type"], response["stats"]["cpu_pct"], response["stats"]["ram_pct"], response["stats"]["cpu_thr_pct"])
 
-    async def apply_decisions(self, scaling_decisions: Decision) -> List[AppStats]:
-        pass
+    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
+        post_body = []
+
+        for decision in scaling_decisions:
+            app_scaling_json = {
+                "id": decision.id
+            }
+
+            if decision.cpu is not None:
+                app_scaling_json["cpus"] = decision.cpu
+            if decision.mem is not None:
+                app_scaling_json["mem"] = decision.mem
+
+            post_body.append(app_scaling_json)
+
+        async with http_client as client:
+            http_response = await client.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                json=post_body
+            )
+
+        return post_body

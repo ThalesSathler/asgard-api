@@ -22,10 +22,12 @@ class ScaleAppsTest(TestCase):
                     "version": "1.0"
                 }
             )
-            new_app_stats = await interface.apply_decisions(decisions)
+            applied_decisions = await interface.apply_decisions(decisions)
 
-        self.assertEqual(len(new_app_stats), 1)
-        self.assertEqual(new_app_stats[0].id, "test")
+        self.assertEqual(len(applied_decisions), 1)
+        self.assertEqual(applied_decisions[0]["id"], decisions[0].id)
+        self.assertEqual(applied_decisions[0]["cpus"], decisions[0].cpu)
+        self.assertEqual(applied_decisions[0]["mem"], decisions[0].mem)
 
     async def test_tune_everything_in_multiple_apps(self):
         interface = AsgardInterface()
@@ -48,12 +50,13 @@ class ScaleAppsTest(TestCase):
                     "version": "1.0"
                 }
             )
-            new_apps_stats = await interface.apply_decisions(decisions)
+            applied_decisions = await interface.apply_decisions(decisions)
 
-        self.assertEqual(len(new_apps_stats), 3)
-        self.assertEqual(new_apps_stats[0].id, "test1")
-        self.assertEqual(new_apps_stats[1].id, "test2")
-        self.assertEqual(new_apps_stats[2].id, "test3")
+        self.assertEqual(len(applied_decisions), 3)
+        for i in range(len(decisions)):
+            self.assertEqual(applied_decisions[i]["id"], decisions[i].id)
+            self.assertEqual(applied_decisions[i]["cpus"], decisions[i].cpu)
+            self.assertEqual(applied_decisions[i]["mem"], decisions[i].mem)
 
     async def test_tune_one_thing_in_one_app(self):
         interface = AsgardInterface()
@@ -69,10 +72,12 @@ class ScaleAppsTest(TestCase):
                     "version": "1.0"
                 }
             )
-            new_app_stats = await interface.apply_decisions(decisions)
+            applied_decisions = await interface.apply_decisions(decisions)
 
-        self.assertEqual(len(new_app_stats), 1)
-        self.assertEqual(new_app_stats[0].id, "test")
+        self.assertEqual(len(applied_decisions), 1)
+        self.assertEqual(applied_decisions[0]["id"], decisions[0].id)
+        self.assertEqual(applied_decisions[0]["cpus"], decisions[0].cpu)
+        self.assertEqual("mem" in applied_decisions[0], False)
 
     async def test_tune_multiple_apps_with_different_params(self):
         interface = AsgardInterface()
@@ -95,9 +100,18 @@ class ScaleAppsTest(TestCase):
                     "version": "1.0"
                 }
             )
-            new_apps_stats = await interface.apply_decisions(decisions)
+            applied_decisions = await interface.apply_decisions(decisions)
 
-        self.assertEqual(len(new_apps_stats), 3)
-        self.assertEqual(new_apps_stats[0].id, "test1")
-        self.assertEqual(new_apps_stats[1].id, "test2")
-        self.assertEqual(new_apps_stats[2].id, "test3")
+        self.assertEqual(len(applied_decisions), 3)
+
+        self.assertEqual(applied_decisions[0]["id"], decisions[0].id)
+        self.assertEqual(applied_decisions[0]["mem"], decisions[0].mem)
+        self.assertEqual("cpus" in applied_decisions[0], False)
+
+        self.assertEqual(applied_decisions[1]["id"], decisions[1].id)
+        self.assertEqual(applied_decisions[1]["cpus"], decisions[1].cpu)
+        self.assertEqual("mem" in applied_decisions[1], False)
+
+        self.assertEqual(applied_decisions[2]["id"], decisions[2].id)
+        self.assertEqual(applied_decisions[2]["mem"], decisions[2].mem)
+        self.assertEqual(applied_decisions[2]["cpus"], decisions[2].cpu)
