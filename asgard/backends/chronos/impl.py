@@ -6,6 +6,7 @@ from asgard.backends.chronos.models.converters import (
 from asgard.backends.jobs import ScheduledJobsBackend
 from asgard.clients.chronos import ChronosClient
 from asgard.conf import settings
+from asgard.exceptions import DuplicateEntity
 from asgard.http.exceptions import HTTPNotFound
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
@@ -46,3 +47,20 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         ]
         all_jobs.sort(key=lambda job: job.id)
         return all_jobs
+
+    async def create_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        job_exists = await self.get_job_by_id(job.id, user, account)
+        if job_exists:
+            raise DuplicateEntity(f"Scheduled job already exists: {job.id}")
+
+        namespaced_job_id = f"{account.namespace}-{job.id}"
+        chronos_job = ChronosScheduledJobConverter.to_client_model(job)
+        chronos_job.name = namespaced_job_id
+        cretaed_chronos_job = await self.client.create_job(chronos_job)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            cretaed_chronos_job
+        )
+        asgard_job.remove_namespace(account)
+        return asgard_job

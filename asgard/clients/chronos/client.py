@@ -9,8 +9,13 @@ from asgard.http.exceptions import HTTPNotFound
 class ChronosClient:
     def __init__(self, url: str) -> None:
         self.address = url
+        self.base_url = f"{self.address}/v1/scheduler"
 
     async def get_job_by_id(self, job_id: str) -> ChronosJob:
+        """
+        Retorna um Job do Chronos, dado seu id (nome).
+        Raise asgard.http.exceptions.HTTPNotFound() se o job não existir
+        """
         async with http_client as client:
             resp = await client.get(f"{self.address}/v1/scheduler/job/{job_id}")
             if resp.status == HTTPStatus.BAD_REQUEST:
@@ -23,7 +28,7 @@ class ChronosClient:
 
     async def search(self, name: str) -> List[ChronosJob]:
         """
-        Procura por todos os jobs que contenham o temo `name` em seu nome.
+        Procura por todos os jobs que contenham o termo `name` em seu nome.
         """
         async with http_client as client:
             resp = await client.get(
@@ -33,3 +38,10 @@ class ChronosClient:
             data = await resp.json()
             jobs = [ChronosJob(**job) for job in data]
             return jobs
+
+    async def create_job(self, job: ChronosJob) -> ChronosJob:
+        async with http_client.post(
+            f"{self.base_url}/iso8601", json=job.dict()
+        ) as resp:
+            resp.raise_for_status()
+            return job

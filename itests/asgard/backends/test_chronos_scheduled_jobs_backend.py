@@ -11,6 +11,7 @@ from asgard.backends.chronos.models.converters import (
 from asgard.clients.chronos import ChronosClient
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
+from asgard.exceptions import DuplicateEntity
 from asgard.http.client import http_client
 from asgard.models.account import Account
 from asgard.models.user import User
@@ -19,6 +20,7 @@ from itests.util import (
     ACCOUNT_DEV_DICT,
     ACCOUNT_INFRA_DICT,
     _load_jobs_into_chronos,
+    _cleanup_chronos,
 )
 from tests.utils import with_json_fixture
 
@@ -130,3 +132,68 @@ class ChronosScheduledJobsBackendTest(TestCase):
             ChronosJob(**infra_job_fixture)
         ).remove_namespace(account)
         self.assertCountEqual([expected_asgard_job], jobs)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_create_job_job_does_not_exist(self, dev_job_fixture):
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        await _cleanup_chronos()
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        returned_job = await self.backend.create_job(asgard_job, user, account)
+        stored_job = await self.backend.get_job_by_id(
+            returned_job.id, user, account
+        )
+        self.assertEqual(returned_job, stored_job)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    @with_json_fixture("scheduled-jobs/chronos/infra-some-scheduled-job.json")
+    async def test_create_job_duplicate_entity(
+        self, dev_job_fixture, infra_job_fixture
+    ):
+        """
+        Se tentarmos criar um job com o mesmo nome de um que já existe,
+        lançamos DuplicateEntity exception. Para atualizar um job temos
+        um método separado
+        """
+
+        await _load_jobs_into_chronos(dev_job_fixture)
+        infra_job_fixture["name"] = dev_job_fixture["name"]
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**infra_job_fixture)
+        )
+
+        asgard_job.remove_namespace(account)
+        with self.assertRaises(DuplicateEntity):
+            await self.backend.create_job(asgard_job, user, account)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    @with_json_fixture("scheduled-jobs/chronos/infra-some-scheduled-job.json")
+    async def test_create_job_name_has_namespace_from_another_account(
+        self, dev_job_fixture, infra_job_fixture
+    ):
+        """
+        Mesmo que o nome do job começe com o namespace de outra conta, o registro
+        do novo job deve ser feito na conta correta
+        """
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**infra_job_fixture)
+        )
+
+        returned_job = await self.backend.create_job(asgard_job, user, account)
+        stored_job = await self.backend.get_job_by_id(
+            returned_job.id, user, account
+        )
+        self.assertEqual(returned_job, stored_job)
