@@ -1,6 +1,6 @@
 import abc
 import re
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 from pydantic import validator
 
@@ -19,7 +19,7 @@ class AbstractApp(BaseModel, abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def remove_namespace(self, account: Account) -> None:
+    def remove_namespace(self, account: Account) -> "AbstractApp":
         raise NotImplementedError()
 
 
@@ -64,6 +64,8 @@ class ScheduledJob(App):
         """
         self.id = f"{account.namespace}-{self.id}"
 
-    def remove_namespace(self, account: Account) -> None:
+    def remove_namespace(self, account: Account) -> "ScheduledJob":
         if self.id.startswith(f"{account.namespace}-"):
             self.id = self.id.replace(f"{account.namespace}-", "", 1)
+
+        return self

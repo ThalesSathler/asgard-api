@@ -92,6 +92,17 @@ class ScheduledJobModelTest(TestCase):
         expected_app_id = f"{account.namespace}-my-app-with-ns"
         self.assertEqual(expected_app_id, app.id)
 
+    async def test_remove_namepace_returns_self(self):
+
+        account = Account(**ACCOUNT_DEV_DICT)
+        self.required_fields_scheduled_job[
+            "id"
+        ] = f"my-app-with-{account.namespace}-ns"
+        app = ScheduledJob(**self.required_fields_scheduled_job)
+
+        returned_app = app.remove_namespace(account)
+        self.assertTrue(app is returned_app)
+
     async def test_remove_namespace_app_id_contains_namespace(self):
         """
         Se o namepspace está no meio do nome, não deve ser removido

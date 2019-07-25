@@ -16,6 +16,7 @@ from itests.util import (
     BaseTestCase,
     USER_WITH_MULTIPLE_ACCOUNTS_DICT,
     ACCOUNT_DEV_DICT,
+    ACCOUNT_INFRA_DICT,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
     ACCOUNT_INFRA_ID,
     _load_jobs_into_chronos,
@@ -94,6 +95,8 @@ class JobsEndpointTestCase(BaseTestCase):
         """
         await _load_jobs_into_chronos(dev_job_fixture, infra_job_fixture)
 
+        account = Account(**ACCOUNT_INFRA_DICT)
+
         resp = await self.client.get(
             "/jobs",
             headers={
@@ -106,7 +109,7 @@ class JobsEndpointTestCase(BaseTestCase):
         expected_asgard_jobs = [
             ChronosScheduledJobConverter.to_asgard_model(
                 ChronosJob(**infra_job_fixture)
-            )
+            ).remove_namespace(account)
         ]
 
         resp_data = await resp.json()
@@ -125,6 +128,8 @@ class JobsEndpointTestCase(BaseTestCase):
             dev_another_job_fixture, infra_job_fixture, dev_with_infra_fixture
         )
 
+        account = Account(**ACCOUNT_DEV_DICT)
+
         resp = await self.client.get(
             "/jobs",
             headers={
@@ -136,10 +141,10 @@ class JobsEndpointTestCase(BaseTestCase):
         expected_asgard_jobs = [
             ChronosScheduledJobConverter.to_asgard_model(
                 ChronosJob(**dev_another_job_fixture)
-            ),
+            ).remove_namespace(account),
             ChronosScheduledJobConverter.to_asgard_model(
                 ChronosJob(**dev_with_infra_fixture)
-            ),
+            ).remove_namespace(account),
         ]
 
         resp_data = await resp.json()
@@ -158,6 +163,8 @@ class JobsEndpointTestCase(BaseTestCase):
             dev_another_job_fixture, dev_with_infra_fixture
         )
 
+        account = Account(**ACCOUNT_DEV_DICT)
+
         resp = await self.client.get(
             "/jobs",
             headers={
@@ -169,10 +176,10 @@ class JobsEndpointTestCase(BaseTestCase):
         expected_asgard_jobs = [
             ChronosScheduledJobConverter.to_asgard_model(
                 ChronosJob(**dev_another_job_fixture)
-            ),
+            ).remove_namespace(account),
             ChronosScheduledJobConverter.to_asgard_model(
                 ChronosJob(**dev_with_infra_fixture)
-            ),
+            ).remove_namespace(account),
         ]
 
         resp_data = await resp.json()

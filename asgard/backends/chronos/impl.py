@@ -38,7 +38,9 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         filter_prefix = f"{account.namespace}-"
         chronos_jobs = await self.client.search(name=filter_prefix)
         all_jobs = [
-            ChronosScheduledJobConverter.to_asgard_model(job)
+            ChronosScheduledJobConverter.to_asgard_model(job).remove_namespace(
+                account
+            )
             for job in chronos_jobs
             if job.name.startswith(filter_prefix)
         ]
