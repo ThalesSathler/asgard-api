@@ -268,21 +268,23 @@ class BaseTestCase(TestCase):
         await asyncio.sleep(3)
 
 
-base_url = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
+CHRONOS_BASE_URL = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
 
 
 async def _cleanup_chronos():
-    async with http_client.get(f"{base_url}/jobs") as resp:
+    async with http_client.get(f"{CHRONOS_BASE_URL}/jobs") as resp:
         all_jobs_json = await resp.json()
         for job in all_jobs_json:
-            async with http_client.delete(f"{base_url}/job/{job['name']}"):
+            async with http_client.delete(
+                f"{CHRONOS_BASE_URL}/job/{job['name']}"
+            ):
                 pass
 
 
 async def _load_jobs_into_chronos(*jobs_list):
     await _cleanup_chronos()
     for job in jobs_list:
-        async with http_client.post(f"{base_url}/iso8601", json=job):
+        async with http_client.post(f"{CHRONOS_BASE_URL}/iso8601", json=job):
             pass
 
     await asyncio.sleep(1)
