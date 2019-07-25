@@ -208,11 +208,10 @@ class ChronosEnvSpecConverter(
 
     @classmethod
     def to_client_model(cls, other: EnvSpec) -> List[ChronosEnvSpec]:
-        env_spec_list = [
+        return [
             ChronosEnvSpec(name=name, value=value)
             for name, value in other.items()
         ]
-        return env_spec_list
 
 
 class ChronosFetchURLSpecConverter(
@@ -222,7 +221,7 @@ class ChronosFetchURLSpecConverter(
     def to_asgard_model(
         cls, other: List[ChronosFetchURLSpec]
     ) -> List[FetchURLSpec]:
-        fetch_list = [
+        return [
             FetchURLSpec(
                 type="ASGARD",
                 uri=fetch_item.uri,
@@ -232,13 +231,12 @@ class ChronosFetchURLSpecConverter(
             )
             for fetch_item in other
         ]
-        return fetch_list
 
     @classmethod
     def to_client_model(
         cls, other: List[FetchURLSpec]
     ) -> List[ChronosFetchURLSpec]:
-        fetch_list = [
+        return [
             ChronosFetchURLSpec(
                 uri=fetch_item.uri,
                 executable=fetch_item.executable,
@@ -247,7 +245,6 @@ class ChronosFetchURLSpecConverter(
             )
             for fetch_item in other
         ]
-        return fetch_list
 
 
 class ChronosConstraintSpecConverter(
@@ -255,10 +252,7 @@ class ChronosConstraintSpecConverter(
 ):
     @classmethod
     def to_asgard_model(cls, other: ChronosConstraintSpec) -> ConstraintSpec:
-        constraint_spec: ConstraintSpec = [
-            f"{item[0]}:{item[1]}:{item[2]}" for item in other
-        ]
-        return constraint_spec
+        return [f"{item[0]}:{item[1]}:{item[2]}" for item in other]
 
     @classmethod
     def to_client_model(cls, other: ConstraintSpec) -> ChronosConstraintSpec:
