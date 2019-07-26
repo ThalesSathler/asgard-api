@@ -94,7 +94,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
         expected_asgard_job = ChronosScheduledJobConverter.to_asgard_model(
             ChronosJob(**dev_job_fixture)
-        )
+        ).remove_namespace(account)
         self.assertCountEqual([expected_asgard_job], jobs)
 
     async def test_list_jobs_empty_result(self):
@@ -128,5 +128,5 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
         expected_asgard_job = ChronosScheduledJobConverter.to_asgard_model(
             ChronosJob(**infra_job_fixture)
-        )
+        ).remove_namespace(account)
         self.assertCountEqual([expected_asgard_job], jobs)
