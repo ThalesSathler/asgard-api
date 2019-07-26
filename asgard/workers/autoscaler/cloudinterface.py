@@ -5,23 +5,28 @@ from asgard.conf import settings
 from asgard.http.client import http_client
 from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
+from asgard.workers.models.scaling_decision import Decision
 
 
 class CloudInterface(ABC):
     @abstractmethod
-    def should_scale(self, labels):
+    def should_scale(self, app: ScalableApp) -> bool:
         pass
 
     @abstractmethod
-    async def fetch_all_apps(self):
+    async def fetch_all_apps(self) -> List[ScalableApp]:
         pass
 
     @abstractmethod
-    async def get_all_scalable_apps(self):
+    async def get_all_scalable_apps(self) -> List[ScalableApp]:
         pass
 
     @abstractmethod
-    async def get_app_stats(self, app_id):
+    async def get_app_stats(self, app_id) -> AppStats:
+        pass
+
+    @abstractmethod
+    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
         pass
 
 
@@ -99,3 +104,26 @@ class AsgardInterface(CloudInterface):
                 return None
             else:
                 return AppStats(app_id, response["stats"]["type"], response["stats"]["cpu_pct"], response["stats"]["ram_pct"], response["stats"]["cpu_thr_pct"])
+
+    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
+        post_body = []
+
+        for decision in scaling_decisions:
+            app_scaling_json = {
+                "id": decision.id
+            }
+
+            if decision.cpu is not None:
+                app_scaling_json["cpus"] = decision.cpu
+            if decision.mem is not None:
+                app_scaling_json["mem"] = decision.mem
+
+            post_body.append(app_scaling_json)
+
+        async with http_client as client:
+            http_response = await client.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                json=post_body
+            )
+
+        return post_body
