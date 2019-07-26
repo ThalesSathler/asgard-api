@@ -55,6 +55,8 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         if job_exists:
             raise DuplicateEntity(f"Scheduled job already exists: {job.id}")
 
+        job.add_constraint(f"owner:LIKE:{account.owner}")
+
         namespaced_job_id = f"{account.namespace}-{job.id}"
         chronos_job = ChronosScheduledJobConverter.to_client_model(job)
         chronos_job.name = namespaced_job_id

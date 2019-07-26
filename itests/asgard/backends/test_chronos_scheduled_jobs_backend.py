@@ -22,12 +22,20 @@ from itests.util import (
     _load_jobs_into_chronos,
     _cleanup_chronos,
 )
-from tests.utils import with_json_fixture
+from tests.utils import with_json_fixture, get_fixture
 
 
 class ChronosScheduledJobsBackendTest(TestCase):
     async def setUp(self):
         self.backend = ChronosScheduledJobsBackend()
+
+        chronos_dev_job_fixture = get_fixture(
+            "scheduled-jobs/chronos/dev-with-infra-in-name.json"
+        )
+
+        self.asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**chronos_dev_job_fixture)
+        )
 
     async def test_get_job_by_id_job_not_found(self):
         job_id = "job-not-found"
@@ -133,17 +141,15 @@ class ChronosScheduledJobsBackendTest(TestCase):
         ).remove_namespace(account)
         self.assertCountEqual([expected_asgard_job], jobs)
 
-    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
-    async def test_create_job_job_does_not_exist(self, dev_job_fixture):
+    async def test_create_job_job_does_not_exist(self):
         user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
         account = Account(**ACCOUNT_DEV_DICT)
 
         await _cleanup_chronos()
-        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
-            ChronosJob(**dev_job_fixture)
-        )
 
-        returned_job = await self.backend.create_job(asgard_job, user, account)
+        returned_job = await self.backend.create_job(
+            self.asgard_job, user, account
+        )
         stored_job = await self.backend.get_job_by_id(
             returned_job.id, user, account
         )
@@ -197,3 +203,53 @@ class ChronosScheduledJobsBackendTest(TestCase):
             returned_job.id, user, account
         )
         self.assertEqual(returned_job, stored_job)
+
+    async def test_create_job_add_owner_constraint(self,):
+        """
+        Todos os Jobs criados recebem a constraint `owner:LIKE:{account.owner}`
+        """
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        await _cleanup_chronos()
+
+        returned_job = await self.backend.create_job(
+            self.asgard_job, user, account
+        )
+        stored_job = await self.backend.get_job_by_id(
+            returned_job.id, user, account
+        )
+        self.assertCountEqual(
+            [
+                "hostname:LIKE:10.0.0.1",
+                "workload:LIKE:general",
+                f"owner:LIKE:{account.owner}",
+            ],
+            stored_job.constraints,
+        )
+
+    async def test_create_job_force_owner_constraint_if_already_exist(self):
+        """
+        Mesmo se o Job sendo crado já tiver a constraint `owner:LIKE:...` temos
+        que substituir por `owner:LIKE:{account.owner}`
+        """
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        await _cleanup_chronos()
+        self.asgard_job.add_constraint("owner:LIKE:other-value")
+
+        returned_job = await self.backend.create_job(
+            self.asgard_job, user, account
+        )
+        stored_job = await self.backend.get_job_by_id(
+            returned_job.id, user, account
+        )
+        self.assertCountEqual(
+            [
+                "hostname:LIKE:10.0.0.1",
+                "workload:LIKE:general",
+                f"owner:LIKE:{account.owner}",
+            ],
+            stored_job.constraints,
+        )
