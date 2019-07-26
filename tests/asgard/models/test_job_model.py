@@ -1,9 +1,14 @@
 from asynctest import TestCase
 from pydantic import ValidationError
 
+from asgard.backends.chronos.models.converters import (
+    ChronosScheduledJobConverter,
+)
+from asgard.clients.chronos.models.job import ChronosJob
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
 from itests.util import ACCOUNT_DEV_DICT
+from tests.utils import with_json_fixture, get_fixture
 
 
 class ScheduledJobModelTest(TestCase):
@@ -22,6 +27,12 @@ class ScheduledJobModelTest(TestCase):
             "schedule": self.schedule_spec,
             "description": "A Scheduled Task",
         }
+        dev_chronos_job_fixture = get_fixture(
+            "scheduled-jobs/chronos/dev-another-job.json"
+        )
+        self.asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_chronos_job_fixture)
+        )
 
     async def test_serialized_parse_dict_required_fields(self):
 
@@ -177,3 +188,107 @@ class ScheduledJobModelTest(TestCase):
             f"{account.namespace}-{self.required_fields_scheduled_job['id'] }"
         )
         self.assertEqual(expected_app_id, app.id)
+
+    async def test_add_constraint_does_not_exist_yet(self,):
+        self.asgard_job.add_constraint("dc:LIKE:aws")
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general", "dc:LIKE:aws"],
+            self.asgard_job.constraints,
+        )
+
+    async def test_add_first_constraint(self,):
+        self.asgard_job.constraints = None
+
+        self.asgard_job.add_constraint("dc:LIKE:aws")
+        self.assertCountEqual(["dc:LIKE:aws"], self.asgard_job.constraints)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")
+    async def test_add_multiple_constraints_builder_style(
+        self, dev_chronos_job_fixture
+    ):
+        """
+        Confirmamos que podemos fazer:
+            job.add_constraint(...)
+               .add_constraint(...)
+        """
+        del dev_chronos_job_fixture["constraints"]
+
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_chronos_job_fixture)
+        )
+
+        self.assertIsNone(asgard_job.constraints)
+
+        asgard_job.add_constraint("dc:LIKE:aws").add_constraint(
+            "workload:LIKE:general"
+        )
+        self.assertCountEqual(
+            ["dc:LIKE:aws", "workload:LIKE:general"], asgard_job.constraints
+        )
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")
+    async def test_add_constraint_already_exist(self, dev_chronos_job_fixture):
+        """
+        Se a constraint já existir, temos que substituir.
+        """
+
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        self.asgard_job.add_constraint("hostname:LIKE:127.0.0.1")
+        self.assertCountEqual(
+            ["hostname:LIKE:127.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+
+    async def test_remove_constraint_by_name(self):
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        self.asgard_job._remove_constraint_by_name("hostname")
+        self.assertCountEqual(
+            ["workload:LIKE:general"], self.asgard_job.constraints
+        )
+
+    async def test_remove_constraint_by_name_constraint_does_not_exist(self):
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        self.asgard_job._remove_constraint_by_name("dc")
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+
+    async def test_remove_multiple_constraint_builder_style(self):
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        self.asgard_job._remove_constraint_by_name(
+            "dc"
+        )._remove_constraint_by_name("hostname")
+        self.assertCountEqual(
+            ["workload:LIKE:general"], self.asgard_job.constraints
+        )
+
+    async def test_test_remove_more_constraints_that_job_has(self):
+        """
+        Podemos remover mesmo com a lista e constraints vazia, nesse caso
+        a remoção é um no-op
+        """
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        self.asgard_job._remove_constraint_by_name(
+            "dc"
+        )._remove_constraint_by_name("hostname")._remove_constraint_by_name(
+            "workload"
+        )._remove_constraint_by_name(
+            "rack"
+        )
+        self.assertCountEqual([], self.asgard_job.constraints)

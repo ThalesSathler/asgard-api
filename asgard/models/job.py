@@ -6,7 +6,7 @@ from pydantic import validator
 
 from asgard.models.account import Account
 from asgard.models.base import BaseModel
-from asgard.models.spec.constraint import ConstraintSpec
+from asgard.models.spec.constraint import ConstraintSpec, ConstraintSpecItem
 from asgard.models.spec.container import ContainerSpec
 from asgard.models.spec.env import EnvSpec
 from asgard.models.spec.fetch import FetchURLSpec
@@ -34,6 +34,21 @@ class App(AbstractApp):
     env: Optional[EnvSpec]
     constraints: Optional[ConstraintSpec]
     fetch: Optional[List[FetchURLSpec]]
+
+    def add_constraint(self, constraint: ConstraintSpecItem) -> "App":
+        if not self.constraints:
+            self.constraints = []
+        self._remove_constraint_by_name(constraint.split(":")[0])
+        self.constraints.append(constraint)
+        return self
+
+    def _remove_constraint_by_name(self, constraint_name: str) -> "App":
+        result: ConstraintSpec = []
+        for item in self.constraints or []:
+            if item.split(":")[0] != constraint_name:
+                result.append(item)
+        self.constraints = result
+        return self
 
 
 class ScheduledJob(App):
