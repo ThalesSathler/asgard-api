@@ -179,7 +179,7 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(1, len(apps))
-            self.assertEquals(fixture[1], apps[0])
+            self.assertEqual(fixture[1], apps[0])
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
         scaler = AsgardInterface()
@@ -226,7 +226,7 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(2, len(apps))
-            self.assertEquals(fixture[:2], apps)
+            self.assertEqual(fixture[:2], apps)
 
     async def test_get_app_stats_existing_app_id(self):
         scaler = AsgardInterface()
@@ -278,4 +278,4 @@ class FetchAppsDataTest(TestCase):
 
             stats = await scaler.get_app_stats(app_id)
 
-            self.assertEquals(None, stats)
+            self.assertEqual(None, stats)
