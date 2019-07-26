@@ -6,7 +6,7 @@ from asgard.backends.chronos.models.converters import (
 from asgard.backends.jobs import ScheduledJobsBackend
 from asgard.clients.chronos import ChronosClient
 from asgard.conf import settings
-from asgard.exceptions import DuplicateEntity
+from asgard.exceptions import DuplicateEntity, NotFoundEntity
 from asgard.http.exceptions import HTTPNotFound
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
@@ -48,13 +48,9 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         all_jobs.sort(key=lambda job: job.id)
         return all_jobs
 
-    async def create_job(
+    async def _save_job(
         self, job: ScheduledJob, user: User, account: Account
     ) -> ScheduledJob:
-        job_exists = await self.get_job_by_id(job.id, user, account)
-        if job_exists:
-            raise DuplicateEntity(f"Scheduled job already exists: {job.id}")
-
         job.add_constraint(f"owner:LIKE:{account.owner}")
 
         namespaced_job_id = f"{account.namespace}-{job.id}"
@@ -66,3 +62,22 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         )
         asgard_job.remove_namespace(account)
         return asgard_job
+
+    async def create_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        job_exists = await self.get_job_by_id(job.id, user, account)
+        if job_exists:
+            raise DuplicateEntity(f"Scheduled job already exists: {job.id}")
+        return await self._save_job(job, user, account)
+
+    async def update_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        """
+        Atualiza um Job no Chronos. Se o job não existir, lança exception NotFoundEntity
+        """
+        job_exists = await self.get_job_by_id(job.id, user, account)
+        if not job_exists:
+            raise NotFoundEntity(f"Entity not found: {job.id}")
+        return await self._save_job(job, user, account)

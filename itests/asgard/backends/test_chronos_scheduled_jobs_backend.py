@@ -11,9 +11,10 @@ from asgard.backends.chronos.models.converters import (
 from asgard.clients.chronos import ChronosClient
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
-from asgard.exceptions import DuplicateEntity
+from asgard.exceptions import DuplicateEntity, NotFoundEntity
 from asgard.http.client import http_client
 from asgard.models.account import Account
+from asgard.models.spec.fetch import FetchURLSpec
 from asgard.models.user import User
 from itests.util import (
     USER_WITH_MULTIPLE_ACCOUNTS_DICT,
@@ -29,13 +30,16 @@ class ChronosScheduledJobsBackendTest(TestCase):
     async def setUp(self):
         self.backend = ChronosScheduledJobsBackend()
 
-        chronos_dev_job_fixture = get_fixture(
+        self.chronos_dev_job_fixture = get_fixture(
             "scheduled-jobs/chronos/dev-with-infra-in-name.json"
         )
 
         self.asgard_job = ChronosScheduledJobConverter.to_asgard_model(
-            ChronosJob(**chronos_dev_job_fixture)
+            ChronosJob(**self.chronos_dev_job_fixture)
         )
+
+        self.user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        self.account = Account(**ACCOUNT_DEV_DICT)
 
     async def test_get_job_by_id_job_not_found(self):
         job_id = "job-not-found"
@@ -230,7 +234,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
     async def test_create_job_force_owner_constraint_if_already_exist(self):
         """
-        Mesmo se o Job sendo crado já tiver a constraint `owner:LIKE:...` temos
+        Mesmo se o Job sendo criado já tiver a constraint `owner:LIKE:...` temos
         que substituir por `owner:LIKE:{account.owner}`
         """
         user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
@@ -252,4 +256,116 @@ class ChronosScheduledJobsBackendTest(TestCase):
                 f"owner:LIKE:{account.owner}",
             ],
             stored_job.constraints,
+        )
+
+    async def test_update_job_job_does_not_exist(self):
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        await _cleanup_chronos()
+
+        with self.assertRaises(NotFoundEntity):
+            await self.backend.update_job(self.asgard_job, user, account)
+
+    async def test_update_job_change_root_fields(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        self.asgard_job._remove_constraint_by_name("owner")
+        self.asgard_job.remove_namespace(account)
+
+        self.asgard_job.cpus = 2
+        self.asgard_job.mem = 1024
+        self.asgard_job.description = "Minha description"
+        self.asgard_job.retries = 4
+
+        updated_job = await self.backend.update_job(
+            self.asgard_job, user, account
+        )
+
+        stored_job = await self.backend.get_job_by_id(
+            updated_job.id, user, account
+        )
+        self.assertEqual(self.asgard_job.cpus, stored_job.cpus)
+        self.assertEqual(self.asgard_job.mem, stored_job.mem)
+        self.assertEqual(self.asgard_job.description, stored_job.description)
+        self.assertEqual(self.asgard_job.retries, stored_job.retries)
+
+    async def test_update_job_add_fetch_uri(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+        new_fetch_uri = FetchURLSpec(
+            uri="https://static.server.com/assets/main.css"
+        )
+        self.asgard_job.fetch.append(new_fetch_uri)
+
+        self.asgard_job.remove_namespace(self.account)
+        await self.backend.update_job(self.asgard_job, self.user, self.account)
+
+        stored_job = await self.backend.get_job_by_id(
+            self.asgard_job.id, self.user, self.account
+        )
+        self.assertCountEqual(self.asgard_job.fetch, stored_job.fetch)
+
+    async def test_update_job_change_sub_fields(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        self.asgard_job.remove_namespace(self.account)
+        self.asgard_job.container.pull_image = True
+        self.asgard_job.container.image = "asgard-api:latest"
+        self.asgard_job.container.parameters = None
+        await self.backend.update_job(self.asgard_job, self.user, self.account)
+
+        stored_job = await self.backend.get_job_by_id(
+            self.asgard_job.id, self.user, self.account
+        )
+        self.assertCountEqual(self.asgard_job.dict(), stored_job.dict())
+
+    async def test_update_job_remove_command(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        self.asgard_job.remove_namespace(self.account)
+        self.asgard_job.command = None
+        await self.backend.update_job(self.asgard_job, self.user, self.account)
+
+        stored_job = await self.backend.get_job_by_id(
+            self.asgard_job.id, self.user, self.account
+        )
+        self.assertCountEqual(self.asgard_job.dict(), stored_job.dict())
+
+    async def test_update_job_remove_arguments(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        self.asgard_job.remove_namespace(self.account)
+        self.asgard_job.arguments = None
+        await self.backend.update_job(self.asgard_job, self.user, self.account)
+
+        stored_job = await self.backend.get_job_by_id(
+            self.asgard_job.id, self.user, self.account
+        )
+        self.assertCountEqual(self.asgard_job.dict(), stored_job.dict())
+
+    async def test_update_job_add_owner_constraint(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        self.asgard_job._remove_constraint_by_name("owner")
+        self.asgard_job.remove_namespace(account)
+        self.assertCountEqual(
+            ["hostname:LIKE:10.0.0.1", "workload:LIKE:general"],
+            self.asgard_job.constraints,
+        )
+        updated_job = await self.backend.update_job(
+            self.asgard_job, user, account
+        )
+        self.assertCountEqual(
+            [
+                "hostname:LIKE:10.0.0.1",
+                "workload:LIKE:general",
+                f"owner:LIKE:{account.owner}",
+            ],
+            updated_job.constraints,
         )
