@@ -35,12 +35,11 @@ class ScheduledJobModelTest(TestCase):
         )
 
     async def test_serialized_parse_dict_required_fields(self):
-
         full_scheduled_job = {
             **self.required_fields_scheduled_job,
             "command": None,
             "arguments": None,
-            "concurrent": False,
+            "concurrent": True,
             "disk": 0,
             "container": {
                 **self.container_spec,
@@ -56,12 +55,11 @@ class ScheduledJobModelTest(TestCase):
             "constraints": None,
             "fetch": None,
             "shell": False,
-            "retries": 2,
+            "retries": 5,
             "enabled": True,
         }
         self.assertEqual(
-            full_scheduled_job,
-            ScheduledJob(**self.required_fields_scheduled_job).dict(),
+            full_scheduled_job, ScheduledJob(**full_scheduled_job).dict()
         )
 
     async def test_valid_job_name(self):
