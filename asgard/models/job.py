@@ -43,11 +43,11 @@ class App(AbstractApp):
         return self
 
     def _remove_constraint_by_name(self, constraint_name: str) -> "App":
-        result: ConstraintSpec = []
-        for item in self.constraints or []:
-            if item.split(":")[0] != constraint_name:
-                result.append(item)
-        self.constraints = result
+        self.constraints = [
+            item
+            for item in self.constraints or []
+            if item.split(":")[0] != constraint_name
+        ]
         return self
 
 
