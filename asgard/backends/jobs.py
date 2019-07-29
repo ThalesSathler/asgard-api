@@ -24,3 +24,9 @@ class ScheduledJobsBackend(abc.ABC):
         self, job: ScheduledJob, user: User, account: Account
     ) -> ScheduledJob:
         raise NotImplementedError
+
+    @abc.abstractmethod
+    async def update_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        raise NotImplementedError
