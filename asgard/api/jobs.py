@@ -1,3 +1,4 @@
+from functools import wraps
 from http import HTTPStatus
 from json.decoder import JSONDecodeError
 
@@ -13,7 +14,7 @@ from asgard.api.resources.jobs import (
 )
 from asgard.app import app
 from asgard.backends.chronos.impl import ChronosScheduledJobsBackend
-from asgard.exceptions import DuplicateEntity
+from asgard.exceptions import DuplicateEntity, NotFoundEntity
 from asgard.http.auth import auth_required
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
@@ -50,27 +51,38 @@ async def list_jobs(request: web.Request):
     return web.json_response(ScheduledJobsListResource(jobs=jobs).dict())
 
 
+def validate_input(handler):
+    @wraps(handler)
+    async def _wrapper(request: web.Request):
+        try:
+            req_body = await request.json()
+        except JSONDecodeError as e:
+            return web.json_response(
+                ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
+                status=HTTPStatus.BAD_REQUEST,
+            )
+
+        try:
+            ScheduledJob(**req_body)
+        except ValidationError as e:
+            return web.json_response(
+                ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
+                status=HTTPStatus.UNPROCESSABLE_ENTITY,
+            )
+        return await handler(request)
+
+    return _wrapper
+
+
 @app.route(["/jobs"], type=RouteTypes.HTTP, methods=["POST"])
 @auth_required
+@validate_input
 async def create_job(request: web.Request):
     user = await User.from_alchemy_obj(request["user"])
     account = await Account.from_alchemy_obj(request["user"].current_account)
 
-    try:
-        req_body = await request.json()
-    except JSONDecodeError as e:
-        return web.json_response(
-            ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
-            status=HTTPStatus.BAD_REQUEST,
-        )
-
-    try:
-        asgard_job = ScheduledJob(**req_body)
-    except ValidationError as e:
-        return web.json_response(
-            ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
-            status=HTTPStatus.UNPROCESSABLE_ENTITY,
-        )
+    req_body = await request.json()
+    asgard_job = ScheduledJob(**req_body)
 
     try:
         created_job = await ScheduledJobsService.create_job(
@@ -84,4 +96,30 @@ async def create_job(request: web.Request):
     return web.json_response(
         CreateScheduledJobResource(job=created_job).dict(),
         status=HTTPStatus.CREATED,
+    )
+
+
+@app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["PUT"])
+@auth_required
+@validate_input
+async def update_job(request: web.Request):
+    user = await User.from_alchemy_obj(request["user"])
+    account = await Account.from_alchemy_obj(request["user"].current_account)
+
+    req_body = await request.json()
+    job = ScheduledJob(**req_body)
+
+    try:
+        updated_job = await ScheduledJobsService.update_job(
+            job, user, account, ChronosScheduledJobsBackend()
+        )
+    except NotFoundEntity as e:
+        return web.json_response(
+            ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
+            status=HTTPStatus.NOT_FOUND,
+        )
+
+    return web.json_response(
+        CreateScheduledJobResource(job=updated_job).dict(),
+        status=HTTPStatus.ACCEPTED,
     )
