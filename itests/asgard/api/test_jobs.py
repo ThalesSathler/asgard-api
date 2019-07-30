@@ -370,7 +370,7 @@ class JobsEndpointTestCase(BaseTestCase):
     async def test_update_job_on_alternate_account(self, infra_job_fixture):
         """
         Confirmar que podemos fazer PUT /jobs?account_id=<id>
-        o o job será criado com o namespace da account de id = <id>
+        o job será criado com o namespace da account de id = <id>
         """
         account = Account(**ACCOUNT_INFRA_DICT)
         await _load_jobs_into_chronos(infra_job_fixture)
