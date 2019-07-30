@@ -3,7 +3,7 @@ from typing import List
 
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.http.client import http_client
-from asgard.http.exceptions import HTTPNotFound
+from asgard.http.exceptions import HTTPNotFound, HTTPBadRequest
 
 
 class ChronosClient:
@@ -44,4 +44,12 @@ class ChronosClient:
             f"{self.base_url}/iso8601", json=job.dict()
         ) as resp:
             resp.raise_for_status()
+            return job
+
+    async def delete_job(self, job: ChronosJob) -> ChronosJob:
+        async with http_client.delete(
+            f"{self.base_url}/job/{job.name}"
+        ) as resp:
+            if resp.status == HTTPStatus.BAD_REQUEST:
+                raise HTTPBadRequest()
             return job

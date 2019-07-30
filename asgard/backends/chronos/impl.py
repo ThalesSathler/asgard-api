@@ -1,5 +1,7 @@
 from typing import Optional, List
 
+from aiohttp.client_exceptions import ClientResponseError
+
 from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
@@ -7,7 +9,7 @@ from asgard.backends.jobs import ScheduledJobsBackend
 from asgard.clients.chronos import ChronosClient
 from asgard.conf import settings
 from asgard.exceptions import DuplicateEntity, NotFoundEntity
-from asgard.http.exceptions import HTTPNotFound
+from asgard.http.exceptions import HTTPNotFound, HTTPBadRequest
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
 from asgard.models.user import User
@@ -81,3 +83,20 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         if not job_exists:
             raise NotFoundEntity(f"Entity not found: {job.id}")
         return await self._save_job(job, user, account)
+
+    async def delete_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        stored_job = await self.get_job_by_id(job.id, user, account)
+        try:
+            if stored_job:
+                stored_job.id = f"{account.namespace}-{stored_job.id}"
+                await self.client.delete_job(
+                    ChronosScheduledJobConverter.to_client_model(stored_job)
+                )
+                return job
+            raise NotFoundEntity(f"Job not found: {job.id}")
+        except HTTPBadRequest:
+            # Chronos retorna HTTP 400 se o job sendo removido não existe
+            pass
+        return job

@@ -1,6 +1,8 @@
 import asyncio
 
 import aiohttp
+from aiohttp.client_exceptions import ClientResponseError
+from aioresponses import aioresponses
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock
 
@@ -13,6 +15,7 @@ from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
 from asgard.exceptions import DuplicateEntity, NotFoundEntity
 from asgard.http.client import http_client
+from asgard.http.exceptions import HTTPNotFound, HTTPBadRequest
 from asgard.models.account import Account
 from asgard.models.spec.fetch import FetchURLSpec
 from asgard.models.user import User
@@ -151,6 +154,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
         await _cleanup_chronos()
 
+        self.asgard_job.remove_namespace(self.account)
         returned_job = await self.backend.create_job(
             self.asgard_job, user, account
         )
@@ -369,3 +373,65 @@ class ChronosScheduledJobsBackendTest(TestCase):
             ],
             updated_job.constraints,
         )
+
+    async def test_delete_job_job_does_not_exist(self):
+        await _cleanup_chronos()
+        job_not_found = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**self.chronos_dev_job_fixture)
+        )
+        job_not_found.id = "this-job-does-not-exist"
+        with self.assertRaises(NotFoundEntity):
+            await self.backend.delete_job(
+                job_not_found, self.user, self.account
+            )
+
+    async def test_delete_job_job_exists(self):
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+        self.asgard_job.remove_namespace(self.account)
+
+        deleted_job = await self.backend.delete_job(
+            self.asgard_job, self.user, self.account
+        )
+        self.assertEqual(self.asgard_job.dict(), deleted_job.dict())
+        not_found_job = await self.backend.get_job_by_id(
+            self.asgard_job.id, self.user, self.account
+        )
+        self.assertIsNone(not_found_job)
+
+    async def test_delete_job_exist_when_get_does_not_exist_when_delete(self):
+        """
+        A lógica do delete é:
+           get_by_id()
+           se não existe, retorna Erro
+           se existe, apaga.
+
+        Esse teste valida que, se o job for removido *entre* as chamadas do get_by_id() e o delete(), ainda assim conseguimos retornar com se o job tivesse sido removido por nós.
+        """
+        self.asgard_job.remove_namespace(self.account)
+
+        CHRONOS_BASE_URL = (
+            f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
+        )
+
+        with aioresponses() as rsps:
+            rsps.get(
+                f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
+                payload=self.chronos_dev_job_fixture,
+            )
+            rsps.get(
+                f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
+                exception=HTTPNotFound(),
+            )
+            rsps.delete(
+                f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
+                exception=HTTPBadRequest(),
+            )
+
+            deleted_job = await self.backend.delete_job(
+                self.asgard_job, self.user, self.account
+            )
+            self.assertEqual(self.asgard_job.dict(), deleted_job.dict())
+            not_found_job = await self.backend.get_job_by_id(
+                self.asgard_job.id, self.user, self.account
+            )
+            self.assertIsNone(not_found_job)
