@@ -1,5 +1,6 @@
+from base64 import b64encode
 from http import HTTPStatus
-from typing import List
+from typing import List, Optional
 
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.http.client import http_client
@@ -7,9 +8,20 @@ from asgard.http.exceptions import HTTPNotFound, HTTPBadRequest
 
 
 class ChronosClient:
-    def __init__(self, url: str) -> None:
+    def __init__(
+        self,
+        url: str,
+        user: Optional[str] = None,
+        password: Optional[str] = None,
+    ) -> None:
         self.address = url
         self.base_url = f"{self.address}/v1/scheduler"
+        self.auth_data = None
+        if user and password:
+            auth_string = f"{user}:{password}"
+            self.auth_data = b64encode(auth_string.encode("utf8")).decode(
+                "utf8"
+            )
 
     async def get_job_by_id(self, job_id: str) -> ChronosJob:
         """
@@ -17,7 +29,10 @@ class ChronosClient:
         Raise asgard.http.exceptions.HTTPNotFound() se o job não existir
         """
         async with http_client as client:
-            resp = await client.get(f"{self.address}/v1/scheduler/job/{job_id}")
+            resp = await client.get(
+                f"{self.address}/v1/scheduler/job/{job_id}",
+                headers={"Authorization": f"Basic {self.auth_data}"},
+            )
             if resp.status == HTTPStatus.BAD_REQUEST:
                 # `/job/{name}` retorna 400 se o job não existe.
                 # Isso acontece por causa dessa linha:
