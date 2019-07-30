@@ -1,4 +1,5 @@
 import asyncio
+from http import HTTPStatus
 
 import aiohttp
 from aiohttp.client_exceptions import ClientResponseError
@@ -424,7 +425,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
             )
             rsps.delete(
                 f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
-                exception=HTTPBadRequest(),
+                status=HTTPStatus.BAD_REQUEST,
             )
 
             deleted_job = await self.backend.delete_job(
