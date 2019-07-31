@@ -1,4 +1,5 @@
 import asyncio
+from base64 import b64encode
 from http import HTTPStatus
 
 import aiohttp
@@ -44,6 +45,14 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
         self.user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
         self.account = Account(**ACCOUNT_DEV_DICT)
+
+    async def test_pass_auth_to_chronos_client(self):
+        backend = ChronosScheduledJobsBackend()
+        user, password = settings.SCHEDULED_JOBS_SERVICE_AUTH.split(":")
+        expected_auth_data = b64encode(
+            f"{user}:{password}".encode("utf8")
+        ).decode("utf8")
+        self.assertEqual(expected_auth_data, backend.client.auth_data)
 
     async def test_get_job_by_id_job_not_found(self):
         job_id = "job-not-found"

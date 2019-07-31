@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     DB_URL: str
     STATS_API_URL: str
     SCHEDULED_JOBS_SERVICE_ADDRESS: str
+    SCHEDULED_JOBS_SERVICE_AUTH: str
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"
