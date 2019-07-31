@@ -32,7 +32,8 @@ os.environ["TEST_SCHEDULED_JOBS_SERVICE_ADDRESS"] = os.getenv(
 
 
 os.environ["TEST_SCHEDULED_JOBS_SERVICE_AUTH"] = os.getenv(
-    "TEST_SCHEDULED_JOBS_SERVICE_AUTH", "chronos:secret"
+    "TEST_SCHEDULED_JOBS_SERVICE_AUTH",
+    json.dumps({"user": "chronos", "password": "secret"}),
 )
 
 

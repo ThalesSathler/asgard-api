@@ -48,7 +48,10 @@ class ChronosScheduledJobsBackendTest(TestCase):
 
     async def test_pass_auth_to_chronos_client(self):
         backend = ChronosScheduledJobsBackend()
-        user, password = settings.SCHEDULED_JOBS_SERVICE_AUTH.split(":")
+        user, password = (
+            settings.SCHEDULED_JOBS_SERVICE_AUTH.user,
+            settings.SCHEDULED_JOBS_SERVICE_AUTH.password,
+        )
         expected_auth_data = b64encode(
             f"{user}:{password}".encode("utf8")
         ).decode("utf8")

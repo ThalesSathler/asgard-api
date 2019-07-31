@@ -15,11 +15,10 @@ from asgard.models.user import User
 
 class ChronosScheduledJobsBackend(ScheduledJobsBackend):
     def __init__(self) -> None:
-        user, password = settings.SCHEDULED_JOBS_SERVICE_AUTH.split(":")
         self.client = ChronosClient(
             url=settings.SCHEDULED_JOBS_SERVICE_ADDRESS,
-            user=user,
-            password=password,
+            user=settings.SCHEDULED_JOBS_SERVICE_AUTH.user,
+            password=settings.SCHEDULED_JOBS_SERVICE_AUTH.password,
         )
 
     async def get_job_by_id(
