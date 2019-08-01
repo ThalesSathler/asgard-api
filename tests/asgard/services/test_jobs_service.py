@@ -40,3 +40,21 @@ class ScheduledJobsServiceTest(TestCase):
         self.backend.create_job.assert_awaited_with(
             job, self.user, self.account
         )
+
+    async def test_update_job(self):
+        job = CoroutineMock()
+        await ScheduledJobsService.update_job(
+            job, self.user, self.account, self.backend
+        )
+        self.backend.update_job.assert_awaited_with(
+            job, self.user, self.account
+        )
+
+    async def test_delete_job(self):
+        job = CoroutineMock()
+        await ScheduledJobsService.delete_job(
+            job, self.user, self.account, self.backend
+        )
+        self.backend.delete_job.assert_awaited_with(
+            job, self.user, self.account
+        )

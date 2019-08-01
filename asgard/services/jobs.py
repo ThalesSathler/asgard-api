@@ -27,3 +27,21 @@ class ScheduledJobsService:
         backend: ScheduledJobsBackend,
     ) -> ScheduledJob:
         return await backend.create_job(job, user, account)
+
+    @staticmethod
+    async def update_job(
+        job: ScheduledJob,
+        user: User,
+        account: Account,
+        backend: ScheduledJobsBackend,
+    ) -> ScheduledJob:
+        return await backend.update_job(job, user, account)
+
+    @staticmethod
+    async def delete_job(
+        job: ScheduledJob,
+        user: User,
+        account: Account,
+        backend: ScheduledJobsBackend,
+    ) -> ScheduledJob:
+        return await backend.delete_job(job, user, account)

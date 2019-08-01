@@ -361,3 +361,229 @@ class JobsEndpointTestCase(BaseTestCase):
             ErrorResource(errors=[ErrorDetail(msg=expected_error_msg)]).dict(),
             resp_data,
         )
+
+    async def test_update_job_with_required(self):
+        resp = await self.client.put("/jobs/my-job-id")
+        self.assertEqual(HTTPStatus.UNAUTHORIZED, resp.status)
+
+    @with_json_fixture("scheduled-jobs/chronos/infra-purge-logs-job.json")
+    async def test_update_job_on_alternate_account(self, infra_job_fixture):
+        """
+        Confirmar que podemos fazer PUT /jobs?account_id=<id>
+        o o job será criado com o namespace da account de id = <id>
+        """
+        account = Account(**ACCOUNT_INFRA_DICT)
+        await _load_jobs_into_chronos(infra_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**infra_job_fixture)
+        )
+
+        asgard_job.remove_namespace(account)
+        self.assertEqual(asgard_job.cpus, infra_job_fixture["cpus"])
+        self.assertEqual(asgard_job.mem, infra_job_fixture["mem"])
+
+        asgard_job.cpus = 2
+        asgard_job.mem = 2048
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            params={"account_id": ACCOUNT_INFRA_ID},
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
+        updated_job_response = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            params={"account_id": ACCOUNT_INFRA_ID},
+        )
+        updated_job_data = await updated_job_response.json()
+        updated_job_resource = CreateScheduledJobResource(**updated_job_data)
+        self.assertEqual(asgard_job.cpus, updated_job_resource.job.cpus)
+        self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_job_exist(self, dev_job_fixture):
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        asgard_job.remove_namespace(self.account)
+        self.assertEqual(asgard_job.cpus, dev_job_fixture["cpus"])
+        self.assertEqual(asgard_job.mem, dev_job_fixture["mem"])
+
+        asgard_job.cpus = 2
+        asgard_job.mem = 2048
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
+        updated_job_response = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        updated_job_data = await updated_job_response.json()
+        updated_job_resource = CreateScheduledJobResource(**updated_job_data)
+        self.assertEqual(asgard_job.cpus, updated_job_resource.job.cpus)
+        self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_job_does_not_exist(self, dev_job_fixture):
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        asgard_job.id = "job-does-not-exist"
+        asgard_job.remove_namespace(self.account)
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.NOT_FOUND, resp.status)
+        self.assertEqual(
+            ErrorResource(
+                errors=[ErrorDetail(msg=f"Entity not found: {asgard_job.id}")]
+            ).dict(),
+            await resp.json(),
+        )
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_name_has_namespace_from_another_account(
+        self, dev_job_fixture
+    ):
+        """
+        Mesmo que um job tenha o nome começado pelo namespace de outra conta,
+        devemos atualizar o job da conta correta, que é a conta do usuário fazendo
+        o request
+        """
+        self.maxDiff = None
+        dev_job_fixture["name"] = f"dev-infra-{dev_job_fixture['name']}"
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        asgard_job.remove_namespace(self.account)
+        self.assertEqual(asgard_job.cpus, dev_job_fixture["cpus"])
+        self.assertEqual(asgard_job.mem, dev_job_fixture["mem"])
+
+        asgard_job.cpus = 4
+        asgard_job.mem = 512
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
+        resp_data = await resp.json()
+
+        asgard_job.add_constraint(f"owner:LIKE:{self.account.owner}")
+        self.assertEqual(
+            CreateScheduledJobResource(job=asgard_job).dict(), resp_data
+        )
+
+        updated_job_response = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        updated_job_data = await updated_job_response.json()
+        updated_job_resource = CreateScheduledJobResource(**updated_job_data)
+        self.assertEqual(asgard_job.cpus, updated_job_resource.job.cpus)
+        self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_invalid_input(self, dev_job_fixture):
+        resp = await self.client.put(
+            f"/jobs/some-invalid-job",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            data="{data",
+        )
+        self.assertEqual(HTTPStatus.BAD_REQUEST, resp.status)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_validation_error(self, dev_job_fixture):
+        asgard_job_no_namespace = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        ).remove_namespace(self.account)
+
+        incomplete_asgard_job = asgard_job_no_namespace.dict()
+        del incomplete_asgard_job["container"]
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job_no_namespace.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=incomplete_asgard_job,
+        )
+        self.assertEqual(HTTPStatus.UNPROCESSABLE_ENTITY, resp.status)
+        resp_data = await resp.json()
+        expected_error_msg = """1 validation error\ncontainer\n  field required (type=value_error.missing)"""
+        self.assertEqual(
+            ErrorResource(errors=[ErrorDetail(msg=expected_error_msg)]).dict(),
+            resp_data,
+        )
+
+    async def test_delete_job_auth_required(self):
+        resp = await self.client.delete("/jobs/my-job-id")
+        self.assertEqual(HTTPStatus.UNAUTHORIZED, resp.status)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_delete_job_job_exist(self, dev_job_fixture):
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        ).remove_namespace(self.account)
+
+        resp = await self.client.delete(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.OK, resp.status)
+        resp_data = await resp.json()
+        self.assertEqual(ScheduledJobResource(job=asgard_job).dict(), resp_data)
+
+        resp = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.NOT_FOUND, resp.status)
+
+    async def test_delete_job_job_does_not_exist(self):
+        resp = await self.client.delete(
+            f"/jobs/job-does-not-exist",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.NOT_FOUND, resp.status)
+        resp_data = await resp.json()
+        self.assertEqual(ScheduledJobResource().dict(), resp_data)
