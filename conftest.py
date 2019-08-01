@@ -25,6 +25,6 @@ VALUES = {
 
 
 for name, value in VALUES.items():
-    os.environ[f"{ENV}_{name}"] = value
+    os.environ[f"{ENV}_{name}"] = os.getenv(f"{ENV}_{name}", value)
 
 assert os.environ["ENV"] == "TEST"
