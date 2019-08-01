@@ -39,11 +39,29 @@
 <p>Todos os clients devem enviar e retornar modelos dos recursos que a API em questão expõe. Um exemplo é o client para o chronos:</p>
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descclassname">asgard.clients.chronos.</code><code class="descname">ChronosClient</code><span class="sig-paren">(</span><em>url: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">asgard.clients.chronos.</code><code class="descname">ChronosClient</code><span class="sig-paren">(</span><em>url: str</em>, <em>user: Optional[str] = None</em>, <em>password: Optional[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient"><span class="viewcode-link">[source]</span></a></dt>
 <dd><dl class="method">
 <dt>
-<code class="descname">get_job_by_id</code><span class="sig-paren">(</span><em>job_id: str</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient.get_job_by_id"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descname">create_job</code><span class="sig-paren">(</span><em>job: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient.create_job"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">delete_job</code><span class="sig-paren">(</span><em>job: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient.delete_job"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">get_job_by_id</code><span class="sig-paren">(</span><em>job_id: str</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient.get_job_by_id"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retorna um Job do Chronos, dado seu id (nome).
+Raise asgard.http.exceptions.HTTPNotFound() se o job não existir</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">search</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; List[asgard.clients.chronos.models.job.ChronosJob]<a class="reference internal" href="../_modules/asgard/clients/chronos/client.html#ChronosClient.search"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Procura por todos os jobs que contenham o termo <cite>name</cite> em seu nome.</p>
+</dd></dl>
 
 </dd></dl>
 

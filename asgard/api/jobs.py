@@ -123,3 +123,23 @@ async def update_job(request: web.Request):
         CreateScheduledJobResource(job=updated_job).dict(),
         status=HTTPStatus.ACCEPTED,
     )
+
+
+@app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["DELETE"])
+@auth_required
+async def delete_job(request: web.Request):
+    user = await User.from_alchemy_obj(request["user"])
+    account = await Account.from_alchemy_obj(request["user"].current_account)
+    job_id = request.match_info["job_id"]
+
+    scheduled_job = await ScheduledJobsService.get_job_by_id(
+        job_id, user, account, ChronosScheduledJobsBackend()
+    )
+    status_code = HTTPStatus.OK if scheduled_job else HTTPStatus.NOT_FOUND
+    if scheduled_job:
+        await ScheduledJobsService.delete_job(
+            scheduled_job, user, account, ChronosScheduledJobsBackend()
+        )
+    return web.json_response(
+        ScheduledJobResource(job=scheduled_job).dict(), status=status_code
+    )

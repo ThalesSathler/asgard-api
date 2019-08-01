@@ -547,3 +547,43 @@ class JobsEndpointTestCase(BaseTestCase):
             ErrorResource(errors=[ErrorDetail(msg=expected_error_msg)]).dict(),
             resp_data,
         )
+
+    async def test_delete_job_auth_required(self):
+        resp = await self.client.delete("/jobs/my-job-id")
+        self.assertEqual(HTTPStatus.UNAUTHORIZED, resp.status)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_delete_job_job_exist(self, dev_job_fixture):
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        ).remove_namespace(self.account)
+
+        resp = await self.client.delete(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.OK, resp.status)
+        resp_data = await resp.json()
+        self.assertEqual(ScheduledJobResource(job=asgard_job).dict(), resp_data)
+
+        resp = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.NOT_FOUND, resp.status)
+
+    async def test_delete_job_job_does_not_exist(self):
+        resp = await self.client.delete(
+            f"/jobs/job-does-not-exist",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        self.assertEqual(HTTPStatus.NOT_FOUND, resp.status)
+        resp_data = await resp.json()
+        self.assertEqual(ScheduledJobResource().dict(), resp_data)
