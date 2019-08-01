@@ -1,11 +1,11 @@
-class AppStats:
+from pydantic import BaseModel
 
-    def __init__(self, appid: str, type: str, cpu_pct: str, ram_pct: str, cpu_thr_pct: str):
-        self.id = appid
-        self.type = type
-        self.cpu_pct = cpu_pct
-        self.ram_pct = ram_pct
-        self.cpu_thr_pct = cpu_thr_pct
+class StatsSpec(BaseModel):
+    type: str
+    cpu_pct: str
+    ram_pct: str
+    cpu_thr_pct: str
 
-    def __eq__(self, other):
-        return self.id == other.id
+class AppStats(BaseModel):
+    id: str
+    stats: StatsSpec

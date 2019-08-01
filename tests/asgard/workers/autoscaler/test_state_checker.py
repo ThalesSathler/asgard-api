@@ -12,12 +12,10 @@ class StateCheckerTest(TestCase):
     async def test_get_scalable_apps_stats_no_scalable_apps(self):
         state_checker = PeriodicStateChecker(AsgardCloudInterface())
         with aioresponses() as rsps:
-            apps_fixture = None
-
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload=apps_fixture,
+                payload=[],
             )
 
             scalable_apps = await state_checker.get_scalable_apps_stats()
@@ -31,6 +29,8 @@ class StateCheckerTest(TestCase):
             apps_fixture = [
                 {
                     "id": "test_app1",
+                    "cpu": 3.5,
+                    "mem": 1.0,
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
                         "asgard.autoscale.mem": 0.8,
@@ -39,6 +39,8 @@ class StateCheckerTest(TestCase):
                 },
                 {
                     "id": "/test_app2",
+                    "cpu": 3.5,
+                    "mem": 1.0,
                     "labels": {
                         "asgard.autoscale.cpu": 0.1,
                         "asgard.autoscale.mem": 0.1,
