@@ -18,3 +18,21 @@ class ScheduledJobsBackend(abc.ABC):
         self, user: User, account: Account
     ) -> List[ScheduledJob]:
         raise NotImplementedError
+
+    @abc.abstractmethod
+    async def create_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def update_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def delete_job(
+        self, job: ScheduledJob, user: User, account: Account
+    ) -> ScheduledJob:
+        raise NotImplementedError

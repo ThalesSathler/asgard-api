@@ -221,6 +221,18 @@ class ChronosScheduledJobConverterTest(TestCase):
             asgard_job.constraints,
         )
 
+    @with_json_fixture("scheduled-jobs/chronos/infra-purge-logs-job.json")
+    async def test_to_client_model_retries_field(self, chronos_job_fixture):
+        chronos_job = ChronosJob(**chronos_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(chronos_job)
+        self.assertEqual(chronos_job_fixture["retries"], asgard_job.retries)
+
+        asgard_job.retries = 4
+        chronos_job_converted = ChronosScheduledJobConverter.to_client_model(
+            asgard_job
+        )
+        self.assertEqual(asgard_job.retries, chronos_job_converted.retries)
+
     async def test_to_client_model_env_field(self):
 
         asgard_dict_with_env_data = {

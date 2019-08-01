@@ -38,13 +38,12 @@
 <span class="kn">from</span> <span class="nn">aiohttp.web</span> <span class="k">import</span> <span class="n">json_response</span>
 <span class="kn">from</span> <span class="nn">asyncworker</span> <span class="k">import</span> <span class="n">RouteTypes</span>
 
+<span class="kn">from</span> <span class="nn">asgard.api.resources</span> <span class="k">import</span> <span class="n">ErrorDetail</span><span class="p">,</span> <span class="n">ErrorResource</span>
 <span class="kn">from</span> <span class="nn">asgard.api.resources.users</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">UserMeResource</span><span class="p">,</span>
     <span class="n">UserListResource</span><span class="p">,</span>
     <span class="n">UserResource</span><span class="p">,</span>
     <span class="n">UserAccountsResource</span><span class="p">,</span>
-    <span class="n">ErrorResource</span><span class="p">,</span>
-    <span class="n">ErrorDetail</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">asgard.app</span> <span class="k">import</span> <span class="n">app</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.users</span> <span class="k">import</span> <span class="n">UsersBackend</span>

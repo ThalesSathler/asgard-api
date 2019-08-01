@@ -11,3 +11,7 @@ class ScheduledJobResource(BaseModel):
 
 class ScheduledJobsListResource(BaseModel):
     jobs: Optional[List[ScheduledJob]]
+
+
+class CreateScheduledJobResource(BaseModel):
+    job: ScheduledJob

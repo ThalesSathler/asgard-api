@@ -12,17 +12,49 @@ class ScheduledJobsServiceTest(TestCase):
     async def setUp(self):
         self.backend = CoroutineMock(spec=ScheduledJobsBackend)
 
+        self.user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        self.account = Account(**ACCOUNT_DEV_DICT)
+
     async def test_get_job_by_id(self):
-        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
-        account = Account(**ACCOUNT_DEV_DICT)
+
         await ScheduledJobsService.get_job_by_id(
-            "my-id", user, account, self.backend
+            "my-id", self.user, self.account, self.backend
         )
-        self.backend.get_job_by_id.assert_awaited_with("my-id", user, account)
+        self.backend.get_job_by_id.assert_awaited_with(
+            "my-id", self.user, self.account
+        )
 
     async def test_list_jobs_from_account(self):
-        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
-        account = Account(**ACCOUNT_DEV_DICT)
 
-        await ScheduledJobsService.list_jobs(user, account, self.backend)
-        self.backend.list_jobs.assert_awaited_with(user, account)
+        await ScheduledJobsService.list_jobs(
+            self.user, self.account, self.backend
+        )
+        self.backend.list_jobs.assert_awaited_with(self.user, self.account)
+
+    async def test_create_job(self):
+        job = CoroutineMock()
+
+        await ScheduledJobsService.create_job(
+            job, self.user, self.account, self.backend
+        )
+        self.backend.create_job.assert_awaited_with(
+            job, self.user, self.account
+        )
+
+    async def test_update_job(self):
+        job = CoroutineMock()
+        await ScheduledJobsService.update_job(
+            job, self.user, self.account, self.backend
+        )
+        self.backend.update_job.assert_awaited_with(
+            job, self.user, self.account
+        )
+
+    async def test_delete_job(self):
+        job = CoroutineMock()
+        await ScheduledJobsService.delete_job(
+            job, self.user, self.account, self.backend
+        )
+        self.backend.delete_job.assert_awaited_with(
+            job, self.user, self.account
+        )
