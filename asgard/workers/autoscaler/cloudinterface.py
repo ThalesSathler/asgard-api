@@ -105,7 +105,7 @@ class AsgardInterface(CloudInterface):
             else:
                 return AppStats(app_id, response["stats"]["type"], response["stats"]["cpu_pct"], response["stats"]["ram_pct"], response["stats"]["cpu_thr_pct"])
 
-    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
+    async def apply_decisions(self, scaling_decisions: List[Decision]) -> List[Dict]:
         post_body = []
 
         for decision in scaling_decisions:
