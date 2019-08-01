@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 14:04-0300\n"
+"POT-Creation-Date: 2019-07-31 15:46-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,16 @@ msgstr ""
 msgid ""
 "Todos os clients devem enviar e retornar modelos dos recursos que a API "
 "em questão expõe. Um exemplo é o client para o chronos:"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.get_job_by_id:1 of
+msgid ""
+"Retorna um Job do Chronos, dado seu id (nome). Raise "
+"asgard.http.exceptions.HTTPNotFound() se o job não existir"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.search:1 of
+msgid "Procura por todos os jobs que contenham o termo `name` em seu nome."
 msgstr ""
 
 #: ../../code/clients.rst:17

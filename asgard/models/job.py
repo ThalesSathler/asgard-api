@@ -1,12 +1,12 @@
 import abc
 import re
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 from pydantic import validator
 
 from asgard.models.account import Account
 from asgard.models.base import BaseModel
-from asgard.models.spec.constraint import ConstraintSpec
+from asgard.models.spec.constraint import ConstraintSpec, ConstraintSpecItem
 from asgard.models.spec.container import ContainerSpec
 from asgard.models.spec.env import EnvSpec
 from asgard.models.spec.fetch import FetchURLSpec
@@ -19,7 +19,7 @@ class AbstractApp(BaseModel, abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def remove_namespace(self, account: Account) -> None:
+    def remove_namespace(self, account: Account) -> "AbstractApp":
         raise NotImplementedError()
 
 
@@ -34,6 +34,21 @@ class App(AbstractApp):
     env: Optional[EnvSpec]
     constraints: Optional[ConstraintSpec]
     fetch: Optional[List[FetchURLSpec]]
+
+    def add_constraint(self, constraint: ConstraintSpecItem) -> "App":
+        if not self.constraints:
+            self.constraints = []
+        self._remove_constraint_by_name(constraint.split(":")[0])
+        self.constraints.append(constraint)
+        return self
+
+    def _remove_constraint_by_name(self, constraint_name: str) -> "App":
+        self.constraints = [
+            item
+            for item in self.constraints or []
+            if item.split(":")[0] != constraint_name
+        ]
+        return self
 
 
 class ScheduledJob(App):
@@ -64,6 +79,8 @@ class ScheduledJob(App):
         """
         self.id = f"{account.namespace}-{self.id}"
 
-    def remove_namespace(self, account: Account) -> None:
+    def remove_namespace(self, account: Account) -> "ScheduledJob":
         if self.id.startswith(f"{account.namespace}-"):
             self.id = self.id.replace(f"{account.namespace}-", "", 1)
+
+        return self

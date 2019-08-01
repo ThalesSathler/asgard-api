@@ -3,12 +3,11 @@ from http import HTTPStatus
 from asynctest.mock import ANY
 
 from asgard.api import users
+from asgard.api.resources import ErrorDetail, ErrorResource
 from asgard.api.resources.users import (
     UserListResource,
     UserResource,
     UserAccountsResource,
-    ErrorResource,
-    ErrorDetail,
 )
 from asgard.app import app
 from asgard.http.auth.jwt import jwt_encode

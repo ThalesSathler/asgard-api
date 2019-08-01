@@ -20,13 +20,5 @@ class UserResource(BaseModel):
     user: Optional[User]
 
 
-class ErrorDetail(BaseModel):
-    msg: str
-
-
-class ErrorResource(BaseModel):
-    errors: List[ErrorDetail]
-
-
 class UserAccountsResource(BaseModel):
     accounts: List[Account] = []

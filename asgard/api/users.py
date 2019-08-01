@@ -5,13 +5,12 @@ from aiohttp import web
 from aiohttp.web import json_response
 from asyncworker import RouteTypes
 
+from asgard.api.resources import ErrorDetail, ErrorResource
 from asgard.api.resources.users import (
     UserMeResource,
     UserListResource,
     UserResource,
     UserAccountsResource,
-    ErrorResource,
-    ErrorDetail,
 )
 from asgard.app import app
 from asgard.backends.users import UsersBackend
