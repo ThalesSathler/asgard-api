@@ -15,6 +15,7 @@ Essa é lista de ENVs já com os valores para o ambiente de desenvolvimento:
   ASGARD_MESOS_API_URLS=["http://172.18.0.11:5050", "http://172.18.0.12:5050", "http://172.18.0.13:5050"]
   ASGARD_STATS_API_URL=http://172.18.70.1:9200
   ASGARD_SCHEDULED_JOBS_SERVICE_ADDRESS=http://172.18.0.40:9090
+  ASGARD_SCHEDULED_JOBS_SERVICE_AUTH={"user": "chronos", "password": "secret"}
   HOLLOWMAN_CORS_WHITELIST=http://localhost:4200,http://localhost
   HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_ID=""
   HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_SECRET=""

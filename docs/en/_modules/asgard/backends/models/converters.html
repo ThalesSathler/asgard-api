@@ -38,7 +38,7 @@
 <span class="n">ClientModel</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;ClientModel&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ModelConverterInterface"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface">[docs]</a><span class="k">class</span> <span class="nc">ModelConverterInterface</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">AsgardModel</span><span class="p">,</span> <span class="n">ClientModel</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ModelConverterInterface"><a class="viewcode-back" href="../../../../code/models.html#asgard.backends.models.converters.ModelConverterInterface">[docs]</a><span class="k">class</span> <span class="nc">ModelConverterInterface</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">AsgardModel</span><span class="p">,</span> <span class="n">ClientModel</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Essa interface deve ser usada por modelos declarados nos backends</span>
 <span class="sd">    para que a conversão entre AsgardModel e ClientModel (e o inverso) possa</span>
@@ -54,7 +54,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ModelConverterInterface.to_asgard_model"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface.to_asgard_model">[docs]</a>    <span class="nd">@abstractclassmethod</span>
+<div class="viewcode-block" id="ModelConverterInterface.to_asgard_model"><a class="viewcode-back" href="../../../../code/models.html#asgard.backends.models.converters.ModelConverterInterface.to_asgard_model">[docs]</a>    <span class="nd">@abstractclassmethod</span>
     <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ClientModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsgardModel</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converte um ClientModel em AsgardModel.</span>
@@ -64,7 +64,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="ModelConverterInterface.to_client_model"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface.to_client_model">[docs]</a>    <span class="nd">@abstractclassmethod</span>
+<div class="viewcode-block" id="ModelConverterInterface.to_client_model"><a class="viewcode-back" href="../../../../code/models.html#asgard.backends.models.converters.ModelConverterInterface.to_client_model">[docs]</a>    <span class="nd">@abstractclassmethod</span>
     <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">AsgardModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientModel</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converte um AsgardModel para ClientModel.</span>

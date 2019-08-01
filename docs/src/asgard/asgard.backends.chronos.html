@@ -56,9 +56,30 @@
 <em class="property">class </em><code class="descclassname">asgard.backends.chronos.impl.</code><code class="descname">ChronosScheduledJobsBackend</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.jobs.ScheduledJobsBackend</span></code></p>
 <dl class="method">
+<dt id="asgard.backends.chronos.impl.ChronosScheduledJobsBackend.create_job">
+<code class="descname">create_job</code><span class="sig-paren">(</span><em>job: asgard.models.job.ScheduledJob</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.job.ScheduledJob<a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend.create_job"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.create_job" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.chronos.impl.ChronosScheduledJobsBackend.delete_job">
+<code class="descname">delete_job</code><span class="sig-paren">(</span><em>job: asgard.models.job.ScheduledJob</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.job.ScheduledJob<a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend.delete_job"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.delete_job" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="asgard.backends.chronos.impl.ChronosScheduledJobsBackend.get_job_by_id">
 <code class="descname">get_job_by_id</code><span class="sig-paren">(</span><em>job_id: str</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; Optional[asgard.models.job.ScheduledJob]<a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend.get_job_by_id"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.get_job_by_id" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.chronos.impl.ChronosScheduledJobsBackend.list_jobs">
+<code class="descname">list_jobs</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.job.ScheduledJob]<a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend.list_jobs"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.list_jobs" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.chronos.impl.ChronosScheduledJobsBackend.update_job">
+<code class="descname">update_job</code><span class="sig-paren">(</span><em>job: asgard.models.job.ScheduledJob</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.job.ScheduledJob<a class="reference internal" href="../../_modules/asgard/backends/chronos/impl.html#ChronosScheduledJobsBackend.update_job"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.update_job" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Atualiza um Job no Chronos. Se o job não existir, lança exception NotFoundEntity</p>
+</dd></dl>
 
 </dd></dl>
 

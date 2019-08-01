@@ -1,7 +1,5 @@
 from typing import Optional, List
 
-from aiohttp.client_exceptions import ClientResponseError
-
 from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
@@ -17,7 +15,11 @@ from asgard.models.user import User
 
 class ChronosScheduledJobsBackend(ScheduledJobsBackend):
     def __init__(self) -> None:
-        self.client = ChronosClient(settings.SCHEDULED_JOBS_SERVICE_ADDRESS)
+        self.client = ChronosClient(
+            url=settings.SCHEDULED_JOBS_SERVICE_ADDRESS,
+            user=settings.SCHEDULED_JOBS_SERVICE_AUTH.user,
+            password=settings.SCHEDULED_JOBS_SERVICE_AUTH.password,
+        )
 
     async def get_job_by_id(
         self, job_id: str, user: User, account: Account
