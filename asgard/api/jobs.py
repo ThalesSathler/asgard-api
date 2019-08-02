@@ -99,7 +99,7 @@ async def create_job(request: web.Request):
     )
 
 
-@app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["PUT"])
+@app.route(["/jobs/{job_id}", "/jobs"], type=RouteTypes.HTTP, methods=["PUT"])
 @auth_required
 @validate_input
 async def update_job(request: web.Request):

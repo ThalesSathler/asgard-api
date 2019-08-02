@@ -543,6 +543,65 @@ class JobsEndpointTestCase(BaseTestCase):
         self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
 
     @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_job_exist_put_on_root_endpoint(
+        self, dev_job_fixture
+    ):
+        """
+        Confirmamos que é possível fazer um PUT /jobs e atualizar um job
+        """
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        asgard_job.remove_namespace(self.account)
+        self.assertEqual(asgard_job.cpus, dev_job_fixture["cpus"])
+        self.assertEqual(asgard_job.mem, dev_job_fixture["mem"])
+
+        asgard_job.cpus = 2
+        asgard_job.mem = 2048
+
+        resp = await self.client.put(
+            f"/jobs",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
+        updated_job_response = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        updated_job_data = await updated_job_response.json()
+        updated_job_resource = CreateScheduledJobResource(**updated_job_data)
+        self.assertEqual(asgard_job.cpus, updated_job_resource.job.cpus)
+        self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_body_without_job_id(self, dev_job_fixture):
+        """
+        Validamos que o id é obrigatório para atualizar um job
+        """
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        asgard_job_dict = asgard_job.dict()
+        del asgard_job_dict["id"]
+
+        resp = await self.client.put(
+            f"/jobs",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job_dict,
+        )
+        self.assertEqual(HTTPStatus.UNPROCESSABLE_ENTITY, resp.status)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
     async def test_update_job_job_does_not_exist(self, dev_job_fixture):
         await _load_jobs_into_chronos(dev_job_fixture)
         asgard_job = ChronosScheduledJobConverter.to_asgard_model(
