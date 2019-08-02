@@ -1,9 +1,15 @@
-from typing import Dict, Optional
+class ScalableApp:
+    def __init__(
+        self,
+        appid,
+        autoscale_ignore=None,
+        autoscale_cpu=None,
+        autoscale_mem=None,
+    ):
+        self.id = appid
+        self.autoscale_ignore = autoscale_ignore
+        self.autoscale_cpu = autoscale_cpu
+        self.autoscale_mem = autoscale_mem
 
-from pydantic import BaseModel
-
-class ScalableApp(BaseModel):
-    id: str
-    cpu: float
-    mem: float
-    labels: Optional[Dict[str, str]]
+    def __eq__(self, other) -> bool:
+        return other.id == self.id
