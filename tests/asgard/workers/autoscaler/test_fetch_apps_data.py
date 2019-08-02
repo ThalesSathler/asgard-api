@@ -16,19 +16,39 @@ class FetchAppsDataTest(TestCase):
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
                 payload=[
-                    {"id": "test_app"},
-                    {"id": "test_app2"},
-                    {"id": "test_app3"},
-                    {"id": "test_app4"},
+                    {
+                        "id": "/test_app",
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": {}
+                    },
+                    {
+                        "id": "/test_app2",
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": {}
+                    },
+                    {
+                        "id": "/test_app3",
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": {}
+                    },
+                    {
+                        "id": "/test_app4",
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": {}
+                    },
                 ],
             )
             apps = await scaler.fetch_all_apps()
 
         self.assertEqual(4, len(apps))
-        self.assertEqual("test_app", apps[0].id)
-        self.assertEqual("test_app2", apps[1].id)
-        self.assertEqual("test_app3", apps[2].id)
-        self.assertEqual("test_app4", apps[3].id)
+        self.assertEqual("/test_app", apps[0].id)
+        self.assertEqual("/test_app2", apps[1].id)
+        self.assertEqual("/test_app3", apps[2].id)
+        self.assertEqual("/test_app4", apps[3].id)
 
     async def test_get_all_apps_data_no_data_found(self):
         scaler = AsgardInterface()
@@ -49,6 +69,8 @@ class FetchAppsDataTest(TestCase):
             payload = [
                 {
                     "id": "test_app1",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
                         "asgard.autoscale.mem": 0.8,
@@ -56,6 +78,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app2",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.1,
                         "asgard.autoscale.mem": 0.1,
@@ -63,6 +87,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app3",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.5,
                         "asgard.autoscale.mem": 0.7,
@@ -94,6 +120,8 @@ class FetchAppsDataTest(TestCase):
             fixture = [
                 {
                     "id": "test_app1",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
                         "asgard.autoscale.mem": 0.8,
@@ -102,6 +130,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app2",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.1,
                         "asgard.autoscale.mem": 0.1,
@@ -110,6 +140,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app3",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.5,
                         "asgard.autoscale.ignore": "cpu",
@@ -135,6 +167,8 @@ class FetchAppsDataTest(TestCase):
             payload = [
                 {
                     "id": "test_app1",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
                         "asgard.autoscale.mem": 0.8,
@@ -143,6 +177,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app2",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.1,
                         "asgard.autoscale.mem": 0.1,
@@ -150,6 +186,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app3",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.5,
                         "asgard.autoscale.ignore": "cpu",
@@ -188,6 +226,8 @@ class FetchAppsDataTest(TestCase):
             payload = [
                 {
                     "id": "test_app1",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
                         "asgard.autoscale.mem": 0.8,
@@ -195,6 +235,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app2",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.1,
                         "asgard.autoscale.mem": 0.1,
@@ -202,6 +244,8 @@ class FetchAppsDataTest(TestCase):
                 },
                 {
                     "id": "test_app3",
+                    "cpu": "0.2",
+                    "mem": "0.2",
                     "labels": {
                         "asgard.autoscale.cpu": 0.5,
                         "asgard.autoscale.ignore": "cpu",
@@ -249,11 +293,13 @@ class FetchAppsDataTest(TestCase):
                 payload=payload,
             )
 
-            fixture = AppStats(app_id, type="ASGARD", cpu_pct="0.93", ram_pct="8.91", cpu_thr_pct="0.06")
+            fixture = AppStats(app_id, cpu_usage=0.93, ram_usage=8.91)
 
             stats = await scaler.get_app_stats(app_id)
 
-            self.assertEqual(fixture, stats)
+            self.assertEqual(fixture.id, stats.id)
+            self.assertEqual(fixture.cpu_usage, stats.cpu_usage)
+            self.assertEqual(fixture.ram_usage, stats.ram_usage)
 
     async def test_get_app_stats_non_existing_app_id(self):
         scaler = AsgardInterface()
@@ -278,4 +324,5 @@ class FetchAppsDataTest(TestCase):
 
             stats = await scaler.get_app_stats(app_id)
 
+            # TODO review API return, should return 404 or error
             self.assertEqual(None, stats)
