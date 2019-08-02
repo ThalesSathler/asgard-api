@@ -94,7 +94,10 @@ class AsgardInterface(CloudInterface):
         async with http_client as client:
             http_response = await client.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
-                json=post_body
+                json=post_body,
+                headers={
+                    'Content-Type': 'application/json'
+                }
             )
 
         return post_body
