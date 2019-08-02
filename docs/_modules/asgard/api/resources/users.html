@@ -32,7 +32,7 @@
           <div class="body" role="main">
             
   <h1>Código fonte para asgard.api.resources.users</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="k">import</span> <span class="n">BaseModel</span>
 
@@ -40,9 +40,21 @@
 <span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
 
 
-<div class="viewcode-block" id="UserResource"><a class="viewcode-back" href="../../../../src/asgard/asgard.api.resources.html#asgard.api.resources.users.UserResource">[documentos]</a><span class="k">class</span> <span class="nc">UserResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="UserMeResource"><a class="viewcode-back" href="../../../../src/asgard/asgard.api.resources.html#asgard.api.resources.users.UserMeResource">[documentos]</a><span class="k">class</span> <span class="nc">UserMeResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">user</span><span class="p">:</span> <span class="n">User</span>
     <span class="n">current_account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="n">accounts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Account</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="UserListResource"><a class="viewcode-back" href="../../../../src/asgard/asgard.api.resources.html#asgard.api.resources.users.UserListResource">[documentos]</a><span class="k">class</span> <span class="nc">UserListResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">users</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="UserResource"><a class="viewcode-back" href="../../../../src/asgard/asgard.api.resources.html#asgard.api.resources.users.UserResource">[documentos]</a><span class="k">class</span> <span class="nc">UserResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="UserAccountsResource"><a class="viewcode-back" href="../../../../src/asgard/asgard.api.resources.html#asgard.api.resources.users.UserAccountsResource">[documentos]</a><span class="k">class</span> <span class="nc">UserAccountsResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">accounts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Account</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
 </pre></div>
 
@@ -75,6 +87,8 @@
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
   <li><a href="../../../index.html">Código do módulo</a><ul>
+  <li><a href="../resources.html">asgard.api.resources</a><ul>
+  </ul></li>
   </ul></li>
   </ul></li>
 </ul>

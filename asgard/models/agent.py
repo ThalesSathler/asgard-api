@@ -6,6 +6,7 @@ from asgard.models.base import BaseModel, ModelFactory
 
 
 class Agent(BaseModel, abc.ABC):
+    type: str
     id: str
     hostname: str
     active: bool
@@ -18,6 +19,11 @@ class Agent(BaseModel, abc.ABC):
     total_apps: int = 0
     applications: List[AppFactory] = []
     stats: Optional[Dict[str, Any]] = {}
+
+    errors: Dict[str, str] = {}
+
+    def add_error(self, field_name, error_msg):
+        self.errors[field_name] = error_msg
 
     def has_attribute(self, attr_name):
         return attr_name in self.attributes

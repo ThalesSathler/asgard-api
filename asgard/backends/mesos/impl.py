@@ -9,14 +9,22 @@ from asgard.models.account import Account
 from asgard.models.agent import Agent
 from asgard.models.app import App, AppStats
 from asgard.models.user import User
+from hollowman import log
 
 
-async def populate_apps(agent):
+async def populate_apps(agent: MesosAgent):
     try:
         agent.applications = await agent.apps()
         agent.total_apps = len(agent.applications)
     except Exception as e:
         agent.add_error(field_name="total_apps", error_msg="INDISPONIVEL")
+        log.logger.exception(
+            {
+                "event": "Erro buscando agent applications",
+                "agent": agent.id,
+                "hostname": agent.hostname,
+            }
+        )
 
 
 class MesosAgentsBackend(AgentsBackend):

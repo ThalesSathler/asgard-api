@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-22 15:50-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../changelog/v0.87.0.rst:2
+msgid "0.87.0"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:5
+msgid "Asgard API"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:8
+msgid ""
+"[`PR #135 <https://github.com/B2W-BIT/asgard-api/pull/135>`_] Removendo "
+"campo ``errors`` do BaseModel;"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:9
+msgid ""
+"Início da implementação do suporte a scheduled tasks, com backend "
+"Chronos. Essa modificação foi feita em múltiplos PRs, para ficar mais "
+"fácil de revisar. São eles:"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:11
+msgid ""
+"[`PR #137 <https://github.com/B2W-BIT/asgard-api/pull/137>`_] Início do "
+"modelo ScheduledJob"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:12
+msgid ""
+"[`PR #139 <https://github.com/B2W-BIT/asgard-api/pull/139>`_] Conversão "
+"chronos.models.* -> asgard.models.*"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:13
+msgid ""
+"[`PR #140 <https://github.com/B2W-BIT/asgard-api/pull/140>`_] Conversão "
+"asgard.models.* -> chronos.models.*"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:14
+msgid ""
+"[`PR #144 <https://github.com/B2W-BIT/asgard-api/pull/144>`_] Update "
+"Docs, explicação sobre ModelConverterInterface"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:15
+msgid ""
+"[`PR #142 <https://github.com/B2W-BIT/asgard-api/pull/142>`_] GET "
+"/jobs/{job_id}"
+msgstr ""
+

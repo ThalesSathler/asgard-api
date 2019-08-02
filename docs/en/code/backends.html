@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Models" href="models.html" />
+    <link rel="next" title="Clients" href="clients.html" />
     <link rel="prev" title="Services" href="services.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -34,12 +34,13 @@
             
   <div class="section" id="backends">
 <span id="asgard-backends"></span><h1>Backends<a class="headerlink" href="#backends" title="Permalink to this headline">¶</a></h1>
-<p>Os Backends são a implementação concreta com as outras APIs com as quais a Asgard API consegue se comunicar.</p>
-<p>Na mesma linha dos <a class="reference internal" href="services.html#asgard-services"><span class="std std-ref">Services</span></a>, esses objetos devem mapear todas as ações que um determinado backend deve ser capaz de realizar.</p>
+<p>Os Backends são a cola entre o core do asgard e as outras APIs com as quais a Asgard API consegue se comunicar.</p>
+<p>Na mesma linha dos <a class="reference internal" href="services.html#asgard-services"><span class="std std-ref">Services</span></a>, esses objetos devem mapear todas as ações que um determinado backend deve ser capaz de realizar. A comunicação entre o backend e suas respectivas APIs lowlevel deve ser feita atráves de um o mais <a class="reference internal" href="clients.html#asgard-clients"><span class="std std-ref">Clients</span></a>.</p>
 <p>O backend estão atualmente divididos em:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../src/asgard/asgard.backends.html#asgard.backends.base.AgentsBackend" title="asgard.backends.base.AgentsBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgentsBackend</span></code></a></p></li>
 <li><p><a class="reference internal" href="../src/asgard/asgard.backends.html#asgard.backends.base.AppsBackend" title="asgard.backends.base.AppsBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">AppsBackends</span></code></a></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ScheduledJobsBackend</span></code></p></li>
 </ul>
 <p>Esss são objetos abstratos que definem quais ações cada um desses backends podem executar. As implementações desses backends é que vão adicionar suporte ao projeto Asgard a falar com múltiplos outros projetos/APIs.</p>
 <p>A junção de múltiplos <code class="docutils literal notranslate"><span class="pre">Backends</span></code> forma um “Orquestrador”, modelado no objeto <a class="reference internal" href="../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator" title="asgard.backends.base.Orchestrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Orchestrator</span></code></a>. Esse é o objeto principal em termos de funcionalidades da Asgard API, é esse objeto quem define o que a Asgard API consegue fazer, em termos de orquestração de containers.</p>
@@ -115,6 +116,7 @@ As depdenências injetadas aqui são implementações que efetivamente falam com
 <li class="toctree-l2"><a class="reference internal" href="api.html">Endpoints HTTP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clients.html">Clients</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 </ul>
 </li>
@@ -129,7 +131,7 @@ As depdenências injetadas aqui são implementações que efetivamente falam com
   <li><a href="index.html">&lt;no title&gt;</a><ul>
   <li><a href="organization.html">Organização do código</a><ul>
       <li>Previous: <a href="services.html" title="previous chapter">Services</a></li>
-      <li>Next: <a href="models.html" title="next chapter">Models</a></li>
+      <li>Next: <a href="clients.html" title="next chapter">Clients</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

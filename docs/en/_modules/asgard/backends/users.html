@@ -31,11 +31,15 @@
           <div class="body" role="main">
             
   <h1>Source code for asgard.backends.users</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="k">import</span> <span class="n">NoResultFound</span>
 
 <span class="kn">from</span> <span class="nn">asgard.db</span> <span class="k">import</span> <span class="n">AsgardDBSession</span>
-<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
-<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">asgard.exceptions</span> <span class="k">import</span> <span class="n">DuplicateEntity</span>
+<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span><span class="p">,</span> <span class="n">AccountDB</span>
+<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserDB</span>
 <span class="kn">from</span> <span class="nn">asgard.models.user_has_account</span> <span class="k">import</span> <span class="n">UserHasAccount</span>
 
 
@@ -64,7 +68,84 @@
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="p">)</span>
             <span class="n">all_acc</span> <span class="o">=</span> <span class="p">[</span><span class="k">await</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span> <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">all_acc</span></div></div>
+        <span class="k">return</span> <span class="n">all_acc</span></div>
+
+<div class="viewcode-block" id="UsersBackend.get_accounts_from_user"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.get_accounts_from_user">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_accounts_from_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Account</span><span class="p">]:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">_join</span> <span class="o">=</span> <span class="n">UserDB</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">UserHasAccount</span><span class="p">,</span> <span class="n">UserDB</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">UserHasAccount</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">AccountDB</span><span class="o">.</span><span class="n">__table__</span><span class="p">,</span>
+                <span class="n">AccountDB</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">UserHasAccount</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">accounts</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">AccountDB</span><span class="o">.</span><span class="n">__table__</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_join</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">UserHasAccount</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="k">await</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="UsersBackend.get_user_by_id"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.get_user_by_id">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">UserDB</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">UserDB</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="UsersBackend.get_users"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.get_users">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lista todos os usuários do sistema, independente de qual conta</span>
+<span class="sd">        esses usuários estão vinculados</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">UserDB</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">]</span></div>
+
+<div class="viewcode-block" id="UsersBackend.create_user"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.create_user">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="n">user_db</span><span class="p">,</span> <span class="n">userTable</span> <span class="o">=</span> <span class="k">await</span> <span class="n">user</span><span class="o">.</span><span class="n">to_alchemy_obj</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">returned_values</span> <span class="o">=</span> <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="n">userTable</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">tx_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">tx_email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">return_defaults</span><span class="p">(</span><span class="n">userTable</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">created_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">returned_values</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+                <span class="k">return</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">created_id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DuplicateEntity</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgerror</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersBackend.delete_user"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.delete_user">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">userTable</span> <span class="o">=</span> <span class="k">await</span> <span class="n">user</span><span class="o">.</span><span class="n">to_alchemy_obj</span><span class="p">()</span>
+
+            <span class="n">delete_acc_relation</span> <span class="o">=</span> <span class="n">UserHasAccount</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">UserHasAccount</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">)</span>
+            <span class="n">delete_user</span> <span class="o">=</span> <span class="n">userTable</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">userTable</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">)</span>
+            <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">delete_acc_relation</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">delete_user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="UsersBackend.update_user"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.users.UsersBackend.update_user">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">AsgardDBSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">user_db</span><span class="p">,</span> <span class="n">userTable</span> <span class="o">=</span> <span class="k">await</span> <span class="n">user</span><span class="o">.</span><span class="n">to_alchemy_obj</span><span class="p">()</span>
+            <span class="n">update</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">userTable</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">userTable</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">tx_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">tx_email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">s</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DuplicateEntity</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgerror</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user</span></div></div>
 </pre></div>
 
           </div>

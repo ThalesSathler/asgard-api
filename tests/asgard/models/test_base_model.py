@@ -20,8 +20,7 @@ class BaseModelTest(TestCase):
         instance = Agent(**{"type": "ONE", "other_field": "value"})
         self.assertIsInstance(instance, ModelOne)
         self.assertDictEqual(
-            {"type": "ONE", "other_field": "value", "errors": {}},
-            instance.dict(),
+            {"type": "ONE", "other_field": "value"}, instance.dict()
         )
 
     async def test_check_transformation_method_to_alchemy(self):

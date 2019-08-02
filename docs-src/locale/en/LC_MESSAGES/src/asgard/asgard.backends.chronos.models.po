@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-22 14:19-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../src/asgard/asgard.backends.chronos.models.rst:2
+msgid "asgard.backends.chronos.models package"
+msgstr ""
+
+#: ../../src/asgard/asgard.backends.chronos.models.rst:5
+msgid "Submodules"
+msgstr ""
+
+#: ../../src/asgard/asgard.backends.chronos.models.rst:8
+msgid "asgard.backends.chronos.models.converters module"
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosContainerSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosEnvSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter:1
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter:1 of
+msgid "Base: :class:`asgard.backends.models.converters.ModelConverterInterface`"
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_asgard_model:1
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model:1
+#: of
+msgid "Converte um ClientModel em AsgardModel."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_asgard_model:3
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model:3
+#: of
+msgid ""
+"O objetivo desse método é copiar todos os campos do ClientModel em "
+"questão para seus respectivos campos em um Asgard Model."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_client_model:1
+#: of
+msgid ""
+"As constraints do chronos são representadas como lista de lista. Cada "
+"constraint é uma lista de 3 elementos [<label>, <operador>, <valor>]. "
+"Aqui dividimos a contraint do Asgard em três, já que ela é representada "
+"como uma string \"<label>:<operador>:<valor>\""
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_client_model:1
+#: asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_client_model:1
+#: asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_client_model:1
+#: asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_client_model:1
+#: asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_client_model:1
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model:1
+#: of
+msgid "Converte um AsgardModel para ClientModel."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_client_model:3
+#: asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_client_model:3
+#: asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_client_model:3
+#: asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_client_model:3
+#: asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_client_model:3
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model:3
+#: of
+msgid ""
+"O objetivo desse método é copiar todos os campos do AsgardModel em "
+"questão para seus respectivos campos em um ClientModel."
+msgstr ""
+
+#: ../../src/asgard/asgard.backends.chronos.models.rst:17
+msgid "Module contents"
+msgstr ""
+

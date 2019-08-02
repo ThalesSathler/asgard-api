@@ -46,7 +46,6 @@ pip-log.txt
 
 # bancos temporarios
 *.db
-.idea
 
 # pasta temporaria usada na exportacao
 wetl/tasks/export/temp/
@@ -76,6 +75,9 @@ docs/.doctrees
 docs/.buildinfo
 .python-version
 
+# IDE
+.vscode
+.idea
 
 coverage.xml
 .mypy/

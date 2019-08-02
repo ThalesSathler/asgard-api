@@ -43,14 +43,22 @@
 <span class="kn">from</span> <span class="nn">asgard.models.agent</span> <span class="k">import</span> <span class="n">Agent</span>
 <span class="kn">from</span> <span class="nn">asgard.models.app</span> <span class="k">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">AppStats</span>
 <span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">hollowman</span> <span class="k">import</span> <span class="n">log</span>
 
 
-<div class="viewcode-block" id="populate_apps"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.mesos.html#asgard.backends.mesos.impl.populate_apps">[documentos]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">populate_apps</span><span class="p">(</span><span class="n">agent</span><span class="p">):</span>
+<div class="viewcode-block" id="populate_apps"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.mesos.html#asgard.backends.mesos.impl.populate_apps">[documentos]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">populate_apps</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">MesosAgent</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">agent</span><span class="o">.</span><span class="n">applications</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="o">.</span><span class="n">apps</span><span class="p">()</span>
         <span class="n">agent</span><span class="o">.</span><span class="n">total_apps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">applications</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">agent</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;total_apps&quot;</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="s2">&quot;INDISPONIVEL&quot;</span><span class="p">)</span></div>
+        <span class="n">agent</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span><span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;total_apps&quot;</span><span class="p">,</span> <span class="n">error_msg</span><span class="o">=</span><span class="s2">&quot;INDISPONIVEL&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;Erro buscando agent applications&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MesosAgentsBackend"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.mesos.html#asgard.backends.mesos.impl.MesosAgentsBackend">[documentos]</a><span class="k">class</span> <span class="nc">MesosAgentsBackend</span><span class="p">(</span><span class="n">AgentsBackend</span><span class="p">):</span>

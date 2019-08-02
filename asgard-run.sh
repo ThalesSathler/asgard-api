@@ -17,6 +17,9 @@ source "dev/network.sh"
 source "dev/pgsql.sh"
 source "dev/elasticsearch.sh"
 source "dev/zk.sh"
+source "dev/chronos.sh"
+sleep 1
+
 source "dev/marathon.sh"
 source "dev/mesosmaster.sh"
 source "dev/mesosslave.sh"

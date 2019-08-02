@@ -4,14 +4,15 @@ Backends
 ========
 
 
-Os Backends são a implementação concreta com as outras APIs com as quais a Asgard API consegue se comunicar.
+Os Backends são a cola entre o core do asgard e as outras APIs com as quais a Asgard API consegue se comunicar.
 
-Na mesma linha dos :ref:`Services <asgard.services>`, esses objetos devem mapear todas as ações que um determinado backend deve ser capaz de realizar.
+Na mesma linha dos :ref:`Services <asgard.services>`, esses objetos devem mapear todas as ações que um determinado backend deve ser capaz de realizar. A comunicação entre o backend e suas respectivas APIs lowlevel deve ser feita atráves de um o mais :ref:`Clients <asgard.clients>`.
 
 O backend estão atualmente divididos em:
 
 - :py:class:`AgentsBackend <asgard.backends.base.AgentsBackend>`
 - :py:class:`AppsBackends <asgard.backends.base.AppsBackend>`
+- :py:class:`ScheduledJobsBackend <asgard.backends.jobs.ScheduledJobsBackend>`
 
 
 Esss são objetos abstratos que definem quais ações cada um desses backends podem executar. As implementações desses backends é que vão adicionar suporte ao projeto Asgard a falar com múltiplos outros projetos/APIs.

@@ -3,7 +3,6 @@ import os
 import random
 import string
 from collections import defaultdict
-from importlib import reload
 from typing import Any, Dict, List, Type, Set
 
 import asyncworker
@@ -16,9 +15,9 @@ from sqlalchemy import Table
 from sqlalchemy.sql.ddl import CreateTable
 
 import asgard.backends.users
-import asgard.db
 from asgard.conf import settings
 from asgard.db import _SessionMaker
+from asgard.http.client import http_client
 from asgard.models.account import AccountDB as Account
 from asgard.models.user import UserDB as User
 from asgard.models.user_has_account import UserHasAccount
@@ -120,7 +119,7 @@ ACCOUNT_WITH_NO_USERS_DICT = {
 
 
 USER_WITH_ONE_ACCOUNT_ID = 22
-USER_WITH_ONE_ACCOUNT_AUTH_KEY = ""
+USER_WITH_ONE_ACCOUNT_AUTH_KEY = "7259c8ce82294480b1be60835b74de0c"
 USER_WITH_ONE_ACCOUNT_NAME = "User one account"
 USER_WITH_ONE_ACCOUNT_EMAIL = "userone@server.com"
 
@@ -267,3 +266,25 @@ class BaseTestCase(TestCase):
             )
         # para dar tempo do Elasticsearch local indexar os dados recém inseridos
         await asyncio.sleep(3)
+
+
+CHRONOS_BASE_URL = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
+
+
+async def _cleanup_chronos():
+    async with http_client.get(f"{CHRONOS_BASE_URL}/jobs") as resp:
+        all_jobs_json = await resp.json()
+        for job in all_jobs_json:
+            async with http_client.delete(
+                f"{CHRONOS_BASE_URL}/job/{job['name']}"
+            ):
+                pass
+
+
+async def _load_jobs_into_chronos(*jobs_list):
+    await _cleanup_chronos()
+    for job in jobs_list:
+        async with http_client.post(f"{CHRONOS_BASE_URL}/iso8601", json=job):
+            pass
+
+    await asyncio.sleep(1)

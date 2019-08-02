@@ -88,6 +88,11 @@
 <em class="property">class </em><code class="descclassname">asgard.backends.accounts.</code><code class="descname">AccountsBackend</code><a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
+<dt id="asgard.backends.accounts.AccountsBackend.add_user">
+<code class="descname">add_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend.add_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend.add_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="asgard.backends.accounts.AccountsBackend.get_account_by_id">
 <code class="descname">get_account_by_id</code><span class="sig-paren">(</span><em>acc_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend.get_account_by_id"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend.get_account_by_id" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
@@ -95,6 +100,16 @@
 <dl class="method">
 <dt id="asgard.backends.accounts.AccountsBackend.get_accounts">
 <code class="descname">get_accounts</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend.get_accounts"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend.get_accounts" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.accounts.AccountsBackend.get_users_from_account">
+<code class="descname">get_users_from_account</code><span class="sig-paren">(</span><em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend.get_users_from_account"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend.get_users_from_account" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.accounts.AccountsBackend.remove_user">
+<code class="descname">remove_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/asgard/backends/accounts.html#AccountsBackend.remove_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.accounts.AccountsBackend.remove_user" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -174,8 +189,40 @@ As depdenências injetadas aqui são implementações que efetivamente falam com
 <em class="property">class </em><code class="descclassname">asgard.backends.users.</code><code class="descname">UsersBackend</code><a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
+<dt id="asgard.backends.users.UsersBackend.create_user">
+<code class="descname">create_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.create_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.create_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.users.UsersBackend.delete_user">
+<code class="descname">delete_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.delete_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.delete_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.users.UsersBackend.get_accounts_from_user">
+<code class="descname">get_accounts_from_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.get_accounts_from_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.get_accounts_from_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="asgard.backends.users.UsersBackend.get_alternate_accounts">
 <code class="descname">get_alternate_accounts</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>current_account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.get_alternate_accounts"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.get_alternate_accounts" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.users.UsersBackend.get_user_by_id">
+<code class="descname">get_user_by_id</code><span class="sig-paren">(</span><em>user_id: int</em><span class="sig-paren">)</span> &#x2192; Optional[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.get_user_by_id"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.get_user_by_id" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.users.UsersBackend.get_users">
+<code class="descname">get_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.get_users"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.get_users" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Lista todos os usuários do sistema, independente de qual conta
+esses usuários estão vinculados</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="asgard.backends.users.UsersBackend.update_user">
+<code class="descname">update_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/backends/users.html#UsersBackend.update_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.users.UsersBackend.update_user" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

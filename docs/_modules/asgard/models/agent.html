@@ -40,6 +40,7 @@
 
 
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.agent.Agent">[documentos]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span>
@@ -52,6 +53,11 @@
     <span class="n">total_apps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">applications</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AppFactory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">stats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">errors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Agent.add_error"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.agent.Agent.add_error">[documentos]</a>    <span class="k">def</span> <span class="nf">add_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span></div>
 
 <div class="viewcode-block" id="Agent.has_attribute"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.agent.Agent.has_attribute">[documentos]</a>    <span class="k">def</span> <span class="nf">has_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span></div>

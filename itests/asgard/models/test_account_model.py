@@ -17,7 +17,7 @@ class AccountModelTest(BaseTestCase):
     async def setUp(self):
         await super(AccountModelTest, self).setUp()
 
-    async def tearDown9(self):
+    async def tearDown(self):
         await super(AccountModelTest, self).tearDown()
 
     async def test_transform_from_alchemy_object(self):

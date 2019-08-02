@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-10 09:20-0300\n"
+"POT-Creation-Date: 2019-07-22 10:55-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 
 #: ../../src/asgard/asgard.backends.rst:2
 msgid "asgard.backends package"
@@ -75,6 +75,12 @@ msgstr ""
 msgid "asgard.backends.users module"
 msgstr ""
 
+#: asgard.backends.users.UsersBackend.get_users:1 of
+msgid ""
+"Lista todos os usuários do sistema, independente de qual conta esses "
+"usuários estão vinculados"
+msgstr ""
+
 #: ../../src/asgard/asgard.backends.rst:41
 msgid "Module contents"
 msgstr ""
@@ -106,5 +112,11 @@ msgstr ""
 #~ "Método que retorna todas as apps "
 #~ "que estão atualmente rodando no agent"
 #~ " referido."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Lista todos os usuários do sistema, "
+#~ "independente de qual conta esses "
+#~ "usuários estão vinculados"
 #~ msgstr ""
 

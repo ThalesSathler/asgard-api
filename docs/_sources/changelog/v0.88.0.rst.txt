@@ -1,0 +1,13 @@
+0.88.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #150 <https://github.com/B2W-BIT/asgard-api/pull/150>`_] GET /jobs
+- [`PR #151 <https://github.com/B2W-BIT/asgard-api/pull/151>`_] POST /jobs
+- [`PR #152 <https://github.com/B2W-BIT/asgard-api/pull/152>`_] PUT /jobs/{job_id}
+- [`PR #153 <https://github.com/B2W-BIT/asgard-api/pull/153>`_] DELETE /jobs/{job_id}
+- [`PR #154 <https://github.com/B2W-BIT/asgard-api/pull/154>`_] Chronos client with auth
+- [`PR #155 <https://github.com/B2W-BIT/asgard-api/pull/155>`_] Ajustando o formato do comment do codecov

@@ -53,6 +53,16 @@
 <div class="section" id="module-asgard.api.accounts">
 <span id="asgard-api-accounts-module"></span><h2>asgard.api.accounts module<a class="headerlink" href="#module-asgard.api.accounts" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="asgard.api.accounts.account_by_id">
+<code class="descclassname">asgard.api.accounts.</code><code class="descname">account_by_id</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#account_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.account_by_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.accounts.add_user_to_account">
+<code class="descclassname">asgard.api.accounts.</code><code class="descname">add_user_to_account</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#add_user_to_account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.add_user_to_account" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="asgard.api.accounts.change_account">
 <code class="descclassname">asgard.api.accounts.</code><code class="descname">change_account</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#change_account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.change_account" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -60,6 +70,16 @@
 <dl class="function">
 <dt id="asgard.api.accounts.index">
 <code class="descclassname">asgard.api.accounts.</code><code class="descname">index</code><span class="sig-paren">(</span><em>r: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.accounts.remove_user_from_account">
+<code class="descclassname">asgard.api.accounts.</code><code class="descname">remove_user_from_account</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#remove_user_from_account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.remove_user_from_account" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.accounts.users_from_account">
+<code class="descclassname">asgard.api.accounts.</code><code class="descname">users_from_account</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/accounts.html#users_from_account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.accounts.users_from_account" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -115,8 +135,38 @@
 <div class="section" id="module-asgard.api.users">
 <span id="asgard-api-users-module"></span><h2>asgard.api.users module<a class="headerlink" href="#module-asgard.api.users" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="asgard.api.users.accounts_from_user">
+<code class="descclassname">asgard.api.users.</code><code class="descname">accounts_from_user</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#accounts_from_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.accounts_from_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.users.create_user">
+<code class="descclassname">asgard.api.users.</code><code class="descname">create_user</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.create_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.users.delete_user">
+<code class="descclassname">asgard.api.users.</code><code class="descname">delete_user</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.users.update_user_partial">
+<code class="descclassname">asgard.api.users.</code><code class="descname">update_user_partial</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#update_user_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.update_user_partial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.users.user_by_id">
+<code class="descclassname">asgard.api.users.</code><code class="descname">user_by_id</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#user_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.user_by_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="asgard.api.users.users_list">
+<code class="descclassname">asgard.api.users.</code><code class="descname">users_list</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#users_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.users_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="asgard.api.users.whoami">
-<code class="descclassname">asgard.api.users.</code><code class="descname">whoami</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#whoami"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.whoami" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">asgard.api.users.</code><code class="descname">whoami</code><span class="sig-paren">(</span><em>request: aiohttp.web_request.Request</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/api/users.html#whoami"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.api.users.whoami" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

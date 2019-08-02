@@ -1,0 +1,77 @@
+{
+   "arguments" : [
+      "-a",
+      "-l"
+   ],
+   "command" : "sleep 10",
+   "concurrent" : false,
+   "constraints" : [["hostname", "LIKE", "10.0.0.1"], ["workload","LIKE","general"]],
+   "container" : {
+     "forcePullImage" : false,
+     "image" : "alpine:3.4",
+     "network" : "BRIDGE",
+     "networkInfos" : [],
+     "parameters" : [
+       {
+         "key" : "a-docker-option",
+         "value" : "a-docker-value"
+       },
+       {
+         "key" : "b-docker-option",
+         "value" : "yyy"
+       }
+     ],
+     "type" : "DOCKER",
+     "volumes" : [
+       {
+         "containerPath" : "/var/log/",
+         "hostPath" : "/logs/",
+         "mode" : "RW"
+       }
+     ]
+   },
+   "cpus" : 0.1,
+   "dataProcessingJobType" : false,
+   "description" : "",
+   "disabled" : false,
+   "disk" : 256,
+   "environmentVariables" : [
+     {"name": "ENV_1", "value": "VALUE_1"},
+     {"name": "ENV_2", "value": "VALUE_2"},
+     {"name": "ENV_3", "value": "VALUE_3"}
+   ],
+   "errorCount" : 0,
+   "errorsSinceLastSuccess" : 0,
+   "executor" : "",
+   "executorFlags" : "",
+   "fetch" : [
+     {
+       "uri": "file:///etc/docker.tar.bz2",
+       "executable": false,
+       "cache": false,
+       "extract": true
+     },
+    {
+       "uri": "https://static.server.com/file.txt",
+       "executable": false,
+       "cache": false,
+       "extract": false
+     }
+   ],
+   "highPriority" : false,
+   "lastError" : "",
+   "lastSuccess" : "",
+   "mem" : 64,
+   "name" : "dev-another-job",
+   "owner" : "",
+   "ownerName" : "",
+   "retries" : 2,
+   "runAsUser" : "root",
+   "schedule" : "R/2019-07-12T12:00:00.000Z/PT24H",
+   "scheduleTimeZone" : "UTC",
+   "shell" : true,
+   "softError" : false,
+   "successCount" : 0,
+   "taskInfoData" : "",
+   "uris" : []
+}

@@ -318,7 +318,6 @@ class JoinTests(unittest.TestCase):
 
     @with_json_fixture("single_full_app.json")
     def test_it_recreates_a_get_response_for_a_single_app(self, fixture):
-        self.maxDiff = None
         with application.test_request_context(
             "/v2/apps//foo", method="GET", data=b""
         ) as ctx:

@@ -1,0 +1,15 @@
+0.87.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #135 <https://github.com/B2W-BIT/asgard-api/pull/135>`_] Removendo campo ``errors`` do BaseModel;
+- Início da implementação do suporte a scheduled tasks, com backend Chronos. Essa modificação foi feita
+  em múltiplos PRs, para ficar mais fácil de revisar. São eles:
+    - [`PR #137 <https://github.com/B2W-BIT/asgard-api/pull/137>`_] Início do modelo ScheduledJob
+    - [`PR #139 <https://github.com/B2W-BIT/asgard-api/pull/139>`_] Conversão chronos.models.* -> asgard.models.*
+    - [`PR #140 <https://github.com/B2W-BIT/asgard-api/pull/140>`_] Conversão asgard.models.* -> chronos.models.*
+    - [`PR #144 <https://github.com/B2W-BIT/asgard-api/pull/144>`_] Update Docs, explicação sobre ModelConverterInterface
+    - [`PR #142 <https://github.com/B2W-BIT/asgard-api/pull/142>`_] GET /jobs/{job_id}

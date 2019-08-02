@@ -6,6 +6,7 @@ from asgard.backends.mesos.impl import MesosOrchestrator, MesosAgentsBackend
 from asgard.conf import settings
 from asgard.models.account import Account
 from asgard.models.user import User
+from hollowman import log
 from itests.util import USER_WITH_MULTIPLE_ACCOUNTS_DICT, ACCOUNT_DEV_DICT
 from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
 from tests.utils import ClusterOptions, build_mesos_cluster, get_fixture
@@ -98,12 +99,19 @@ class MesosOrchestratorTest(TestCase):
                 {"cpu_pct": "16.00", "ram_pct": "22.50"}, agent.stats
             )
 
-    async def test_get_agent_by_id_adds_app_count_on_error_dict_if_failed(self):
+    async def test_get_agent_by_id_logs_error_if_failed(self):
         """
-        O campo total_apps deve estar no "errors" caso tenha acontecido alguma falha ao carregá-lo.
+        O campo total_apps retorna com valor 0 caso não tenha sido possível obter a lista de apps rodando em um Agent.
+        Nesse caso o campo `errors` deverá estar preenchido
         """
-        agent_id = "ead07ffb-5a61-42c9-9386-21b680597e6c-S10"
-        with aioresponses(passthrough=[TEST_LOCAL_AIOHTTP_ADDRESS]) as rsps:
+        agent_data = get_fixture(
+            "agents/ead07ffb-5a61-42c9-9386-21b680597e6c-S10/info.json"
+        )
+        agent_id = agent_data["id"]
+        agent_hostname = agent_data["hostname"]
+        with aioresponses(
+            passthrough=[TEST_LOCAL_AIOHTTP_ADDRESS]
+        ) as rsps, mock.patch.object(log, "logger") as logger_mock:
             build_mesos_cluster(
                 rsps, {"id": agent_id, "apps": ClusterOptions.CONNECTION_ERROR}
             )
@@ -111,7 +119,16 @@ class MesosOrchestratorTest(TestCase):
                 agent_id, self.user, self.account
             )
             self.assertEqual(agent_id, agent.id)
+            self.assertEqual([], agent.applications)
+            self.assertEqual(0, agent.total_apps)
             self.assertEqual({"total_apps": "INDISPONIVEL"}, agent.errors)
+            logger_mock.exception.assert_called_with(
+                {
+                    "event": "Erro buscando agent applications",
+                    "agent": agent_id,
+                    "hostname": agent_hostname,
+                }
+            )
 
     async def test_get_agent_by_id_returns_None_for_agent_in_another_namespace(
         self

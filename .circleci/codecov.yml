@@ -16,3 +16,6 @@ coverage:
         flags: unittest
       typehint:
         flags: typehint
+
+comment:
+  layout: "flags,files"

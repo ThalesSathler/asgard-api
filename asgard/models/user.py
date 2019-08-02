@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from typing import Type, Tuple
+from typing import Type, Tuple, Optional
 
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
@@ -22,9 +22,9 @@ class UserDB(BaseModelAlchemy):  # type: ignore
 
 class User(BaseModel):
     type: str = "ASGARD"
-    id: int
-    name: str
-    email: str
+    id: Optional[int]
+    name: Optional[str]
+    email: Optional[str]
 
     @staticmethod
     async def from_alchemy_obj(alchemy_obj: UserDB) -> "User":

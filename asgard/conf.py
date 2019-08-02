@@ -1,7 +1,7 @@
 import os
-from typing import List
+from typing import List, Optional
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, BaseModel, ValidationError
 
 ASGARD_RABBITMQ_HOST = "127.0.0.1"
 ASGARD_RABBITMQ_USER = "guest"
@@ -23,12 +23,19 @@ TASK_FILEREAD_MAX_OFFSET: int = int(
 )
 
 
+class AuthSpec(BaseModel):
+    user: Optional[str]
+    password: Optional[str]
+
+
 class Settings(BaseSettings):
 
     MESOS_API_URLS: List[str]
     DB_URL: str
     STATS_API_URL: str
     ASGARD_API_ADDRESS: str
+    SCHEDULED_JOBS_SERVICE_ADDRESS: str
+    SCHEDULED_JOBS_SERVICE_AUTH: AuthSpec = AuthSpec()
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"

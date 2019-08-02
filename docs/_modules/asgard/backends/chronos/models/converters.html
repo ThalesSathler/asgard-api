@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>asgard.backends.chronos.models.converters &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fonte para asgard.backends.chronos.models.converters</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">asgard.backends.models.converters</span> <span class="k">import</span> <span class="n">ModelConverterInterface</span>
+<span class="kn">from</span> <span class="nn">asgard.clients.chronos.models.job</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">ChronosJob</span><span class="p">,</span>
+    <span class="n">ChronosContainerParameterSpec</span><span class="p">,</span>
+    <span class="n">ChronosContainerVolumeSpec</span><span class="p">,</span>
+    <span class="n">ChronosContainerSpec</span><span class="p">,</span>
+    <span class="n">ChronosEnvSpec</span><span class="p">,</span>
+    <span class="n">ChronosFetchURLSpec</span><span class="p">,</span>
+    <span class="n">ChronosConstraintSpec</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">asgard.models.job</span> <span class="k">import</span> <span class="n">ScheduledJob</span>
+<span class="kn">from</span> <span class="nn">asgard.models.spec.constraint</span> <span class="k">import</span> <span class="n">ConstraintSpec</span>
+<span class="kn">from</span> <span class="nn">asgard.models.spec.container</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">ContainerSpec</span><span class="p">,</span>
+    <span class="n">ContainerParameterSpec</span><span class="p">,</span>
+    <span class="n">ContainerVolumeSpec</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">asgard.models.spec.env</span> <span class="k">import</span> <span class="n">EnvSpec</span>
+<span class="kn">from</span> <span class="nn">asgard.models.spec.fetch</span> <span class="k">import</span> <span class="n">FetchURLSpec</span>
+<span class="kn">from</span> <span class="nn">asgard.models.spec.schedule</span> <span class="k">import</span> <span class="n">ScheduleSpec</span>
+
+
+<div class="viewcode-block" id="ChronosScheduledJobConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosScheduledJobConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">ChronosJob</span><span class="p">]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosScheduledJobConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="n">env_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fetch_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">constraints_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">environmentVariables</span><span class="p">:</span>
+            <span class="n">env_dict</span> <span class="o">=</span> <span class="n">ChronosEnvSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">environmentVariables</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">fetch</span><span class="p">:</span>
+            <span class="n">fetch_list</span> <span class="o">=</span> <span class="n">ChronosFetchURLSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">fetch</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+            <span class="n">constraints_list</span> <span class="o">=</span> <span class="n">ChronosConstraintSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">constraints</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ScheduledJob</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">cpus</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">cpus</span><span class="p">,</span>
+            <span class="n">mem</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">mem</span><span class="p">,</span>
+            <span class="n">retries</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">retries</span><span class="p">,</span>
+            <span class="n">disk</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">disk</span><span class="p">,</span>
+            <span class="n">pull_image</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">forcePullImage</span><span class="p">,</span>
+            <span class="n">enabled</span><span class="o">=</span><span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">disabled</span><span class="p">,</span>
+            <span class="n">shell</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">shell</span><span class="p">,</span>
+            <span class="n">container</span><span class="o">=</span><span class="n">ChronosContainerSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">container</span>
+            <span class="p">),</span>
+            <span class="n">schedule</span><span class="o">=</span><span class="n">ScheduleSpec</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">schedule</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">scheduleTimeZone</span>
+            <span class="p">),</span>
+            <span class="n">env</span><span class="o">=</span><span class="n">env_dict</span><span class="p">,</span>
+            <span class="n">fetch</span><span class="o">=</span><span class="n">fetch_list</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints_list</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosScheduledJobConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ScheduledJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
+        <span class="n">env_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fetch_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">constraints_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">env</span><span class="p">:</span>
+            <span class="n">env_list</span> <span class="o">=</span> <span class="n">ChronosEnvSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">fetch</span><span class="p">:</span>
+            <span class="n">fetch_list</span> <span class="o">=</span> <span class="n">ChronosFetchURLSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">fetch</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+            <span class="n">constraints_list</span> <span class="o">=</span> <span class="n">ChronosConstraintSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">constraints</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ChronosJob</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">cpus</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">cpus</span><span class="p">,</span>
+            <span class="n">shell</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">shell</span><span class="p">,</span>
+            <span class="n">retries</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">retries</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="o">=</span><span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
+            <span class="n">concurrent</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">concurrent</span><span class="p">,</span>
+            <span class="n">mem</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">mem</span><span class="p">,</span>
+            <span class="n">disk</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">disk</span><span class="p">,</span>
+            <span class="n">schedule</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">scheduleTimeZone</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">tz</span><span class="p">,</span>
+            <span class="n">container</span><span class="o">=</span><span class="n">ChronosContainerSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">container</span>
+            <span class="p">),</span>
+            <span class="n">environmentVariables</span><span class="o">=</span><span class="n">env_list</span><span class="p">,</span>
+            <span class="n">fetch</span><span class="o">=</span><span class="n">fetch_list</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints_list</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosContainerParameterSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerParameterSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span>
+        <span class="n">ContainerParameterSpec</span><span class="p">,</span> <span class="n">ChronosContainerParameterSpec</span>
+    <span class="p">]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosContainerParameterSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosContainerParameterSpec</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainerParameterSpec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ContainerParameterSpec</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosContainerParameterSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ContainerParameterSpec</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosContainerParameterSpec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ChronosContainerParameterSpec</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosContainerVolumeSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerVolumeSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">ContainerVolumeSpec</span><span class="p">,</span> <span class="n">ChronosContainerVolumeSpec</span><span class="p">]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosContainerVolumeSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosContainerVolumeSpec</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainerVolumeSpec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ContainerVolumeSpec</span><span class="p">(</span>
+            <span class="n">container_path</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">containerPath</span><span class="p">,</span>
+            <span class="n">host_path</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">hostPath</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosContainerVolumeSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ContainerVolumeSpec</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosContainerVolumeSpec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ChronosContainerVolumeSpec</span><span class="p">(</span>
+            <span class="n">hostPath</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">host_path</span><span class="p">,</span>
+            <span class="n">containerPath</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">container_path</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosContainerSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">ContainerSpec</span><span class="p">,</span> <span class="n">ChronosContainerSpec</span><span class="p">]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosContainerSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosContainerSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainerSpec</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">volumes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ChronosContainerParameterSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+            <span class="n">volumes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ChronosContainerVolumeSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">volumes</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">ContainerSpec</span><span class="p">(</span>
+            <span class="n">image</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">network</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">pull_image</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">forcePullImage</span><span class="p">,</span>
+            <span class="n">volumes</span><span class="o">=</span><span class="n">volumes</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosContainerSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ContainerSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosContainerSpec</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">volumes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ChronosContainerParameterSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">volumes</span><span class="p">:</span>
+            <span class="n">volumes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ChronosContainerVolumeSpecConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">volumes</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">ChronosContainerSpec</span><span class="p">(</span>
+            <span class="n">image</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">network</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">network</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+            <span class="n">forcePullImage</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">pull_image</span><span class="p">,</span>
+            <span class="n">volumes</span><span class="o">=</span><span class="n">volumes</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosEnvSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosEnvSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">EnvSpec</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosEnvSpec</span><span class="p">]]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosEnvSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosEnvSpec</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EnvSpec</span><span class="p">:</span>
+        <span class="n">env_dict</span><span class="p">:</span> <span class="n">EnvSpec</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">other_item</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
+            <span class="n">env_dict</span><span class="p">[</span><span class="n">other_item</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_item</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">env_dict</span></div>
+
+<div class="viewcode-block" id="ChronosEnvSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">EnvSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosEnvSpec</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ChronosEnvSpec</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosFetchURLSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosFetchURLSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">FetchURLSpec</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosFetchURLSpec</span><span class="p">]]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosFetchURLSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosFetchURLSpec</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FetchURLSpec</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">FetchURLSpec</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;ASGARD&quot;</span><span class="p">,</span>
+                <span class="n">uri</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span>
+                <span class="n">executable</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+                <span class="n">cache</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span>
+                <span class="n">extract</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">extract</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">fetch_item</span> <span class="ow">in</span> <span class="n">other</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="ChronosFetchURLSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FetchURLSpec</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosFetchURLSpec</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ChronosFetchURLSpec</span><span class="p">(</span>
+                <span class="n">uri</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span>
+                <span class="n">executable</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+                <span class="n">cache</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span>
+                <span class="n">extract</span><span class="o">=</span><span class="n">fetch_item</span><span class="o">.</span><span class="n">extract</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">fetch_item</span> <span class="ow">in</span> <span class="n">other</span>
+        <span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ChronosConstraintSpecConverter"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter">[documentos]</a><span class="k">class</span> <span class="nc">ChronosConstraintSpecConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">ConstraintSpec</span><span class="p">,</span> <span class="n">ChronosConstraintSpec</span><span class="p">]</span>
+<span class="p">):</span>
+<div class="viewcode-block" id="ChronosConstraintSpecConverter.to_asgard_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_asgard_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosConstraintSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConstraintSpec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{item[0]}</span><span class="s2">:</span><span class="si">{item[1]}</span><span class="s2">:</span><span class="si">{item[2]}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">other</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ChronosConstraintSpecConverter.to_client_model"><a class="viewcode-back" href="../../../../../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_client_model">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_client_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ConstraintSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosConstraintSpec</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        As constraints do chronos são representadas como lista de lista. Cada constraint é uma lista de 3 elementos [&lt;label&gt;, &lt;operador&gt;, &lt;valor&gt;]. Aqui dividimos a contraint do Asgard em três, já que ela é representada como uma string &quot;&lt;label&gt;:&lt;operador&gt;:&lt;valor&gt;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraint_spec</span><span class="p">:</span> <span class="n">ChronosConstraintSpec</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">constraint_spec</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">constraint_spec</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code/organization.html">Organização do código</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Código do módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
