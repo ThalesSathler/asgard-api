@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-11 14:33-0300\n"
+"POT-Creation-Date: 2019-07-22 13:57-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 
 #: ../../code/backends.rst:4
 msgid "Backends"
@@ -23,15 +23,16 @@ msgstr ""
 
 #: ../../code/backends.rst:7
 msgid ""
-"Os Backends são a implementação concreta com as outras APIs com as quais "
-"a Asgard API consegue se comunicar."
+"Os Backends são a cola entre o core do asgard e as outras APIs com as "
+"quais a Asgard API consegue se comunicar."
 msgstr ""
 
 #: ../../code/backends.rst:9
 msgid ""
 "Na mesma linha dos :ref:`Services <asgard.services>`, esses objetos devem"
 " mapear todas as ações que um determinado backend deve ser capaz de "
-"realizar."
+"realizar. A comunicação entre o backend e suas respectivas APIs lowlevel "
+"deve ser feita atráves de um o mais :ref:`Clients <asgard.clients>`."
 msgstr ""
 
 #: ../../code/backends.rst:11
@@ -46,7 +47,13 @@ msgstr ""
 msgid ":py:class:`AppsBackends <asgard.backends.base.AppsBackend>`"
 msgstr ""
 
-#: ../../code/backends.rst:17
+#: ../../code/backends.rst:15
+msgid ""
+":py:class:`ScheduledJobsBackend "
+"<asgard.backends.jobs.ScheduledJobsBackend>`"
+msgstr ""
+
+#: ../../code/backends.rst:18
 msgid ""
 "Esss são objetos abstratos que definem quais ações cada um desses "
 "backends podem executar. As implementações desses backends é que vão "
@@ -54,7 +61,7 @@ msgid ""
 "projetos/APIs."
 msgstr ""
 
-#: ../../code/backends.rst:19
+#: ../../code/backends.rst:20
 msgid ""
 "A junção de múltiplos ``Backends`` forma um \"Orquestrador\", modelado no"
 " objeto :py:class:`Orchestrator <asgard.backends.base.Orchestrator>`. "
@@ -63,18 +70,18 @@ msgid ""
 "orquestração de containers."
 msgstr ""
 
-#: ../../code/backends.rst:25
+#: ../../code/backends.rst:26
 msgid "Orquestrador"
 msgstr ""
 
-#: ../../code/backends.rst:27
+#: ../../code/backends.rst:28
 msgid ""
 "O Objeto :py:class:`Orchestrator <asgard.backends.base.Orchestrator>` é a"
 " junção de múltiplos backends. Uma instância de Orquestator recebe seus "
 "backends como parâmetros em seu construtor."
 msgstr ""
 
-#: ../../code/backends.rst:30
+#: ../../code/backends.rst:31
 msgid "Abaixo está a implementação do objeto ``Orchestrator``:"
 msgstr ""
 
@@ -91,15 +98,15 @@ msgid ""
 "referido."
 msgstr ""
 
-#: ../../code/backends.rst:38
+#: ../../code/backends.rst:39
 msgid "Orquetsradores atualmente suportados"
 msgstr ""
 
-#: ../../code/backends.rst:41
+#: ../../code/backends.rst:42
 msgid "Mesos"
 msgstr ""
 
-#: ../../code/backends.rst:43
+#: ../../code/backends.rst:44
 msgid ""
 "O Mesos é um cluster manager que suporta uma variadeade de orquestrdores "
 "de containers. Como temos modelado o backend de Agents separados do "
@@ -107,7 +114,7 @@ msgid ""
 "Mesos com backends variados."
 msgstr ""
 
-#: ../../code/backends.rst:45
+#: ../../code/backends.rst:46
 msgid ""
 "Atualmente a Asgard API já possui implementação de "
 ":py:class:`AgentsService <asgard.services.agents.AgentsService>` para "
@@ -115,11 +122,11 @@ msgid ""
 "de AppsService (interface ainda a ser definida) para Mesosphere Marathon."
 msgstr ""
 
-#: ../../code/backends.rst:48
+#: ../../code/backends.rst:49
 msgid "Kubernetes - Futuro"
 msgstr ""
 
-#: ../../code/backends.rst:50
+#: ../../code/backends.rst:51
 msgid ""
 "Assim que as interfaces ``AgentsService`` e ``AppsServices`` estiverem "
 "mais bem defindas poderemos começar uma implementação para suportar "
@@ -228,5 +235,37 @@ msgstr ""
 #~ "defindas poderemos começar uma implementação"
 #~ " para suportar orquestração de containers"
 #~ " com `Kubernetes <https://kubernetes.io/>`_."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Backends são a implementação concreta"
+#~ " com as outras APIs com as "
+#~ "quais a Asgard API consegue se "
+#~ "comunicar."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Na mesma linha dos :ref:`Services "
+#~ "<asgard.services>`, esses objetos devem mapear"
+#~ " todas as ações que um determinado"
+#~ " backend deve ser capaz de realizar."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Na mesma linha dos :ref:`Services "
+#~ "<asgard.services>`, esses objetos devem mapear"
+#~ " todas as ações que um determinado"
+#~ " backend deve ser capaz de realizar."
+#~ " A comunicação entre o backend e "
+#~ "suas respectivas APIs lowlevel deve ser"
+#~ " feita atráves de um o mais "
+#~ ":ref:`SClients <asgard.clients>`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Backends são a cola enre o "
+#~ "core do asgard e as outras APIs"
+#~ " com as quais a Asgard API "
+#~ "consegue se comunicar."
 #~ msgstr ""
 

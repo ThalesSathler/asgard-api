@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>asgard.backends.chronos.impl &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fonte para asgard.backends.chronos.impl</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">asgard.backends.chronos.models.converters</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">ChronosScheduledJobConverter</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">asgard.backends.jobs</span> <span class="k">import</span> <span class="n">ScheduledJobsBackend</span>
+<span class="kn">from</span> <span class="nn">asgard.clients.chronos</span> <span class="k">import</span> <span class="n">ChronosClient</span>
+<span class="kn">from</span> <span class="nn">asgard.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">asgard.exceptions</span> <span class="k">import</span> <span class="n">DuplicateEntity</span><span class="p">,</span> <span class="n">NotFoundEntity</span>
+<span class="kn">from</span> <span class="nn">asgard.http.exceptions</span> <span class="k">import</span> <span class="n">HTTPNotFound</span><span class="p">,</span> <span class="n">HTTPBadRequest</span>
+<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
+<span class="kn">from</span> <span class="nn">asgard.models.job</span> <span class="k">import</span> <span class="n">ScheduledJob</span>
+<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
+
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend">[documentos]</a><span class="k">class</span> <span class="nc">ChronosScheduledJobsBackend</span><span class="p">(</span><span class="n">ScheduledJobsBackend</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">ChronosClient</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SCHEDULED_JOBS_SERVICE_ADDRESS</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SCHEDULED_JOBS_SERVICE_AUTH</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SCHEDULED_JOBS_SERVICE_AUTH</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend.get_job_by_id"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.get_job_by_id">[documentos]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_job_by_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledJob</span><span class="p">]:</span>
+        <span class="n">namespaced_job_id</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{account.namespace}</span><span class="s2">-</span><span class="si">{job_id}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">chronos_job</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="n">namespaced_job_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">chronos_job</span><span class="p">:</span>
+                <span class="n">scheduled_job</span> <span class="o">=</span> <span class="n">ChronosScheduledJobConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                    <span class="n">chronos_job</span>
+                <span class="p">)</span>
+                <span class="n">scheduled_job</span><span class="o">.</span><span class="n">remove_namespace</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">scheduled_job</span>
+        <span class="k">except</span> <span class="n">HTTPNotFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend.list_jobs"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.list_jobs">[documentos]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">list_jobs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ScheduledJob</span><span class="p">]:</span>
+        <span class="n">filter_prefix</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{account.namespace}</span><span class="s2">-&quot;</span>
+        <span class="n">chronos_jobs</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">filter_prefix</span><span class="p">)</span>
+        <span class="n">all_jobs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ChronosScheduledJobConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">job</span><span class="p">)</span><span class="o">.</span><span class="n">remove_namespace</span><span class="p">(</span>
+                <span class="n">account</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">chronos_jobs</span>
+            <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">filter_prefix</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">all_jobs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">job</span><span class="p">:</span> <span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">all_jobs</span></div>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_save_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;owner:LIKE:</span><span class="si">{account.owner}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">namespaced_job_id</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{account.namespace}</span><span class="s2">-</span><span class="si">{job.id}</span><span class="s2">&quot;</span>
+        <span class="n">chronos_job</span> <span class="o">=</span> <span class="n">ChronosScheduledJobConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+        <span class="n">chronos_job</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">namespaced_job_id</span>
+        <span class="n">cretaed_chronos_job</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_job</span><span class="p">(</span><span class="n">chronos_job</span><span class="p">)</span>
+        <span class="n">asgard_job</span> <span class="o">=</span> <span class="n">ChronosScheduledJobConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+            <span class="n">cretaed_chronos_job</span>
+        <span class="p">)</span>
+        <span class="n">asgard_job</span><span class="o">.</span><span class="n">remove_namespace</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">asgard_job</span>
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend.create_job"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.create_job">[documentos]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="n">job_exists</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">job_exists</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DuplicateEntity</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Scheduled job already exists: </span><span class="si">{job.id}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_job</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend.update_job"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.update_job">[documentos]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza um Job no Chronos. Se o job não existir, lança exception NotFoundEntity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">job_exists</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">job_exists</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundEntity</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Entity not found: </span><span class="si">{job.id}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_job</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChronosScheduledJobsBackend.delete_job"><a class="viewcode-back" href="../../../../src/asgard/asgard.backends.chronos.html#asgard.backends.chronos.impl.ChronosScheduledJobsBackend.delete_job">[documentos]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="n">stored_job</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stored_job</span><span class="p">:</span>
+                <span class="n">stored_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{account.namespace}</span><span class="s2">-</span><span class="si">{stored_job.id}</span><span class="s2">&quot;</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">delete_job</span><span class="p">(</span>
+                    <span class="n">ChronosScheduledJobConverter</span><span class="o">.</span><span class="n">to_client_model</span><span class="p">(</span><span class="n">stored_job</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">job</span>
+            <span class="k">raise</span> <span class="n">NotFoundEntity</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Job not found: </span><span class="si">{job.id}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">HTTPBadRequest</span><span class="p">:</span>
+            <span class="c1"># Chronos retorna HTTP 400 se o job sendo removido não existe</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">job</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code/organization.html">Organização do código</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Código do módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

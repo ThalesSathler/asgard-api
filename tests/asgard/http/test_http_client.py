@@ -1,8 +1,5 @@
-from importlib import reload
-
 import asynctest
-from asynctest import mock
-from asynctest.mock import CoroutineMock, Mock, call
+from asynctest.mock import CoroutineMock, Mock
 
 from asgard.http.client import (
     _HttpClient,
@@ -139,6 +136,37 @@ class HttpClientMkakerTest(asynctest.TestCase):
                 self.assertEqual(session1, self._session_mock)
                 self.assertEqual(session2, self._session_mock)
                 session_class.assert_called_once()
+
+    async def test_shared_session_must_be_closed_on_context_exit(self):
+        """
+        Se não fechamos a sessão, caso o loop seja trocado, o http_client
+        que já foi usado antes (e por isso já tem uma session aberta) para
+        de funcionar com o erro "loop is closed".
+
+        O que temos que fazer é melhorar a API desse http_client. Idealmente
+        exigino que ele seja instanciado antes de ser usado.
+        Em vez de fazermos assim:
+        from asgard.http.client import http_client
+
+        async with http_client as client:
+          await client.get(...)
+
+        Fazer algo nessa linha:
+        from asgard.http.client import HttpClient
+
+        client = HttpClient(headers=..., ...)
+        await client.get(...)
+        """
+        client = _HttpClientMaker(self.session_class_mock)
+        original_session = None
+        async with client:
+            self.session_class_mock.assert_called_with(
+                timeout=default_http_client_timeout
+            )
+            client.session.close.assert_not_awaited()
+            original_session = client.session
+        original_session.close.assert_awaited()
+        self.assertIsNone(client.session)
 
     async def test_call_session_with_default_timeout_settings(self):
         session_class = Mock(return_value=self._session_mock)

@@ -1,0 +1,7 @@
+0.86.1
+======
+
+Asgard API
+----------
+
+- [`PR #133 <https://github.com/B2W-BIT/asgard-api/pull/133>`_] @auth_required para PATCH /users/{id}

@@ -31,8 +31,7 @@
           <div class="body" role="main">
             
   <h1>Source code for asgard.models.base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="k">import</span> <span class="n">Mapping</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="k">import</span> <span class="n">BaseModel</span> <span class="k">as</span> <span class="n">PydanticBaseModel</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
@@ -42,12 +41,6 @@
 
 
 <div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.base.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">PydanticBaseModel</span><span class="p">):</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">errors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-<div class="viewcode-block" id="BaseModel.add_error"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.base.BaseModel.add_error">[docs]</a>    <span class="k">def</span> <span class="nf">add_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span></div>
-
 <div class="viewcode-block" id="BaseModel.from_alchemy_object"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.base.BaseModel.from_alchemy_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">from_alchemy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alchemy_obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseModel&quot;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 

@@ -107,7 +107,9 @@ class _HttpClientMaker:
         return self.session
 
     async def __aexit__(self, exc_type, exc_value, exc_tb):
-        await self.session.close()
+        if self.session:
+            await self.session.close()
+            self.session = None
 
 
 http_client = _HttpClientMaker(

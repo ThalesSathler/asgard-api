@@ -31,7 +31,7 @@
           <div class="body" role="main">
             
   <h1>Source code for asgard.services.users</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">asgard.backends.users</span> <span class="k">import</span> <span class="n">UsersBackend</span>
 <span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
@@ -43,7 +43,35 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_alternate_accounts</span><span class="p">(</span>
         <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">current_account</span><span class="p">:</span> <span class="n">Account</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Account</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_alternate_accounts</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">current_account</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_alternate_accounts</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">current_account</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersService.get_user_by_id"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.get_user_by_id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersService.get_users"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.get_users">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_users</span><span class="p">(</span><span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_users</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="UsersService.create_user"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.create_user">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersService.get_accounts_from_user"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.get_accounts_from_user">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_accounts_from_user</span><span class="p">(</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Account</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">get_accounts_from_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersService.delete_user"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.delete_user">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UsersService.update_user"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.users.UsersService.update_user">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="n">UsersBackend</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">backend</span><span class="o">.</span><span class="n">update_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

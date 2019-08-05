@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-11 11:18-0300\n"
+"POT-Creation-Date: 2019-07-22 14:43-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 
 #: ../../code/models.rst:4
 msgid "Models"
@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 
 #: ../../code/models.rst:11
-msgid "Existem alguns tipos de modelo no projeto:"
+msgid "Existem 2 tipos de modelos no projeto:"
 msgstr ""
 
 #: ../../code/models.rst:14
@@ -41,163 +41,230 @@ msgstr ""
 
 #: ../../code/models.rst:15
 msgid ""
-":ref:`Backend Models <asgard.models.backend>`, estão no pacote "
-"``asgard.backends.*.models``"
-msgstr ""
-
-#: ../../code/models.rst:16
-msgid ""
 ":ref:`Client Models <asgard.models.client>`, estão o pacote "
-"``asgard.backends.*.client.models``"
+"``asgard.client.*.models``"
 msgstr ""
 
-#: ../../code/models.rst:18
+#: ../../code/models.rst:17
+msgid ""
+"E existe também um modelo \"especial\", que é na verdade, uma interface "
+"de conversão entre um ClientModel e um AsgardModel. Essa conversão é de "
+"**total responsabilidade** da implementação do :ref:`Backend "
+"<asgard.backends>` em questão."
+msgstr ""
+
+#: ../../code/models.rst:19
+msgid ""
+"Todos os conversõres entre modelos preciam implementar a interface "
+":ref:`ModelConverterInterface <asgard.models.converters>`."
+msgstr ""
+
+#: ../../code/models.rst:21
 msgid "Abaixo temos uma explicação sobre cada um deles."
 msgstr ""
 
-#: ../../code/models.rst:24
-msgid "Asgard Models"
-msgstr ""
-
 #: ../../code/models.rst:26
-msgid ""
-"Esses são models abstratos que servem de modelo Base para os modelos que "
-"estão em ``asgard.backends.*.models``. A ideia é ter um modelo único para"
-" todos os backends, dessa forma mesmo que tenhamos múltiplos backends "
-"retornando cada um seus modelos, todos serão filhos dos \"BaseModels\" "
-"que estão em ``asgard.models.*``."
+msgid "Asgard Models"
 msgstr ""
 
 #: ../../code/models.rst:28
 msgid ""
-"Imagine que temos duas implementações de :ref:`AgentsBackend "
-"<asgard.backends>`:"
-msgstr ""
-
-#: ../../code/models.rst:30
-msgid "MesosAgentsBackends"
-msgstr ""
-
-#: ../../code/models.rst:31
-msgid "K8sAgentsBackend"
+"Esses são os modelos oficiais do projeto Asgard. Todas as passagens de "
+"informação entre as camadas do código (HTTP, Service, Backend, etc) devem"
+" ser feitas com instancias desses modelos. A única exceção é quando "
+"buscamos um modelo pelo seu ``id`` canonico. Nesse caso o método que faz "
+"essa busca recebe o ``id`` puro, mas retorna um Asgard Model preenchido."
 msgstr ""
 
 #: ../../code/models.rst:33
-msgid "nesse caso teríamos os respectivos models em:"
+msgid "Client Models"
 msgstr ""
 
 #: ../../code/models.rst:35
-msgid "``asgard.backends.mesos.models.agent.Agent``"
-msgstr ""
-
-#: ../../code/models.rst:36
-msgid "``asgard.backends.k8s.models.agent.Agent``"
-msgstr ""
-
-#: ../../code/models.rst:38
-msgid "Ambos os models seriam declarados dess forma:"
-msgstr ""
-
-#: ../../code/models.rst:50
 msgid ""
-"Ambos os models podem ter métodos/campos específicos do seus backends, "
-"mas ao mesmo tempo precisam preencher os campos exigidos pelo model base,"
-" :py:class:`asgard.models.agent.Agent`."
+"Os Client Models são models usados internamente pelos :ref:`Clients "
+"<asgard.clients>`. Cada implementação de :ref:`asgard.clients` precisa "
+"falar com uma API para implementar suas funcionalidades. O "
+":py:class:`~asgard.clients.chronos.ChronosClient` por exemplo precisa "
+"falar com a API do `chronos "
+"<https://mesos.github.io/chronos/docs/api.html>`_ para fornecer os dados "
+"corretos."
 msgstr ""
 
-#: ../../code/models.rst:52
+#: ../../code/models.rst:37
 msgid ""
-"Isso significa que podemos ter em uma mesma lista (``agents: "
-"List[Agent]``) objetos de dos dois backends, pois eles são filhos da "
-"mesma classe base. Extrapolando isso para um momento onde temos que "
-"listar os agents desses dois backends, poderíamos fazer algo como:"
+"O Client model é o mapeamento exato do que a API (com a qual esse client "
+"está faladndo) retorna. Pegando um exemplo de retorno da API do Chronos, "
+"endpoint ``/v1/scheduler/job/{job_id}``."
 msgstr ""
 
-#: ../../code/models.rst:84
+#: ../../code/models.rst:39
 msgid ""
-"Essa é a ideia principal dos models: Ter objetos comuns que podem ser "
-"passados e combinados com objetos do mesmo tipo mas providos por outras "
-"implementações."
-msgstr ""
-
-#: ../../code/models.rst:90
-msgid "Backend Models"
-msgstr ""
-
-#: ../../code/models.rst:92
-msgid ""
-"Os Models de cada backend são, na vedade, implementações do modelos "
-"abstratos. Eles podem conter campos/métodos específicos de cada backend "
-"mas precisam implementar todos os métodos abstratos exigidos pelos "
-"``asgard.models.*``."
-msgstr ""
-
-#: ../../code/models.rst:94
-msgid ""
-"Cada backend model deve definir o valor do seu campo ``type``. Esse campo"
-" é uma string e pode ser escolhido livremente pela implementação do "
-"backend. Esse campo é serializado junto com o modelo e serve para "
-"diferenciar de qual backend aquele objeto veio."
-msgstr ""
-
-#: ../../code/models.rst:100
-msgid "Client Models"
+"Esse endpoint retorna um Job do Chronos, com definido na `Documentação do"
+" projeto <https://mesos.github.io/chronos/docs/api.html#job-"
+"configuration>`_"
 msgstr ""
 
 #: ../../code/models.rst:103
 msgid ""
-"Os Client Models são models usados internamente pelos backends. Cada "
-"implementação de :ref:`asgard.backends` precisa falar com uma API para "
-"implementar suas funcionalidades, por exemplo, o "
-":py:class`asgard.backend.mesos.impl.MesosAgentsBackend` por exemplo "
-"precisa falar com a API do `mesos <https://mesos.apache.org>`_ para "
-"fornecer os dados corretos."
+"O mapeamento do :ref:`Client Model <asgard.models.client>` para esse "
+"retorno está em:"
 msgstr ""
 
-#: ../../code/models.rst:105
+#: ../../code/models.rst:109
 msgid ""
-"A ideia é que cada backend tenha seus próprios clients que também recebem"
-" (como parâmetro) e retornem **modelos**. Os Client Models depois são "
-"transformados em Backend Models para poderem ser serializados pela API "
-"HTTP do asgard."
+"A responsabilidade transformar esse model em AsgardModel pertence ao "
+"Backend. A forma que escolhemos de transformar um Client Model em seu "
+"respectivo Asgard Model é através do :ref:`ModelConverter "
+"<asgard.models.converters>`, que veremos mais em detalhes a seguir."
 msgstr ""
 
-#: ../../code/models.rst:108
+#: ../../code/models.rst:116
+msgid "Model Converters"
+msgstr ""
+
+#: ../../code/models.rst:119
 msgid ""
-"O Client model é o mapeamento bruto do que a API do backend retorna. "
-"Então pegando um exemplo de retorno da API do Mesos, endpoint `/slaves "
-"<http://mesos.apache.org/documentation/latest/endpoints/master/slaves/>`_."
+"Um ModelConverter é uma interface absrata que deve ser implementada para "
+"que seja possível transformar um :ref:`Client Model "
+"<asgard.models.client>` em um :ref:`Asgard Model <asgard.models.base>` e "
+"vice-versa. Esses converters são implementados por :ref:`Backends "
+"<asgard.backends>`."
 msgstr ""
 
-#: ../../code/models.rst:129
-msgid "Um possível mapeamento de Client Model para essa resposta poderia ser:"
-msgstr ""
-
-#: ../../code/models.rst:150
+#: ../../code/models.rst:121
 msgid ""
-"Esse model estaria em "
-"``asgard.backends.mesos.client.models.agent.MesosAgent``"
+"Isso foi pensado dessa forma para que os Asgard Models não tenham "
+"dependências de nada externo e também para que os Cliets Models também "
+"não tenham nenhuma dependência externa. A princípio, um client "
+"implementado no respositório da Asgard API pode ser externalizado para um"
+" projeto próprio sem muitas dificuldades."
 msgstr ""
 
-#: ../../code/models.rst:152
-msgid ""
-"A responsabilidade se transformar em Backend Model é do próprio Client "
-"Model. A forma que escolhemos de transformar um Client Model em seu "
-"respectivo Backend Model é adicionando um método chamado "
-"``to_asgard_model()`` que recebe a classe do Backend Model para o qual "
-"será transformado."
+#: ../../code/models.rst:123
+msgid "A ideia é que cada backend tenha seus próprios ModelConverters."
 msgstr ""
 
-#: ../../code/models.rst:154
-msgid ""
-"Pegando ainda esse exemplo, essa seria um possível implementação da "
-"transformação de Client Model para Backend Model."
+#: ../../code/models.rst:125
+msgid "Todos os ModelConverters devem implementar a seguinte interface:"
 msgstr ""
 
-#: ../../code/models.rst:171
+#: asgard.backends.models.converters.ModelConverterInterface:1 of
 msgid ""
-"Esse é o código que deve \"traduzir\" os campos da API do backend para os"
-" campos do modelo que será usado por todo o código do Asgard."
+"Essa interface deve ser usada por modelos declarados nos backends para "
+"que a conversão entre AsgardModel e ClientModel (e o inverso) possa ser "
+"feita."
+msgstr ""
+
+#: asgard.backends.models.converters.ModelConverterInterface:5 of
+msgid ""
+"Isso existe para que o core do código da asgard API não precise saber "
+"detalhes de implementação dos modelos dos backends que estão sendo "
+"usados."
+msgstr ""
+
+#: asgard.backends.models.converters.ModelConverterInterface:13 of
+msgid "Exemplo:"
+msgstr ""
+
+#: asgard.backends.models.converters.ModelConverterInterface:9 of
+msgid ""
+"Podemos ter múltiplos Backends que gerenciam Aplicações. Cada backend "
+"pode ser sua API que retorna seus próprios recursos. Para o código do "
+"asgard só deve existir um modelo: `asgard.models.app.App`. Se o Marathon "
+"retorna suas Apps com um JSON `A`, o ModelConverter serve para fazer as "
+"seguintes traduções: `A -> asgard.models.app.App` e "
+"`asgard.models.app.App -> A`. Se o k8s rerorna suas apps com um JSON `B`."
+" Teremos outro ModelConverter que vai fazer a tradução `B` <-> "
+"`asgard.models.app.App`."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model:1
+#: asgard.backends.models.converters.ModelConverterInterface.to_asgard_model:1
+#: of
+msgid "Converte um ClientModel em AsgardModel."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model:3
+#: asgard.backends.models.converters.ModelConverterInterface.to_asgard_model:3
+#: of
+msgid ""
+"O objetivo desse método é copiar todos os campos do ClientModel em "
+"questão para seus respectivos campos em um Asgard Model."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model:1
+#: asgard.backends.models.converters.ModelConverterInterface.to_client_model:1
+#: of
+msgid "Converte um AsgardModel para ClientModel."
+msgstr ""
+
+#: asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model:3
+#: asgard.backends.models.converters.ModelConverterInterface.to_client_model:3
+#: of
+msgid ""
+"O objetivo desse método é copiar todos os campos do AsgardModel em "
+"questão para seus respectivos campos em um ClientModel."
+msgstr ""
+
+#: ../../code/models.rst:131
+msgid ""
+"Essa interface é também um tipo generico parametrizado com dois outros "
+"tipos: O primeiro parametro é o AsgardModel e o segundo é o ClientModel."
+msgstr ""
+
+#: ../../code/models.rst:134
+msgid "Exemplo de um ModelConverter"
+msgstr ""
+
+#: ../../code/models.rst:136
+msgid "Seguindo com o exemplo acima, de um client pro Chronos."
+msgstr ""
+
+#: ../../code/models.rst:138
+msgid ""
+"O Model Converter implementado pelo "
+":py:class:`~asgard.backends.chronos.impl.ChronosScheduledJobBackend` é "
+"esse:"
+msgstr ""
+
+#: ../../code/models.rst:145
+msgid ""
+"O papel do Model Converter é bem simples. O que ele faz é copiar todos os"
+" valores de um Client Model para seus respectivos campos em um Asgard "
+"Models. Dessa forma podemos ter no Asgard Model campos com nomes e "
+"formatos diferentes do Client Model."
+msgstr ""
+
+#: ../../code/models.rst:147
+msgid ""
+"Como nesse caso o modelo do ScheduledJob do Chronos é um objeto bem "
+"complexo, a implementação completa da transformação entre esses dois "
+"models (ChronosJob e ScheduledJob) demanda mais do que somente um "
+"ModelConverter."
+msgstr ""
+
+#: ../../code/models.rst:149
+msgid ""
+"Temos, por exemplo, um outro converter dedicado para o campo "
+"``container``, que é o "
+":py:class:`~asgard.backends.chronos.models.converters.ChronosContainerSpecConverter`."
+msgstr ""
+
+#: ../../code/models.rst:151
+msgid "Um converter pode usar outro, assim:"
+msgstr ""
+
+#: ../../code/models.rst:170
+msgid ""
+"Veja que nesse caso a transformação do campo ``container`` foi "
+"\"delegada\" para o ModelConverter especializado nesse campo."
+msgstr ""
+
+#: ../../code/models.rst:172
+msgid ""
+"Esse tipo de \"delegação\" simplifica o código de conversão de objetos "
+"grandes e complexos."
 msgstr ""
 
 #~ msgid ""
@@ -317,5 +384,375 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Pegando ainda esse"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":ref:`Backend Models <asgard.models.backend>`, estão"
+#~ " no pacote ``asgard.backends.*.models``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":ref:`Client Models <asgard.models.client>`, estão"
+#~ " o pacote ``asgard.backends.*.client.models``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":ref:`ModelConverter "
+#~ "<asgard.models.base.converters.ModelConverterInterface>`."
+#~ msgstr ""
+
+#~ msgid "Backend Models"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":ref:`Asgard Models <asgard.models.base>`, estão "
+#~ "no pacote :py:mod:`asgard.models`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":ref:`Asgard Models <asgard.models.base>`, estão "
+#~ "no pacote :py:mod:`asgard.models.*`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Esses são models abstratos que servem"
+#~ " de modelo Base para os modelos "
+#~ "que estão em ``asgard.backends.*.models``. A"
+#~ " ideia é ter um modelo único "
+#~ "para todos os backends, dessa forma "
+#~ "mesmo que tenhamos múltiplos backends "
+#~ "retornando cada um seus modelos, todos"
+#~ " serão filhos dos \"BaseModels\" que "
+#~ "estão em ``asgard.models.*``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Esses são models que servem de "
+#~ "modelo Base para os modelos que "
+#~ "estão em ``asgard.backends.*.models``. A ideia"
+#~ " é ter um modelo único para "
+#~ "todos os backends, dessa forma mesmo "
+#~ "que tenhamos múltiplos backends retornando "
+#~ "cada um seus modelos, todos serão "
+#~ "filhos dos \"BaseModels\" que estão em"
+#~ " ``asgard.models.*``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Imagine que temos duas implementações de"
+#~ " :ref:`AgentsBackend <asgard.backends>`:"
+#~ msgstr ""
+
+#~ msgid "MesosAgentsBackends"
+#~ msgstr ""
+
+#~ msgid "K8sAgentsBackend"
+#~ msgstr ""
+
+#~ msgid "nesse caso teríamos os respectivos models em:"
+#~ msgstr ""
+
+#~ msgid "``asgard.backends.mesos.models.agent.Agent``"
+#~ msgstr ""
+
+#~ msgid "``asgard.backends.k8s.models.agent.Agent``"
+#~ msgstr ""
+
+#~ msgid "Ambos os models seriam declarados dess forma:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Ambos os models podem ter métodos/campos"
+#~ " específicos do seus backends, mas ao"
+#~ " mesmo tempo precisam preencher os "
+#~ "campos exigidos pelo model base, "
+#~ ":py:class:`asgard.models.agent.Agent`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Isso significa que podemos ter em "
+#~ "uma mesma lista (``agents: List[Agent]``) "
+#~ "objetos de dos dois backends, pois "
+#~ "eles são filhos da mesma classe "
+#~ "base. Extrapolando isso para um momento"
+#~ " onde temos que listar os agents "
+#~ "desses dois backends, poderíamos fazer "
+#~ "algo como:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Essa é a ideia principal dos "
+#~ "models: Ter objetos comuns que podem "
+#~ "ser passados e combinados com objetos"
+#~ " do mesmo tipo mas providos por "
+#~ "outras implementações."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A ideia é que cada backend tenha"
+#~ " seus próprios clients que também "
+#~ "recebem (como parâmetro) e retornem "
+#~ "**modelos**. Os Client Models depois são"
+#~ " transformados em Backend Models para "
+#~ "poderem ser serializados pela API HTTP"
+#~ " do asgard."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Esses são os modelos oficiais do "
+#~ "projeto Asgard. Todas as passagens de"
+#~ " informação entre as camadas do "
+#~ "código (HTTP, Service, Backend, etc) "
+#~ "devem ser feitas com instancias desses"
+#~ " modelos. A única exceção é quando"
+#~ " buscamos um modelo pelo seu `id` "
+#~ "canonico. Nesse caso o método que "
+#~ "faz essa busca recebe o `id` puro,"
+#~ " mas retorna um Asgard Model "
+#~ "preenchido."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Client Models são models usados "
+#~ "internamente pelos backends. Cada "
+#~ "implementação de :ref:`asgard.backends` precisa "
+#~ "falar com uma API para implementar "
+#~ "suas funcionalidades, por exemplo, o "
+#~ ":py:class`asgard.backend.mesos.impl.MesosAgentsBackend` por "
+#~ "exemplo precisa falar com a API do"
+#~ " `mesos <https://mesos.apache.org>`_ para "
+#~ "fornecer os dados corretos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Client Models são models usados "
+#~ "internamente pelos :ref:`Clients <asgard.clients>`."
+#~ " Cada implementação de :ref:`asgard.clients` "
+#~ "precisa falar com uma API para "
+#~ "implementar suas funcionalidades, por exemplo,"
+#~ " o :py:class`asgard.backend.mesos.impl.MesosAgentsBackend`"
+#~ " por exemplo precisa falar com a "
+#~ "API do `mesos <https://mesos.apache.org>`_ "
+#~ "para fornecer os dados corretos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A ideia é que cada backend tenha"
+#~ " seus próprios clients que também "
+#~ "recebem (como parâmetro) e retornem "
+#~ "**Asgard Models**. Os Client Models "
+#~ "depois são transformados em Backend "
+#~ "Models para poderem ser serializados "
+#~ "pela API HTTP do asgard."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "O Client model é o mapeamento "
+#~ "bruto do que a API do backend "
+#~ "retorna. Então pegando um exemplo de "
+#~ "retorno da API do Mesos, endpoint "
+#~ "`/slaves "
+#~ "<http://mesos.apache.org/documentation/latest/endpoints/master/slaves/>`_."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Esse model estaria em "
+#~ "``asgard.backends.mesos.client.models.agent.MesosAgent``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A responsabilidade se transformar em "
+#~ "Backend Model é do próprio Client "
+#~ "Model. A forma que escolhemos de "
+#~ "transformar um Client Model em seu "
+#~ "respectivo Backend Model é adicionando "
+#~ "um método chamado ``to_asgard_model()`` que"
+#~ " recebe a classe do Backend Model "
+#~ "para o qual será transformado."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Pegando ainda esse exemplo, essa seria"
+#~ " um possível implementação da transformação"
+#~ " de Client Model para Backend Model."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Models de cada backend são, na"
+#~ " vedade, implementações do modelos "
+#~ "abstratos. Eles podem conter campos/métodos"
+#~ " específicos de cada backend mas "
+#~ "precisam implementar todos os métodos "
+#~ "abstratos exigidos pelos ``asgard.models.*``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Cada backend model deve definir o "
+#~ "valor do seu campo ``type``. Esse "
+#~ "campo é uma string e pode ser "
+#~ "escolhido livremente pela implementação do "
+#~ "backend. Esse campo é serializado junto"
+#~ " com o modelo e serve para "
+#~ "diferenciar de qual backend aquele "
+#~ "objeto veio."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A ideia é que cada backend tenha"
+#~ " seus próprios ModelConverters que também"
+#~ " recebem (como parâmetro) um Clientmodel"
+#~ " e retornem o respectivo **Asgard "
+#~ "Models**."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "O Client model é o mapeamento "
+#~ "exato do que a API (com a "
+#~ "qual esse client está faladndo) retorna."
+#~ " Então pegando um exemplo de retorno"
+#~ " da API do Mesos, endpoint `/slaves"
+#~ " "
+#~ "<http://mesos.apache.org/documentation/latest/endpoints/master/slaves/>`_."
+#~ msgstr ""
+
+#~ msgid "Um possível mapeamento de Client Model para essa resposta poderia ser:"
+#~ msgstr ""
+
+#~ msgid "Esse model estaria em ``asgard.client.mesos.models.agent.MesosAgent``"
+#~ msgstr ""
+
+#~ msgid "O mapeando do Client Model para esse retorno está em:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A responsabilidade transformar esse model "
+#~ "em AsgardModel pertence ao Backend. A"
+#~ " forma que escolhemos de transformar "
+#~ "um Client Model em seu respectivo "
+#~ "Asgard Model é através do "
+#~ ":ref:`ModelConverter <asgard.models.converters>`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "O mapeamento do :ref:`ClientModel "
+#~ "<asgard.models.client>` para esse retorno está"
+#~ " em:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Um ModelConverter é uma interface "
+#~ "absrata que deve ser implementada para"
+#~ " que seja possível transformar um "
+#~ "ClientModel em um Asgard Model e "
+#~ "vice-versa. Esses converters são "
+#~ "implementados por :ref:`Backends <asgard.backends>`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Isso foi pensado dessa forma para "
+#~ "que os Asgard Models não tenham "
+#~ "dependências de nada externo e também"
+#~ " para que os Cliets Models também "
+#~ "não tenham nenhuma dependência externa. "
+#~ "A princípio, um client implementado no"
+#~ " respositório da Asgard API pode ser"
+#~ " externaçizado para um projeto próprio "
+#~ "sem muitas dificuldades."
+#~ msgstr ""
+
+#~ msgid "Seguindo com o exemplo do AgentModel, da API do Mesos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "O Model Converter implementado pelo "
+#~ ":py:class:`~asgard.backends.chronos.impl.ChronosScheduledJobBackend`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Esse é o código que deve "
+#~ "\"traduzir\" os campos da API do "
+#~ "backend para os campos do modelo "
+#~ "que será usado por todo o código"
+#~ " do Asgard."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Perceba como o ``ChronosScheduledJobConverter`` "
+#~ "converte cada um dos campos do "
+#~ "modelo. A conversão completa de um "
+#~ "modelo complexto possui vários Model "
+#~ "Converters, idealmente um para cada "
+#~ "objeto complexo, ou seja, que possui "
+#~ "seus próprios campos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "O papel do Model Converter é bem"
+#~ " simples na verdade. O que ele "
+#~ "faz é copiar todos os valores de"
+#~ " um Client Model para seus "
+#~ "respectivos campos em um Asgard Models."
+#~ " Dessa forma podemos ter no Asgard"
+#~ " Model campos com nomes e formatos"
+#~ " diferentes do Client Model."
+#~ msgstr ""
+
+#~ msgid "Existem alguns tipos de modelo no projeto:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "E existe também um modelo \"especial\","
+#~ " que é na verdade, uma interface "
+#~ "de conversão entre um ClientModel e "
+#~ "um AsgardModel. Essa conversão é de "
+#~ "**total responsabilidade** da implementação do"
+#~ " Backend em questão."
+#~ msgstr ""
+
+#~ msgid "Todos os conversões entre modelos preciam implementar a interface:"
+#~ msgstr ""
+
+#~ msgid ":ref:`ModelConverter <asgard.models.converters>`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Todos os conversõres entre modelos "
+#~ "preciam implementar a interface "
+#~ ":ref:`ModelConverter <asgard.models.converters>`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Converte um ClientModel em AsgardModel. "
+#~ "O objetivo desse método é copiar "
+#~ "todos os campos do ClientModel em "
+#~ "questão para seus respectivos campos em"
+#~ " um Asgard Model."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Temos, por exemplo, um outro converter"
+#~ " dedicado para o campo ``container``, "
+#~ "que é o "
+#~ ":py:class:`asgard.backends.chronos.models.converters.ChronosContainerSpecConverter`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Os Client Models são models usados "
+#~ "internamente pelos :ref:`Clients <asgard.clients>`."
+#~ " Cada implementação de :ref:`asgard.clients` "
+#~ "precisa falar com uma API para "
+#~ "implementar suas funcionalidades. O "
+#~ ":py:class:`asgard.clients.chronos.ChronosClient` por "
+#~ "exemplo precisa falar com a API do"
+#~ " `mesos <https://mesos.apache.org>`_ para "
+#~ "fornecer os dados corretos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A ideia é que cada backend tenha"
+#~ " seus próprios ModelConverters que também"
+#~ " recebem (como parâmetro) um ClientModel"
+#~ " e retornem o respectivo **Asgard "
+#~ "Models**."
 #~ msgstr ""
 

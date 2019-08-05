@@ -31,16 +31,24 @@
           <div class="body" role="main">
             
   <h1>Source code for asgard.api.users</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">http</span> <span class="k">import</span> <span class="n">HTTPStatus</span>
+<span class="kn">from</span> <span class="nn">json.decoder</span> <span class="k">import</span> <span class="n">JSONDecodeError</span>
 
+<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">web</span>
 <span class="kn">from</span> <span class="nn">aiohttp.web</span> <span class="k">import</span> <span class="n">json_response</span>
 <span class="kn">from</span> <span class="nn">asyncworker</span> <span class="k">import</span> <span class="n">RouteTypes</span>
 
-<span class="kn">from</span> <span class="nn">asgard.api.resources.users</span> <span class="k">import</span> <span class="n">UserResource</span>
+<span class="kn">from</span> <span class="nn">asgard.api.resources</span> <span class="k">import</span> <span class="n">ErrorDetail</span><span class="p">,</span> <span class="n">ErrorResource</span>
+<span class="kn">from</span> <span class="nn">asgard.api.resources.users</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">UserMeResource</span><span class="p">,</span>
+    <span class="n">UserListResource</span><span class="p">,</span>
+    <span class="n">UserResource</span><span class="p">,</span>
+    <span class="n">UserAccountsResource</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">asgard.app</span> <span class="k">import</span> <span class="n">app</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.users</span> <span class="k">import</span> <span class="n">UsersBackend</span>
+<span class="kn">from</span> <span class="nn">asgard.exceptions</span> <span class="k">import</span> <span class="n">DuplicateEntity</span>
 <span class="kn">from</span> <span class="nn">asgard.http.auth</span> <span class="k">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span> <span class="nn">asgard.http.auth.auth_required</span> <span class="k">import</span> <span class="n">_get_account_by_id</span>
 <span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
 <span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">asgard.services.users</span> <span class="k">import</span> <span class="n">UsersService</span>
@@ -48,21 +56,130 @@
 
 <div class="viewcode-block" id="whoami"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.whoami">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users/me&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <span class="nd">@auth_required</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">whoami</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">whoami</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">])</span>
     <span class="n">current_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span>
-        <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">current_account</span>
+        <span class="n">request</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">current_account</span>
     <span class="p">)</span>
 
     <span class="n">alternate_accounts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_alternate_accounts</span><span class="p">(</span>
         <span class="n">user</span><span class="p">,</span> <span class="n">current_account</span><span class="p">,</span> <span class="n">UsersBackend</span><span class="p">()</span>
     <span class="p">)</span>
 
-    <span class="n">resource_response</span> <span class="o">=</span> <span class="n">UserResource</span><span class="p">(</span>
+    <span class="n">resource_response</span> <span class="o">=</span> <span class="n">UserMeResource</span><span class="p">(</span>
         <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">current_account</span><span class="o">=</span><span class="n">current_account</span><span class="p">,</span> <span class="n">accounts</span><span class="o">=</span><span class="n">alternate_accounts</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">json_response</span><span class="p">(</span><span class="n">resource_response</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="users_list"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.users_list">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">users_list</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_users</span><span class="p">(</span><span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">UserListResource</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="user_by_id"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.user_by_id">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">user_by_id</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">OK</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">NOT_FOUND</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">UserResource</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="accounts_from_user"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.accounts_from_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">/accounts&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">accounts_from_user</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">UsersBackend</span><span class="p">())</span>
+
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">OK</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">NOT_FOUND</span>
+
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="n">accounts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_accounts_from_user</span><span class="p">(</span>
+            <span class="n">user</span><span class="p">,</span> <span class="n">UsersBackend</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">UserAccountsResource</span><span class="p">(</span><span class="n">accounts</span><span class="o">=</span><span class="n">accounts</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">UserAccountsResource</span><span class="p">()</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_user"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.create_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">CREATED</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="o">**</span><span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">UserResource</span><span class="p">()</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">HTTPStatus</span><span class="o">.</span><span class="n">BAD_REQUEST</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">created_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="k">except</span> <span class="n">DuplicateEntity</span> <span class="k">as</span> <span class="n">de</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">ErrorResource</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="p">[</span><span class="n">ErrorDetail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">de</span><span class="p">))])</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">HTTPStatus</span><span class="o">.</span><span class="n">UNPROCESSABLE_ENTITY</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+        <span class="n">UserResource</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">created_user</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.delete_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DELETE&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">OK</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">NOT_FOUND</span>
+
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">UsersBackend</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">UserResource</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">UserResource</span><span class="p">()</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update_user_partial"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.users.update_user_partial">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">([</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PATCH&quot;</span><span class="p">])</span>
+<span class="nd">@auth_required</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">update_user_partial</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">body_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">ErrorResource</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="p">[</span><span class="n">ErrorDetail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))])</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">HTTPStatus</span><span class="o">.</span><span class="n">UNPROCESSABLE_ENTITY</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="n">status_code</span> <span class="o">=</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">ACCEPTED</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">NOT_FOUND</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">body_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="o">**</span><span class="n">body_data</span><span class="p">)</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">body_user</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">body_user</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">body_user</span><span class="o">.</span><span class="n">email</span> <span class="k">if</span> <span class="n">body_user</span><span class="o">.</span><span class="n">email</span> <span class="k">else</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+            <span class="n">updated_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">UsersService</span><span class="o">.</span><span class="n">update_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">UsersBackend</span><span class="p">())</span>
+    <span class="k">except</span> <span class="n">DuplicateEntity</span> <span class="k">as</span> <span class="n">de</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+            <span class="n">ErrorResource</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="p">[</span><span class="n">ErrorDetail</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">de</span><span class="p">))])</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+        <span class="n">UserResource</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">updated_user</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span>
+    <span class="p">)</span></div>
 </pre></div>
 
           </div>

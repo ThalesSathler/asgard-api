@@ -28,17 +28,34 @@ commands:
     steps:
       - run: "pipenv run all-tests"
 
+primary: &primary
+  image: circleci/python:3.6.8
+  environment:
+    TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
+    TEST_STATS_API_URL: "http://127.0.0.1:9200"
+    TEST_SCHEDULED_JOBS_SERVICE_ADDRESS: "http://127.0.0.1:9090"
+
+
+chronos: &chronos
+  image: b2wasgard/chronos:0.1.0
+  environment:
+    ZK_CLUSTER_IPS: "127.0.0.1:2181"
+    HOST: "127.0.0.1" # Para popular a env LIBPROCESS_ADVERTISE_IP.
+  command: |
+    sh -c "java -jar /chronos/chronos.jar --zk_hosts zk://${ZK_CLUSTER_IPS}/mesos --master zk://${ZK_CLUSTER_IPS}/mesos --http_port 9090"
+
 jobs:
   py368: &template
     docker:
-      - image: circleci/python:3.6.8
-        environment:
-          TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
-          TEST_STATS_API_URL: "http://127.0.0.1:9200"
+      - <<: *primary
+      - image: b2wasgard/zookeeper:0.0.1
+      - <<: *chronos
       - image: postgres:9.4
       - image: elasticsearch:5.5-alpine
+
     steps:
       - checkout
+      - run: sudo apt update
       - run: sudo apt-get install postgresql-client
       - run:
           name: Install pip/pipenv
@@ -61,19 +78,19 @@ jobs:
   py37x:
       <<: *template
       docker:
-        - image: circleci/python:3.7
-          environment:
-            TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
-            TEST_STATS_API_URL: "http://127.0.0.1:9200"
+        - <<: *primary
+          image: circleci/python:3.7
+        - image: b2wasgard/zookeeper:0.0.1
+        - <<: *chronos
         - image: postgres:9.4
         - image: elasticsearch:5.5-alpine
   py36x:
       <<: *template
       docker:
-        - image: circleci/python:3.6
-          environment:
-            TEST_DB_URL: "postgresql://postgres@127.0.0.1/asgard"
-            TEST_STATS_API_URL: "http://127.0.0.1:9200"
+        - <<: *primary
+          image: circleci/python:3.6
+        - image: b2wasgard/zookeeper:0.0.1
+        - <<: *chronos
         - image: postgres:9.4
         - image: elasticsearch:5.5-alpine
 workflows:

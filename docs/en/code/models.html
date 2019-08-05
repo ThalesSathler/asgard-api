@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contribuindo com o projeto" href="../contrib/index.html" />
-    <link rel="prev" title="Backends" href="backends.html" />
+    <link rel="prev" title="Clients" href="clients.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -35,132 +35,178 @@
   <div class="section" id="models">
 <span id="asgard-models"></span><h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
 <p>Os models são os objetos que todo o codebase da Asgard API deve usar para transitar informações entre suas camadas, desde o request HTTP que chegou no endpoint até o momento em que temos que falar com a API do <a class="reference internal" href="backends.html#asgard-backends-orquestrador"><span class="std std-ref">Orquestrador</span></a> real.</p>
-<p>Existem alguns tipos de modelo no projeto:</p>
+<p>Existem 2 tipos de modelos no projeto:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#asgard-models-base"><span class="std std-ref">Asgard Models</span></a>, estão no pacote <a class="reference internal" href="../src/asgard/asgard.models.html#module-asgard.models" title="asgard.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard.models</span></code></a></p></li>
-<li><p><a class="reference internal" href="#asgard-models-backend"><span class="std std-ref">Backend Models</span></a>, estão no pacote <code class="docutils literal notranslate"><span class="pre">asgard.backends.*.models</span></code></p></li>
-<li><p><a class="reference internal" href="#asgard-models-client"><span class="std std-ref">Client Models</span></a>, estão o pacote <code class="docutils literal notranslate"><span class="pre">asgard.backends.*.client.models</span></code></p></li>
+<li><p><a class="reference internal" href="#asgard-models-client"><span class="std std-ref">Client Models</span></a>, estão o pacote <code class="docutils literal notranslate"><span class="pre">asgard.client.*.models</span></code></p></li>
 </ul>
+<p>E existe também um modelo “especial”, que é na verdade, uma interface de conversão entre um ClientModel e um AsgardModel. Essa conversão é de <strong>total responsabilidade</strong> da implementação do <a class="reference internal" href="backends.html#asgard-backends"><span class="std std-ref">Backend</span></a> em questão.</p>
+<p>Todos os conversõres entre modelos preciam implementar a interface <a class="reference internal" href="#asgard-models-converters"><span class="std std-ref">ModelConverterInterface</span></a>.</p>
 <p>Abaixo temos uma explicação sobre cada um deles.</p>
 <div class="section" id="asgard-models-base">
 <span id="id1"></span><h2>Asgard Models<a class="headerlink" href="#asgard-models-base" title="Permalink to this headline">¶</a></h2>
-<p>Esses são models abstratos que servem de modelo Base para os modelos que estão em <code class="docutils literal notranslate"><span class="pre">asgard.backends.*.models</span></code>. A ideia é ter um modelo único para todos os backends, dessa forma mesmo que tenhamos múltiplos backends retornando cada um seus modelos, todos serão filhos dos “BaseModels” que estão em <code class="docutils literal notranslate"><span class="pre">asgard.models.*</span></code>.</p>
-<p>Imagine que temos duas implementações de <a class="reference internal" href="backends.html#asgard-backends"><span class="std std-ref">AgentsBackend</span></a>:</p>
-<ul class="simple">
-<li><p>MesosAgentsBackends</p></li>
-<li><p>K8sAgentsBackend</p></li>
-</ul>
-<p>nesse caso teríamos os respectivos models em:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard.backends.mesos.models.agent.Agent</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard.backends.k8s.models.agent.Agent</span></code></p></li>
-</ul>
-<p>Ambos os models seriam declarados dess forma:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">asgard.models.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
-
-<span class="k">class</span> <span class="nc">MesosAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-  <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MESOS&quot;</span>
-
-<span class="k">class</span> <span class="nc">K8SAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-  <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K8S&quot;</span>
-</pre></div>
-</div>
-<p>Ambos os models podem ter métodos/campos específicos do seus backends, mas ao mesmo tempo precisam preencher os campos exigidos pelo model base, <a class="reference internal" href="../src/asgard/asgard.models.html#asgard.models.agent.Agent" title="asgard.models.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.models.agent.Agent</span></code></a>.</p>
-<p>Isso significa que podemos ter em uma mesma lista (<code class="docutils literal notranslate"><span class="pre">agents:</span> <span class="pre">List[Agent]</span></code>) objetos de dos dois backends, pois eles são filhos da mesma classe base. Extrapolando isso para um momento onde temos que listar os agents desses dois backends, poderíamos fazer algo como:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-
-<span class="kn">from</span> <span class="nn">asgard.backends.base</span> <span class="kn">import</span> <span class="n">AgentsBackend</span>
-<span class="kn">from</span> <span class="nn">asgard.backends.k8s.impl</span> <span class="kn">import</span> <span class="n">K8SAgentsBackend</span>
-<span class="kn">from</span> <span class="nn">asgard.backends.mesos.impl</span> <span class="kn">import</span> <span class="n">MesosAgentsBackend</span>
-<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="kn">import</span> <span class="n">Account</span>
-<span class="kn">from</span> <span class="nn">asgard.models.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="kn">import</span> <span class="n">User</span>
-
-
-<span class="n">async</span> <span class="k">def</span> <span class="nf">get_all_agents</span><span class="p">(</span>
-    <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">,</span> <span class="o">*</span><span class="n">agents_backends</span><span class="p">:</span> <span class="n">AgentsBackend</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
-    <span class="n">m_agents</span> <span class="o">=</span> <span class="n">await</span> <span class="n">agents_backends</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_agents</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span>
-    <span class="n">k_agents</span> <span class="o">=</span> <span class="n">await</span> <span class="n">agents_backends</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_agents</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">m_agents</span> <span class="o">+</span> <span class="n">k_agents</span>
-
-
-<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">mesos_agents_bakend</span> <span class="o">=</span> <span class="n">MesosAgentsBackend</span><span class="p">()</span>
-    <span class="n">k8s_agents_backend</span> <span class="o">=</span> <span class="n">K8SAgentsBackend</span><span class="p">()</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">await</span> <span class="n">get_all_agents</span><span class="p">(</span>
-        <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">mesos_agents_bakend</span><span class="p">,</span> <span class="n">k8s_agents_backend</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-<p>Essa é a ideia principal dos models: Ter objetos comuns que podem ser passados e combinados com objetos do mesmo tipo mas providos por outras implementações.</p>
-</div>
-<div class="section" id="backend-models">
-<span id="asgard-models-backend"></span><h2>Backend Models<a class="headerlink" href="#backend-models" title="Permalink to this headline">¶</a></h2>
-<p>Os Models de cada backend são, na vedade, implementações do modelos abstratos. Eles podem conter campos/métodos específicos de cada backend mas precisam implementar todos os métodos abstratos exigidos pelos <code class="docutils literal notranslate"><span class="pre">asgard.models.*</span></code>.</p>
-<p>Cada backend model deve definir o valor do seu campo <code class="docutils literal notranslate"><span class="pre">type</span></code>. Esse campo é uma string e pode ser escolhido livremente pela implementação do backend. Esse campo é serializado junto com o modelo e serve para diferenciar de qual backend aquele objeto veio.</p>
+<p>Esses são os modelos oficiais do projeto Asgard. Todas as passagens de informação entre as camadas do código (HTTP, Service, Backend, etc) devem ser feitas com instancias desses modelos. A única exceção é quando buscamos um modelo pelo seu <code class="docutils literal notranslate"><span class="pre">id</span></code> canonico. Nesse caso o método que faz essa busca recebe o <code class="docutils literal notranslate"><span class="pre">id</span></code> puro, mas retorna um Asgard Model preenchido.</p>
 </div>
 <div class="section" id="client-models">
 <span id="asgard-models-client"></span><h2>Client Models<a class="headerlink" href="#client-models" title="Permalink to this headline">¶</a></h2>
-<p>Os Client Models são models usados internamente pelos backends. Cada implementação de <a class="reference internal" href="backends.html#asgard-backends"><span class="std std-ref">Backends</span></a> precisa falar com uma API para implementar suas funcionalidades, por exemplo, o :py:class`asgard.backend.mesos.impl.MesosAgentsBackend` por exemplo precisa falar com a API do <a class="reference external" href="https://mesos.apache.org">mesos</a> para fornecer os dados corretos.</p>
-<p>A ideia é que cada backend tenha seus próprios clients que também recebem (como parâmetro) e retornem <strong>modelos</strong>. Os Client Models depois são transformados em Backend Models para poderem ser serializados pela API HTTP do asgard.</p>
-<p>O Client model é o mapeamento bruto do que a API do backend retorna. Então pegando um exemplo de retorno da API do Mesos, endpoint <a class="reference external" href="http://mesos.apache.org/documentation/latest/endpoints/master/slaves/">/slaves</a>.</p>
+<p>Os Client Models são models usados internamente pelos <a class="reference internal" href="clients.html#asgard-clients"><span class="std std-ref">Clients</span></a>. Cada implementação de <a class="reference internal" href="clients.html#asgard-clients"><span class="std std-ref">Clients</span></a> precisa falar com uma API para implementar suas funcionalidades. O <code class="xref py py-class docutils literal notranslate"><span class="pre">ChronosClient</span></code> por exemplo precisa falar com a API do <a class="reference external" href="https://mesos.github.io/chronos/docs/api.html">chronos</a> para fornecer os dados corretos.</p>
+<p>O Client model é o mapeamento exato do que a API (com a qual esse client está faladndo) retorna. Pegando um exemplo de retorno da API do Chronos, endpoint <code class="docutils literal notranslate"><span class="pre">/v1/scheduler/job/{job_id}</span></code>.</p>
+<p>Esse endpoint retorna um Job do Chronos, com definido na <a class="reference external" href="https://mesos.github.io/chronos/docs/api.html#job-configuration">Documentação do projeto</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;slaves&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;asgard-curator-delete-indices-asgard-app-stats&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;curator --config /opt/curator.yml /opt/actions/delete-indices-hours-old.yml&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;shell&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">&quot;executor&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;executorFlags&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;taskInfoData&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;ownerName&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;successCount&quot;</span><span class="p">:</span> <span class="mi">2658</span><span class="p">,</span>
+  <span class="s2">&quot;errorCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;lastSuccess&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-07-22T16:02:49.359Z&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;lastError&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-05-18T00:02:28.330Z&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;cpus&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+  <span class="s2">&quot;disk&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+  <span class="s2">&quot;mem&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+  <span class="s2">&quot;disabled&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+  <span class="s2">&quot;softError&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+  <span class="s2">&quot;dataProcessingJobType&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+  <span class="s2">&quot;errorsSinceLastSuccess&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s2">&quot;fetch&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;uris&quot;</span><span class="p">:</span> <span class="p">[</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;environmentVariables&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4783cf15-4fb1-4c75-90fe-44eeec5258a7-S12&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;10.234.172.35&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">5051</span><span class="p">,</span>
-      <span class="s2">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;workload&quot;</span><span class="p">:</span> <span class="s2">&quot;general&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="s2">&quot;asgard&quot;</span>
-      <span class="p">},</span>
-      <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
-      <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.4.1&quot;</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MY_ENV_VAR&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;ME_ENV_VALUE&quot;</span>
     <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;highPriority&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+  <span class="s2">&quot;runAsUser&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;concurrent&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+  <span class="s2">&quot;container&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DOCKER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;alpine:3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;network&quot;</span><span class="p">:</span> <span class="s2">&quot;BRIDGE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;networkInfos&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;volumes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;forcePullImage&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;constraints&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;workload&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;LIKE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;general&quot;</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;owner&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;LIKE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;asgard&quot;</span>
+    <span class="p">]</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="s2">&quot;R/2019-07-22T14:00:00.000-03:00/PT1H&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;scheduleTimeZone&quot;</span><span class="p">:</span> <span class="s2">&quot;America/Sao_Paulo&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Um possível mapeamento de Client Model para essa resposta poderia ser:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
+<p>O mapeamento do <a class="reference internal" href="#asgard-models-client"><span class="std std-ref">Client Model</span></a> para esse retorno está em:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.clients.chronos.models.job.</code><code class="descname">ChronosJob</code><span class="sig-paren">(</span><em>**data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/asgard/clients/chronos/models/job.html#ChronosJob"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span> <span class="k">as</span> <span class="n">PydanticBaseModel</span>
+<p>A responsabilidade transformar esse model em AsgardModel pertence ao Backend. A forma que escolhemos de transformar um Client Model em seu respectivo Asgard Model é através do <a class="reference internal" href="#asgard-models-converters"><span class="std std-ref">ModelConverter</span></a>, que veremos mais em detalhes a seguir.</p>
+</div>
+<div class="section" id="model-converters">
+<span id="asgard-models-converters"></span><h2>Model Converters<a class="headerlink" href="#model-converters" title="Permalink to this headline">¶</a></h2>
+<p>Um ModelConverter é uma interface absrata que deve ser implementada para que seja possível transformar um <a class="reference internal" href="#asgard-models-client"><span class="std std-ref">Client Model</span></a> em um <a class="reference internal" href="#asgard-models-base"><span class="std std-ref">Asgard Model</span></a> e vice-versa. Esses converters são implementados por <a class="reference internal" href="backends.html#asgard-backends"><span class="std std-ref">Backends</span></a>.</p>
+<p>Isso foi pensado dessa forma para que os Asgard Models não tenham dependências de nada externo e também para que os Cliets Models também não tenham nenhuma dependência externa. A princípio, um client implementado no respositório da Asgard API pode ser externalizado para um projeto próprio sem muitas dificuldades.</p>
+<p>A ideia é que cada backend tenha seus próprios ModelConverters.</p>
+<p>Todos os ModelConverters devem implementar a seguinte interface:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.backends.models.converters.</code><code class="descname">ModelConverterInterface</code><a class="reference internal" href="../_modules/asgard/backends/models/converters.html#ModelConverterInterface"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Essa interface deve ser usada por modelos declarados nos backends
+para que a conversão entre AsgardModel e ClientModel (e o inverso) possa
+ser feita.</p>
+<p>Isso existe para que o core do código da asgard API não precise saber
+detalhes de implementação dos modelos dos backends que estão sendo usados.</p>
+<dl class="simple">
+<dt>Exemplo:</dt><dd><p>Podemos ter múltiplos Backends que gerenciam Aplicações. Cada backend pode ser sua API que retorna seus próprios recursos. Para o código do asgard só deve existir um modelo: <cite>asgard.models.app.App</cite>.
+Se o Marathon retorna suas Apps com um JSON <cite>A</cite>, o ModelConverter serve para fazer as seguintes traduções: <cite>A -&gt; asgard.models.app.App</cite> e <cite>asgard.models.app.App -&gt; A</cite>.
+Se o k8s rerorna suas apps com um JSON <cite>B</cite>. Teremos outro ModelConverter que vai fazer a tradução <cite>B</cite> &lt;-&gt; <cite>asgard.models.app.App</cite>.</p>
+</dd>
+</dl>
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: ClientModel</em><span class="sig-paren">)</span> &#x2192; AsgardModel<a class="reference internal" href="../_modules/asgard/backends/models/converters.html#ModelConverterInterface.to_asgard_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
 
-<span class="kn">from</span> <span class="nn">asgard.backends.mesos.models.agent</span> <span class="kn">import</span> <span class="n">MesosAgent</span> <span class="k">as</span> <span class="n">AsgardMesosAgent</span>
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: AsgardModel</em><span class="sig-paren">)</span> &#x2192; ClientModel<a class="reference internal" href="../_modules/asgard/backends/models/converters.html#ModelConverterInterface.to_client_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
 
+</dd></dl>
 
-<span class="k">class</span> <span class="nc">MesosAgent</span><span class="p">(</span><span class="n">PydanticBaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">attributes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span>
+<p>Essa interface é também um tipo generico parametrizado com dois outros tipos: O primeiro parametro é o AsgardModel e o segundo é o ClientModel.</p>
+<div class="section" id="exemplo-de-um-modelconverter">
+<h3>Exemplo de um ModelConverter<a class="headerlink" href="#exemplo-de-um-modelconverter" title="Permalink to this headline">¶</a></h3>
+<p>Seguindo com o exemplo acima, de um client pro Chronos.</p>
+<p>O Model Converter implementado pelo <code class="xref py py-class docutils literal notranslate"><span class="pre">ChronosScheduledJobBackend</span></code> é esse:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosScheduledJobConverter</code><a class="reference internal" href="../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.models.job.ScheduledJob<a class="reference internal" href="../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter.to_asgard_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: asgard.models.job.ScheduledJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter.to_client_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>O papel do Model Converter é bem simples. O que ele faz é copiar todos os valores de um Client Model para seus respectivos campos em um Asgard Models. Dessa forma podemos ter no Asgard Model campos com nomes e formatos diferentes do Client Model.</p>
+<p>Como nesse caso o modelo do ScheduledJob do Chronos é um objeto bem complexo, a implementação completa da transformação entre esses dois models (ChronosJob e ScheduledJob) demanda mais do que somente um ModelConverter.</p>
+<p>Temos, por exemplo, um outro converter dedicado para o campo <code class="docutils literal notranslate"><span class="pre">container</span></code>, que é o <a class="reference internal" href="../src/asgard/asgard.backends.chronos.models.html#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter" title="asgard.backends.chronos.models.converters.ChronosContainerSpecConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChronosContainerSpecConverter</span></code></a>.</p>
+<p>Um converter pode usar outro, assim:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ChronosScheduledJobConverter</span><span class="p">(</span>
+    <span class="n">ModelConverterInterface</span><span class="p">[</span><span class="n">ScheduledJob</span><span class="p">,</span> <span class="n">ChronosJob</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledJob</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ScheduledJob</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="o">...</span>
+            <span class="o">...</span>
+            <span class="n">container</span><span class="o">=</span><span class="n">ChronosContainerSpecConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span>
+                <span class="n">other</span><span class="o">.</span><span class="n">container</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Esse model estaria em <code class="docutils literal notranslate"><span class="pre">asgard.backends.mesos.client.models.agent.MesosAgent</span></code></p>
+<p>Veja que nesse caso a transformação do campo <code class="docutils literal notranslate"><span class="pre">container</span></code> foi “delegada” para o ModelConverter especializado nesse campo.</p>
+<p>Esse tipo de “delegação” simplifica o código de conversão de objetos grandes e complexos.</p>
 </div>
-<p>A responsabilidade se transformar em Backend Model é do próprio Client Model. A forma que escolhemos de transformar um Client Model em seu respectivo Backend Model é adicionando um método chamado <code class="docutils literal notranslate"><span class="pre">to_asgard_model()</span></code> que recebe a classe do Backend Model para o qual será transformado.</p>
-<p>Pegando ainda esse exemplo, essa seria um possível implementação da transformação de Client Model para Backend Model.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">to_asgard_model</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">class_</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">AsgardMesosAgent</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsgardMesosAgent</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">class_</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-        <span class="n">hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
-        <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span>
-        <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
-        <span class="n">ativo</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">,</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-<p>Esse é o código que deve “traduzir” os campos da API do backend para os campos do modelo que será usado por todo o código do Asgard.</p>
 </div>
 </div>
 
@@ -189,6 +235,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html">Endpoints HTTP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="backends.html">Backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clients.html">Clients</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Models</a></li>
 </ul>
 </li>
@@ -202,7 +249,7 @@
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">&lt;no title&gt;</a><ul>
   <li><a href="organization.html">Organização do código</a><ul>
-      <li>Previous: <a href="backends.html" title="previous chapter">Backends</a></li>
+      <li>Previous: <a href="clients.html" title="previous chapter">Clients</a></li>
       <li>Next: <a href="../contrib/index.html" title="next chapter">Contribuindo com o projeto</a></li>
   </ul></li>
   </ul></li>

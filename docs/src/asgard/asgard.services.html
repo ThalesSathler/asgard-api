@@ -43,6 +43,11 @@
 <em class="property">class </em><code class="descclassname">asgard.services.accounts.</code><code class="descname">AccountsService</code><a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="staticmethod">
+<dt id="asgard.services.accounts.AccountsService.add_user_to_account">
+<em class="property">static </em><code class="descname">add_user_to_account</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em>, <em>backend: asgard.backends.accounts.AccountsBackend</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService.add_user_to_account"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService.add_user_to_account" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
 <dt id="asgard.services.accounts.AccountsService.get_account_by_id">
 <em class="property">static </em><code class="descname">get_account_by_id</code><span class="sig-paren">(</span><em>account_id: int</em>, <em>backend: asgard.backends.accounts.AccountsBackend</em><span class="sig-paren">)</span> &#x2192; Optional[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService.get_account_by_id"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService.get_account_by_id" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
@@ -50,6 +55,16 @@
 <dl class="staticmethod">
 <dt id="asgard.services.accounts.AccountsService.get_accounts">
 <em class="property">static </em><code class="descname">get_accounts</code><span class="sig-paren">(</span><em>backend: asgard.backends.accounts.AccountsBackend</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService.get_accounts"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService.get_accounts" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.accounts.AccountsService.get_users_from_account">
+<em class="property">static </em><code class="descname">get_users_from_account</code><span class="sig-paren">(</span><em>account: asgard.models.account.Account</em>, <em>backend: asgard.backends.accounts.AccountsBackend</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService.get_users_from_account"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService.get_users_from_account" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.accounts.AccountsService.remove_user_from_account">
+<em class="property">static </em><code class="descname">remove_user_from_account</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em>, <em>backend: asgard.backends.accounts.AccountsBackend</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/asgard/services/accounts.html#AccountsService.remove_user_from_account"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.accounts.AccountsService.remove_user_from_account" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -103,8 +118,38 @@ Retorna um objeto <a class="reference internal" href="asgard.models.html#asgard.
 <em class="property">class </em><code class="descclassname">asgard.services.users.</code><code class="descname">UsersService</code><a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.create_user">
+<em class="property">static </em><code class="descname">create_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.create_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.create_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.delete_user">
+<em class="property">static </em><code class="descname">delete_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.delete_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.delete_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.get_accounts_from_user">
+<em class="property">static </em><code class="descname">get_accounts_from_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.get_accounts_from_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.get_accounts_from_user" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
 <dt id="asgard.services.users.UsersService.get_alternate_accounts">
 <em class="property">static </em><code class="descname">get_alternate_accounts</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>current_account: asgard.models.account.Account</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.account.Account]<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.get_alternate_accounts"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.get_alternate_accounts" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.get_user_by_id">
+<em class="property">static </em><code class="descname">get_user_by_id</code><span class="sig-paren">(</span><em>user_id: int</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; Optional[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.get_user_by_id"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.get_user_by_id" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.get_users">
+<em class="property">static </em><code class="descname">get_users</code><span class="sig-paren">(</span><em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.user.User]<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.get_users"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.get_users" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="asgard.services.users.UsersService.update_user">
+<em class="property">static </em><code class="descname">update_user</code><span class="sig-paren">(</span><em>user: asgard.models.user.User</em>, <em>backend: asgard.backends.users.UsersBackend</em><span class="sig-paren">)</span> &#x2192; asgard.models.user.User<a class="reference internal" href="../../_modules/asgard/services/users.html#UsersService.update_user"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.services.users.UsersService.update_user" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

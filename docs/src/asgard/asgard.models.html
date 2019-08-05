@@ -98,6 +98,11 @@
 <em class="property">class </em><code class="descclassname">asgard.models.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>**data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/models/agent.html#Agent"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.agent.Agent" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <a class="reference internal" href="#asgard.models.base.BaseModel" title="asgard.models.base.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.models.base.BaseModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <dl class="method">
+<dt id="asgard.models.agent.Agent.add_error">
+<code class="descname">add_error</code><span class="sig-paren">(</span><em>field_name</em>, <em>error_msg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/models/agent.html#Agent.add_error"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.agent.Agent.add_error" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="asgard.models.agent.Agent.apps">
 <code class="descname">apps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.models.app.App]<a class="reference internal" href="../../_modules/asgard/models/agent.html#Agent.apps"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.agent.Agent.apps" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
@@ -146,11 +151,6 @@
 <dt id="asgard.models.base.BaseModel">
 <em class="property">class </em><code class="descclassname">asgard.models.base.</code><code class="descname">BaseModel</code><span class="sig-paren">(</span><em>**data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/models/base.html#BaseModel"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.base.BaseModel" title="Link permanente para esta definição">¶</a></dt>
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">pydantic.main.BaseModel</span></code></p>
-<dl class="method">
-<dt id="asgard.models.base.BaseModel.add_error">
-<code class="descname">add_error</code><span class="sig-paren">(</span><em>field_name</em>, <em>error_msg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/models/base.html#BaseModel.add_error"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.base.BaseModel.add_error" title="Link permanente para esta definição">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="asgard.models.base.BaseModel.from_alchemy_object">
 <code class="descname">from_alchemy_object</code><span class="sig-paren">(</span><em>alchemy_obj</em><span class="sig-paren">)</span> &#x2192; asgard.models.base.BaseModel<a class="reference internal" href="../../_modules/asgard/models/base.html#BaseModel.from_alchemy_object"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.models.base.BaseModel.from_alchemy_object" title="Link permanente para esta definição">¶</a></dt>

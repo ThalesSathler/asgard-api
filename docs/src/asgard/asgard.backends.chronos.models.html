@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>asgard.backends.chronos.models package &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="asgard-backends-chronos-models-package">
+<h1>asgard.backends.chronos.models package<a class="headerlink" href="#asgard-backends-chronos-models-package" title="Link permanente para este título">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link permanente para este título">¶</a></h2>
+</div>
+<div class="section" id="module-asgard.backends.chronos.models.converters">
+<span id="asgard-backends-chronos-models-converters-module"></span><h2>asgard.backends.chronos.models.converters module<a class="headerlink" href="#module-asgard.backends.chronos.models.converters" title="Link permanente para este título">¶</a></h2>
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosConstraintSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosConstraintSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: List[List[str]]</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosConstraintSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: List[str]</em><span class="sig-paren">)</span> &#x2192; List[List[str]]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosConstraintSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosConstraintSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>As constraints do chronos são representadas como lista de lista. Cada constraint é uma lista de 3 elementos [&lt;label&gt;, &lt;operador&gt;, &lt;valor&gt;]. Aqui dividimos a contraint do Asgard em três, já que ela é representada como uma string “&lt;label&gt;:&lt;operador&gt;:&lt;valor&gt;”</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosContainerParameterSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerParameterSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: asgard.clients.chronos.models.job.ChronosContainerParameterSpec</em><span class="sig-paren">)</span> &#x2192; asgard.models.spec.container.ContainerParameterSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerParameterSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: asgard.models.spec.container.ContainerParameterSpec</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosContainerParameterSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerParameterSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerParameterSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosContainerSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: asgard.clients.chronos.models.job.ChronosContainerSpec</em><span class="sig-paren">)</span> &#x2192; asgard.models.spec.container.ContainerSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: asgard.models.spec.container.ContainerSpec</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosContainerSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosContainerVolumeSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerVolumeSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: asgard.clients.chronos.models.job.ChronosContainerVolumeSpec</em><span class="sig-paren">)</span> &#x2192; asgard.models.spec.container.ContainerVolumeSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerVolumeSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: asgard.models.spec.container.ContainerVolumeSpec</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosContainerVolumeSpec<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosContainerVolumeSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosContainerVolumeSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosEnvSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosEnvSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosEnvSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: List[asgard.clients.chronos.models.job.ChronosEnvSpec]</em><span class="sig-paren">)</span> &#x2192; Dict[str, str]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosEnvSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: Dict[str, str]</em><span class="sig-paren">)</span> &#x2192; List[asgard.clients.chronos.models.job.ChronosEnvSpec]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosEnvSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosEnvSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosFetchURLSpecConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosFetchURLSpecConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: List[asgard.clients.chronos.models.job.ChronosFetchURLSpec]</em><span class="sig-paren">)</span> &#x2192; List[asgard.models.spec.fetch.FetchURLSpec]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosFetchURLSpecConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: List[asgard.models.spec.fetch.FetchURLSpec]</em><span class="sig-paren">)</span> &#x2192; List[asgard.clients.chronos.models.job.ChronosFetchURLSpec]<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosFetchURLSpecConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosFetchURLSpecConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.chronos.models.converters.ChronosScheduledJobConverter">
+<em class="property">class </em><code class="descclassname">asgard.backends.chronos.models.converters.</code><code class="descname">ChronosScheduledJobConverter</code><a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <a class="reference internal" href="asgard.backends.models.html#asgard.backends.models.converters.ModelConverterInterface" title="asgard.backends.models.converters.ModelConverterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.backends.models.converters.ModelConverterInterface</span></code></a></p>
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model">
+<em class="property">classmethod </em><code class="descname">to_asgard_model</code><span class="sig-paren">(</span><em>other: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.models.job.ScheduledJob<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter.to_asgard_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_asgard_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um ClientModel em AsgardModel.</p>
+<p>O objetivo desse método é copiar todos os campos do ClientModel em questão
+para seus respectivos campos em um Asgard Model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model">
+<em class="property">classmethod </em><code class="descname">to_client_model</code><span class="sig-paren">(</span><em>other: asgard.models.job.ScheduledJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../../_modules/asgard/backends/chronos/models/converters.html#ChronosScheduledJobConverter.to_client_model"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.chronos.models.converters.ChronosScheduledJobConverter.to_client_model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte um AsgardModel para ClientModel.</p>
+<p>O objetivo desse método é copiar todos os campos do AsgardModel em questão
+para seus respectivos campos em um ClientModel.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.backends.chronos.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-asgard.backends.chronos.models" title="Link permanente para este título">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code/organization.html">Organização do código</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/src/asgard/asgard.backends.chronos.models.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

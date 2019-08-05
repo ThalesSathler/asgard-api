@@ -40,7 +40,8 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">asgard/api</span></code>: Contém todo o código que lida com a camada HTTP, ou seja, são os endpoints da API;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">asgard/services</span></code>: É o código que faz a “ponte” entre os enpoints HTTP e o restante do código do projeto. A ideia principal é que os endpoints HTTP não conheçam nada além dessa camada de services.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">asgard/backends</span></code>: Aqui estão as implementações concretas de todos os backends que o Asgard suporta. Backend são serviços com os quais a Asgard API consegue se comunicar. Atualmente a Asgard API se comunica com a API do Mesos e do Marathon para prover suas funcionalidades.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard/backends</span></code>: Aqui estão as implementações concretas de todos os backends que o Asgard suporta. Backend são serviços com os quais a Asgard API consegue se comunicar. Atualmente a Asgard API se comunica com a API do Mesos, do Marathon e do Chronos para prover suas funcionalidades.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard/clients</span></code>: São as implementações low-level de todos os clients necessários para falar com cada uma as APIs necessárias. Cada Backend pode usar um ou mais clients para poder executar suas funções.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">asgard/models</span></code>: Contém os objetos que são usados para passar dados entre as camadas (http, service, backends) do projeto.</p></li>
 </ul>
 <p>Conteúdo:</p>
@@ -58,10 +59,11 @@
 <li class="toctree-l2"><a class="reference internal" href="backends.html#orquetsradores-atualmente-suportados">Orquetsradores atualmente suportados</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="clients.html">Clients</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="models.html#asgard-models-base">Asgard Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#backend-models">Backend Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html#client-models">Client Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#model-converters">Model Converters</a></li>
 </ul>
 </li>
 </ul>
@@ -93,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html">Endpoints HTTP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="backends.html">Backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clients.html">Clients</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
 </ul>
 </li>

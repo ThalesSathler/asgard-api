@@ -1,0 +1,8 @@
+0.86.0
+======
+
+Asgard API
+----------
+
+- [`PR #131 <https://github.com/B2W-BIT/asgard-api/pull/131>`_] /users/* HTTP endpoint
+- [`PR #129 <https://github.com/B2W-BIT/asgard-api/pull/129>`_] /accounts/* HTTP endpoint

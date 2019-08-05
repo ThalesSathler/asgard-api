@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>asgard.clients.chronos.models.job &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fonte para asgard.clients.chronos.models.job</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="k">import</span> <span class="n">BaseModel</span>
+
+
+<div class="viewcode-block" id="ChronosEnvSpec"><a class="viewcode-back" href="../../../../../src/asgard/asgard.clients.chronos.models.html#asgard.clients.chronos.models.job.ChronosEnvSpec">[documentos]</a><span class="k">class</span> <span class="nc">ChronosEnvSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="ChronosContainerVolumeSpec"><a class="viewcode-back" href="../../../../../src/asgard/asgard.clients.chronos.models.html#asgard.clients.chronos.models.job.ChronosContainerVolumeSpec">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerVolumeSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">containerPath</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">hostPath</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="ChronosContainerParameterSpec"><a class="viewcode-back" href="../../../../../src/asgard/asgard.clients.chronos.models.html#asgard.clients.chronos.models.job.ChronosContainerParameterSpec">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerParameterSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="ChronosContainerSpec"><a class="viewcode-back" href="../../../../../src/asgard/asgard.clients.chronos.models.html#asgard.clients.chronos.models.job.ChronosContainerSpec">[documentos]</a><span class="k">class</span> <span class="nc">ChronosContainerSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;DOCKER&quot;</span>
+    <span class="n">image</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">network</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ChronosContainerParameterSpec</span><span class="p">]]</span>
+    <span class="n">forcePullImage</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">volumes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ChronosContainerVolumeSpec</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="ChronosFetchURLSpec"><a class="viewcode-back" href="../../../../../src/asgard/asgard.clients.chronos.models.html#asgard.clients.chronos.models.job.ChronosFetchURLSpec">[documentos]</a><span class="k">class</span> <span class="nc">ChronosFetchURLSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;CHRONOS&quot;</span>
+    <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">executable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">extract</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<span class="n">ChronosConstraintSpecItem</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="n">ChronosConstraintSpec</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosConstraintSpecItem</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ChronosJob"><a class="viewcode-back" href="../../../../../code/models.html#asgard.clients.chronos.models.job.ChronosJob">[documentos]</a><span class="k">class</span> <span class="nc">ChronosJob</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">command</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">shell</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">disabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">concurrent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cpus</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">mem</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">disk</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">scheduleTimeZone</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">environmentVariables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ChronosEnvSpec</span><span class="p">]]</span>
+    <span class="n">container</span><span class="p">:</span> <span class="n">ChronosContainerSpec</span>
+    <span class="n">fetch</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ChronosFetchURLSpec</span><span class="p">]]</span>
+    <span class="n">constraints</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ChronosConstraintSpec</span><span class="p">]</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code/organization.html">Organização do código</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Código do módulo</a><ul>
+  <li><a href="../../chronos.html">asgard.clients.chronos</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

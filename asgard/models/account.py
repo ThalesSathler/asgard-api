@@ -1,10 +1,11 @@
 # encoding: utf-8
 
-from sqlalchemy import Column, Integer, String, func
+
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from asgard.db import AsgardDBSession
-from asgard.models.base import BaseModel, ModelFactory, BaseModelAlchemy
+from asgard.models.base import BaseModel, BaseModelAlchemy
 from asgard.models.user import User, UserDB
 from asgard.models.user_has_account import UserHasAccount
 

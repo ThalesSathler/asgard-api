@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-11 15:20-0300\n"
+"POT-Creation-Date: 2019-07-22 10:55-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 
 #: ../../contrib/write-new-orquestrator.rst:2
 msgid "Escrevendo uma implementação de um novo Orquestrador"
@@ -84,11 +84,11 @@ msgstr ""
 msgid "Código do ``AgentsBackend``:"
 msgstr ""
 
-#: ../../contrib/write-new-orquestrator.rst:69
+#: ../../contrib/write-new-orquestrator.rst:70
 msgid "Código do ``K8SOrchestrator``:"
 msgstr ""
 
-#: ../../contrib/write-new-orquestrator.rst:83
+#: ../../contrib/write-new-orquestrator.rst:84
 msgid ""
 "Com uma implementação nessa linha, seria possível listar todos os agents "
 "desse novo Orchestrador dessa forma:"
@@ -152,5 +152,19 @@ msgstr ""
 #~ " (:py:class:`asgard.models.user.User`) e ``account``"
 #~ " são descobertos assim que a view "
 #~ "HTTP começa a rodar."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Classe abstrata que mapeia todas as "
+#~ "ações que um orquestrador pode excutar."
+#~ " As depdenências injetadas aqui são "
+#~ "implementações que efetivamente falam com "
+#~ "cada um dos backends suportados."
+#~ msgstr ""
+
+#~ msgid "Initialize self.  See help(type(self)) for accurate signature."
+#~ msgstr ""
+
+#~ msgid "Retorna todos os Agents da conta `account`."
 #~ msgstr ""
 

@@ -1,4 +1,4 @@
-from asgard.api.resources.users import UserResource
+from asgard.api.resources.users import UserMeResource
 from asgard.db import AsgardDBSession
 from asgard.models.account import AccountDB, Account
 from asgard.models.user import UserDB, User
@@ -48,7 +48,7 @@ class UsersMeResourcesTest(BaseTestCase):
                 .one()
             )
 
-            users_me_resource = UserResource(
+            users_me_resource = UserMeResource(
                 user=await User.from_alchemy_obj(user),
                 current_account=await Account.from_alchemy_obj(account),
                 accounts=[await Account.from_alchemy_obj(other_accounts)],
@@ -58,7 +58,6 @@ class UsersMeResourcesTest(BaseTestCase):
                 {
                     "accounts": [
                         {
-                            "errors": {},
                             "id": ACCOUNT_INFRA_ID,
                             "name": ACCOUNT_INFRA_NAME,
                             "namespace": ACCOUNT_INFRA_NAMESPACE,
@@ -67,7 +66,6 @@ class UsersMeResourcesTest(BaseTestCase):
                         }
                     ],
                     "current_account": {
-                        "errors": {},
                         "id": ACCOUNT_DEV_ID,
                         "name": ACCOUNT_DEV_NAME,
                         "namespace": ACCOUNT_DEV_NAMESPACE,
@@ -76,7 +74,6 @@ class UsersMeResourcesTest(BaseTestCase):
                     },
                     "user": {
                         "email": USER_WITH_MULTIPLE_ACCOUNTS_EMAIL,
-                        "errors": {},
                         "id": USER_WITH_MULTIPLE_ACCOUNTS_ID,
                         "name": USER_WITH_MULTIPLE_ACCOUNTS_NAME,
                         "type": "ASGARD",

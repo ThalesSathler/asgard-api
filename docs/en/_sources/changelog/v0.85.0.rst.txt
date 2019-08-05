@@ -1,0 +1,7 @@
+0.85.0
+======
+
+Asgard API
+----------
+
+- [`PR #126 <https://github.com/B2W-BIT/asgard-api/pull/126>`_] Implementando endpoint `/accounts/<id>`
