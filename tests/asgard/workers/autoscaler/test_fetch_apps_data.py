@@ -7,7 +7,7 @@ from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 
 
-class FetchAppsDataTest(TestCase):
+class TestFetchAppsData(TestCase):
     async def test_get_all_apps_data(self):
         scaler = AsgardInterface()
 
@@ -121,7 +121,6 @@ class FetchAppsDataTest(TestCase):
             for i in range(len(fixture)):
                 self.assertEqual(fixture[i].id, apps[i].id)
                 self.assertEqual(fixture[i].autoscale_cpu, apps[i].autoscale_cpu)
-                self.assertEqual(fixture[i].autoscale_ignore, apps[i].autoscale_ignore)
                 self.assertEqual(fixture[i].autoscale_mem, apps[i].autoscale_mem)
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
@@ -209,13 +208,18 @@ class FetchAppsDataTest(TestCase):
             fixture = [
                 ScalableApp(
                     "test_app1",
-                    autoscale_cpu=0.3,
-                    autoscale_mem=0.8,
-                    autoscale_ignore="all",
+                    autoscale_cpu=None,
+                    autoscale_mem=None,
                 ),
-                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
                 ScalableApp(
-                    "test_app3", autoscale_cpu=0.5, autoscale_ignore="cpu"
+                    "test_app2",
+                    autoscale_cpu=0.1,
+                    autoscale_mem=0.1
+                ),
+                ScalableApp(
+                    "test_app3",
+                    autoscale_cpu=None,
+                    autoscale_mem=None
                 ),
             ]
 
@@ -231,7 +235,6 @@ class FetchAppsDataTest(TestCase):
 
             self.assertEqual(fixture[1].id, apps[0].id)
             self.assertEqual(fixture[1].autoscale_cpu, apps[0].autoscale_cpu)
-            self.assertEqual(fixture[1].autoscale_ignore, apps[0].autoscale_ignore)
             self.assertEqual(fixture[1].autoscale_mem, apps[0].autoscale_mem)
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
@@ -271,9 +274,7 @@ class FetchAppsDataTest(TestCase):
             fixture = [
                 ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8),
                 ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
-                ScalableApp(
-                    "test_app3", autoscale_cpu=0.5, autoscale_ignore="cpu"
-                ),
+                ScalableApp("test_app3", autoscale_cpu=None, autoscale_mem=None),
             ]
 
             rsps.get(
@@ -288,12 +289,10 @@ class FetchAppsDataTest(TestCase):
 
             self.assertEqual(fixture[0].id, apps[0].id)
             self.assertEqual(fixture[0].autoscale_cpu, apps[0].autoscale_cpu)
-            self.assertEqual(fixture[0].autoscale_ignore, apps[0].autoscale_ignore)
             self.assertEqual(fixture[0].autoscale_mem, apps[0].autoscale_mem)
 
             self.assertEqual(fixture[1].id, apps[1].id)
             self.assertEqual(fixture[1].autoscale_cpu, apps[1].autoscale_cpu)
-            self.assertEqual(fixture[1].autoscale_ignore, apps[1].autoscale_ignore)
             self.assertEqual(fixture[1].autoscale_mem, apps[1].autoscale_mem)
 
     async def test_get_app_stats_existing_app_id(self):

@@ -8,7 +8,7 @@ from asgard.workers.autoscaler.cloudinterface import (
 from asgard.workers.autoscaler.periodicstatechecker import PeriodicStateChecker
 
 
-class StateCheckerTest(TestCase):
+class TestStateChecker(TestCase):
     async def test_get_scalable_apps_stats_no_scalable_apps(self):
         state_checker = PeriodicStateChecker(AsgardCloudInterface())
         with aioresponses() as rsps:

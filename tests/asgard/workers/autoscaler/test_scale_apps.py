@@ -7,7 +7,7 @@ from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.scaling_decision import Decision
 
 
-class ScaleAppsTest(TestCase):
+class TestScaleApps(TestCase):
     async def test_tune_everything_in_one_app(self):
         interface = AsgardInterface()
         app = ScalableApp("test")

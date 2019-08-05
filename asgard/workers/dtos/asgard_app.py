@@ -41,14 +41,21 @@ class AppConverter(
         scalable_app = ScalableApp(appid)
 
         if dto_object.labels is not None:
-            if "asgard.autoscale.ignore" in dto_object.labels:
-                scalable_app.autoscale_ignore = dto_object.labels["asgard.autoscale.ignore"]
-
             if "asgard.autoscale.cpu" in dto_object.labels:
                 scalable_app.autoscale_cpu = float(dto_object.labels["asgard.autoscale.cpu"])
 
             if "asgard.autoscale.mem" in dto_object.labels:
                 scalable_app.autoscale_mem = float(dto_object.labels["asgard.autoscale.mem"])
+
+            if "asgard.autoscale.ignore" in dto_object.labels:
+                if "all" in dto_object.labels["asgard.autoscale.ignore"]:
+                    scalable_app.autoscale_cpu = None
+                    scalable_app.autoscale_mem = None
+                else:
+                    if "cpu" in dto_object.labels["asgard.autoscale.ignore"]:
+                        scalable_app.autoscale_cpu = None
+                    if "mem" in dto_object.labels["asgard.autoscale.ignore"]:
+                        scalable_app.autoscale_mem = None
 
         return scalable_app
 
