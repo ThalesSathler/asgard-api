@@ -1,3 +1,4 @@
+import asyncio
 from http import HTTPStatus
 
 from asgard.api import jobs
@@ -286,6 +287,7 @@ class JobsEndpointTestCase(BaseTestCase):
             CreateScheduledJobResource(**resp_data).job.id,
         )
 
+        await asyncio.sleep(0.5)
         resp_created_job = await self.client.get(
             f"/jobs/{asgard_job_no_namespace.id}",
             headers={
