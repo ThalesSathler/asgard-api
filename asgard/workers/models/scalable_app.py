@@ -10,6 +10,3 @@ class ScalableApp:
         self.autoscale_ignore = autoscale_ignore
         self.autoscale_cpu = autoscale_cpu
         self.autoscale_mem = autoscale_mem
-
-    def __eq__(self, other) -> bool:
-        return other.id == self.id

@@ -77,7 +77,7 @@ class AsgardInterface(CloudInterface):
     async def get_app_stats(self, app_id: str) -> AppStats:
         async with http_client as client:
             http_response = await client.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats"
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats"
             )
 
             response = await http_response.json()

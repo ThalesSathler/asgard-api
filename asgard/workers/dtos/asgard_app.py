@@ -24,13 +24,21 @@ class AppStatsDto(BaseModel):
     id: str
     stats: StatsSpec
 
+    def was_not_found(self) -> bool:
+        return self.stats.cpu_pct == "0" and self.stats.ram_pct == "0" and self.stats.cpu_thr_pct == "0"
+
 
 class AppConverter(
     Converter[ScalableApp, AppDto]
 ):
     @classmethod
     def to_model(cls, dto_object: AppDto) -> ScalableApp:
-        scalable_app = ScalableApp(dto_object.id)
+        if dto_object.id[0] == '/':
+            appid = dto_object.id[1:]
+        else:
+            appid = dto_object.id
+
+        scalable_app = ScalableApp(appid)
 
         if dto_object.labels is not None:
             if "asgard.autoscale.ignore" in dto_object.labels:
@@ -54,8 +62,17 @@ class AppStatsConverter (
     Converter[AppStats, AppStatsDto]
 ):
     @classmethod
-    def to_model(cls, dto_object: AppStatsDto) -> AppStats:
-        app_stats = AppStats(dto_object.id)
+    def to_model(cls, dto_object: AppStatsDto) -> Optional[AppStats]:
+
+        if dto_object.was_not_found():
+            return None
+
+        if dto_object.id[0] == '/':
+            appid = dto_object.id[1:]
+        else:
+            appid = dto_object.id
+
+        app_stats = AppStats(appid)
         app_stats.cpu_usage = float(dto_object.stats.cpu_pct)
         app_stats.ram_usage = float(dto_object.stats.ram_pct)
 

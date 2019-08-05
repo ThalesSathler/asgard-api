@@ -44,11 +44,17 @@ class FetchAppsDataTest(TestCase):
             )
             apps = await scaler.fetch_all_apps()
 
-        self.assertEqual(4, len(apps))
-        self.assertEqual("/test_app", apps[0].id)
-        self.assertEqual("/test_app2", apps[1].id)
-        self.assertEqual("/test_app3", apps[2].id)
-        self.assertEqual("/test_app4", apps[3].id)
+        fixture = [
+            ScalableApp('test_app'),
+            ScalableApp('test_app2'),
+            ScalableApp('test_app3'),
+            ScalableApp('test_app4')
+        ]
+
+        self.assertEqual(len(fixture), len(apps))
+
+        for i in range(len(fixture)):
+            self.assertEqual(fixture[i].id, apps[i].id)
 
     async def test_get_all_apps_data_no_data_found(self):
         scaler = AsgardInterface()
@@ -68,7 +74,7 @@ class FetchAppsDataTest(TestCase):
         with aioresponses() as rsps:
             payload = [
                 {
-                    "id": "test_app1",
+                    "id": "/test_app1",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -77,7 +83,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app2",
+                    "id": "/test_app2",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -86,7 +92,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app3",
+                    "id": "/test_app3",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -110,8 +116,13 @@ class FetchAppsDataTest(TestCase):
 
             apps = await scaler.get_all_scalable_apps()
 
-            self.assertEqual(3, len(apps))
-            self.assertListEqual(fixture, apps)
+            self.assertEqual(len(fixture), len(apps))
+
+            for i in range(len(fixture)):
+                self.assertEqual(fixture[i].id, apps[i].id)
+                self.assertEqual(fixture[i].autoscale_cpu, apps[i].autoscale_cpu)
+                self.assertEqual(fixture[i].autoscale_ignore, apps[i].autoscale_ignore)
+                self.assertEqual(fixture[i].autoscale_mem, apps[i].autoscale_mem)
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
         scaler = AsgardInterface()
@@ -119,7 +130,7 @@ class FetchAppsDataTest(TestCase):
         with aioresponses() as rsps:
             fixture = [
                 {
-                    "id": "test_app1",
+                    "id": "/test_app1",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -129,7 +140,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app2",
+                    "id": "/test_app2",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -139,7 +150,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app3",
+                    "id": "/test_app3",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -166,7 +177,7 @@ class FetchAppsDataTest(TestCase):
         with aioresponses() as rsps:
             payload = [
                 {
-                    "id": "test_app1",
+                    "id": "/test_app1",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -176,7 +187,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app2",
+                    "id": "/test_app2",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -185,7 +196,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app3",
+                    "id": "/test_app3",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -217,7 +228,11 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(1, len(apps))
-            self.assertEqual(fixture[1], apps[0])
+
+            self.assertEqual(fixture[1].id, apps[0].id)
+            self.assertEqual(fixture[1].autoscale_cpu, apps[0].autoscale_cpu)
+            self.assertEqual(fixture[1].autoscale_ignore, apps[0].autoscale_ignore)
+            self.assertEqual(fixture[1].autoscale_mem, apps[0].autoscale_mem)
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
         scaler = AsgardInterface()
@@ -225,7 +240,7 @@ class FetchAppsDataTest(TestCase):
         with aioresponses() as rsps:
             payload = [
                 {
-                    "id": "test_app1",
+                    "id": "/test_app1",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -234,7 +249,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app2",
+                    "id": "/test_app2",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -243,7 +258,7 @@ class FetchAppsDataTest(TestCase):
                     },
                 },
                 {
-                    "id": "test_app3",
+                    "id": "/test_app3",
                     "cpu": "0.2",
                     "mem": "0.2",
                     "labels": {
@@ -270,7 +285,16 @@ class FetchAppsDataTest(TestCase):
             apps = await scaler.get_all_scalable_apps()
 
             self.assertEqual(2, len(apps))
-            self.assertEqual(fixture[:2], apps)
+
+            self.assertEqual(fixture[0].id, apps[0].id)
+            self.assertEqual(fixture[0].autoscale_cpu, apps[0].autoscale_cpu)
+            self.assertEqual(fixture[0].autoscale_ignore, apps[0].autoscale_ignore)
+            self.assertEqual(fixture[0].autoscale_mem, apps[0].autoscale_mem)
+
+            self.assertEqual(fixture[1].id, apps[1].id)
+            self.assertEqual(fixture[1].autoscale_cpu, apps[1].autoscale_cpu)
+            self.assertEqual(fixture[1].autoscale_ignore, apps[1].autoscale_ignore)
+            self.assertEqual(fixture[1].autoscale_mem, apps[1].autoscale_mem)
 
     async def test_get_app_stats_existing_app_id(self):
         scaler = AsgardInterface()
@@ -288,7 +312,7 @@ class FetchAppsDataTest(TestCase):
             app_id = "app_test1"
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats",
                 status=200,
                 payload=payload,
             )
@@ -317,12 +341,11 @@ class FetchAppsDataTest(TestCase):
             app_id = "app_test1"
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps{app_id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats",
                 status=200,
                 payload=fixture,
             )
 
             stats = await scaler.get_app_stats(app_id)
 
-            # TODO review API return, should return 404 or error
             self.assertEqual(None, stats)
