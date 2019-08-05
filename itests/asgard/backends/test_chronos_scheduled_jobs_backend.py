@@ -177,6 +177,30 @@ class ChronosScheduledJobsBackendTest(TestCase):
         )
         self.assertEqual(returned_job, stored_job)
 
+    async def test_create_job_add_default_uris_fields(self):
+        """
+        Confere que as URIs default são adicionadas ao Job
+        """
+        user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        expected_fetch_list = self.asgard_job.fetch + [
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[0].uri),
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[1].uri),
+        ]
+
+        await _cleanup_chronos()
+
+        self.asgard_job.remove_namespace(self.account)
+        returned_job = await self.backend.create_job(
+            self.asgard_job, user, account
+        )
+        await asyncio.sleep(1)
+        stored_job = await self.backend.get_job_by_id(
+            returned_job.id, user, account
+        )
+        self.assertEqual(expected_fetch_list, stored_job.fetch)
+
     @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
     @with_json_fixture("scheduled-jobs/chronos/infra-some-scheduled-job.json")
     async def test_create_job_duplicate_entity(
@@ -326,6 +350,34 @@ class ChronosScheduledJobsBackendTest(TestCase):
             self.asgard_job.id, self.user, self.account
         )
         self.assertCountEqual(self.asgard_job.fetch, stored_job.fetch)
+
+    async def test_update_job_add_default_fetch_uri(self):
+        del self.chronos_dev_job_fixture["fetch"]
+
+        new_fetch_uri = FetchURLSpec(
+            uri="https://static.server.com/assets/main.css"
+        )
+
+        expected_fetch_list = [
+            new_fetch_uri,
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[0].uri),
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[1].uri),
+        ]
+
+        await _load_jobs_into_chronos(self.chronos_dev_job_fixture)
+
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**self.chronos_dev_job_fixture)
+        )
+        asgard_job.add_fetch_uri(new_fetch_uri)
+        asgard_job.remove_namespace(self.account)
+
+        await self.backend.update_job(asgard_job, self.user, self.account)
+
+        stored_job = await self.backend.get_job_by_id(
+            asgard_job.id, self.user, self.account
+        )
+        self.assertEqual(expected_fetch_list, stored_job.fetch)
 
     async def test_update_job_change_sub_fields(self):
         await _load_jobs_into_chronos(self.chronos_dev_job_fixture)

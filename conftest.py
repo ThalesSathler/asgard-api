@@ -21,6 +21,12 @@ VALUES = {
     "SCHEDULED_JOBS_SERVICE_AUTH": json.dumps(
         {"user": "chronos", "password": "secret"}
     ),
+    "SCHEDULED_JOBS_DEFAULT_FETCH_URIS": json.dumps(
+        [
+            {"uri": "file:///etc/docker.tar.bz2"},
+            {"uri": "file:///etc/config.bz2"},
+        ]
+    ),
 }
 
 

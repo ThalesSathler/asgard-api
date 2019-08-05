@@ -50,6 +50,13 @@ class App(AbstractApp):
         ]
         return self
 
+    def add_fetch_uri(self, fetch: FetchURLSpec) -> "App":
+        if not self.fetch:
+            self.fetch = []
+        self.fetch = [item for item in self.fetch if item.uri != fetch.uri]
+        self.fetch.append(fetch)
+        return self
+
 
 class ScheduledJob(App):
     """
