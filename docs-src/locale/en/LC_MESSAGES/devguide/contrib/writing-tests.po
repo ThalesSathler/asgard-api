@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/contrib/writing-tests.rst:5
+msgid "Escrevendo testes para o projeto"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:8
+msgid "Os testes do projeto Asgard estão dvididos em duas categorias:"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:10
+#: ../../devguide/contrib/writing-tests.rst:22
+msgid "Testes unitários"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:11
+#: ../../devguide/contrib/writing-tests.rst:27
+msgid "Testes funcionais"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:13
+msgid ""
+"Os testes unitários estão abaixo da pasta ``tests/`` e os funcionais "
+"estão abaixo da pasta ``itests/``. A diferença entre eles é que os testes"
+" funcionais dependem de recursos externos, como por exemplo Banco de "
+"daos, ElasticSearch, etc."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:17
+msgid "Localização dos testes dentro de suas respectivas pastas"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:19
+msgid ""
+"Os arquivos de teste devem seguir a mesma hierarquia de pastas do código "
+"que está sendo testando. Pegando um exemplo: Os testes da classe "
+":py:class:`asgard.services.apps.AppsService` que está declarada em "
+"``asgard/services/apps.py`` devem estar abaixo da pasta "
+"``tests/asgard/service/``. Nesse caso estão em "
+"``tests/asgard/services/test_apps_service.py``."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:24
+msgid ""
+"Os testes unitários são escritos com ``asynctest`` e devem ser subclasse "
+"de ``asynctest.TestCase``."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:29
+msgid ""
+"Todos os testes funcionais são subclasses da classe "
+"``itests.util.BaseTestCase``. Importante notar que todos as classes de "
+"teste precisam implementar os métodos ``setUp(self)`` e "
+"``tearDown(self)``. Esses métodos são, na verdade, corotinas. Então sua "
+"classe de teste deve declará-los também como corotinas. Um exemplo de "
+"caso de teste para um teste funcional."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:40
+msgid ""
+"Essa é a base para uma nova classe de teste que implementa testes "
+"funcionais."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:42
+msgid ""
+"Se se teste é um teste que chama a API do asgard, existe uma corotina que"
+" que te devolve um ``aiohttp_client``, dessa forma:"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:53
+msgid ""
+"A partir desse momento você pode chamar a API do Asgard usando esse "
+"client, como se fosse um cliente http comum."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:56
+msgid "Usando aiohttp_client com aioresponses"
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:58
+msgid ""
+"Quando estamos escrevendo testes que fazem chamadaas reais à API do "
+"Asgard e ao mesmo tempo precisamos mocker alguma outra requisição que o "
+"código da API fará, precisamos passar uma opção especial para o "
+"aioresponses, que é o ``passthrough``."
+msgstr ""
+
+#: ../../devguide/contrib/writing-tests.rst:69
+msgid ""
+"Quaisquer outros serviços HTTP que precisarem ser usados pelo teste (sem "
+"mock) devem ser adicionados à lista que está sendo passada para o "
+"``aioresponses``."
+msgstr ""
+

@@ -1,0 +1,69 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/code/legacy-api.rst:5
+msgid "Código legado da Asgard API"
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:7
+msgid ""
+"A Asgard API começou com sendo um projeto `flask "
+"<http://flask.pocoo.org/docs/1.0/>`_, usando python 2.7."
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:9
+msgid ""
+"Todo esse código está abaixo da pasta ``hollowman/``, que inclusive era o"
+" nome antigo do projeto, antes de se chamar Asgard."
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:11
+msgid ""
+"O código da Asgard API está sendo re-escrito com `aiohttp "
+"<https://aiohttp.readthedocs.io/en/stable/>`_ sendo o motor HTTP por "
+"baixo dos panos. Não usamos o aiohttp diretamente, o re-write da Asgard "
+"API usa como framework o `asyncworker <https://github.com/B2W-BIT/async-"
+"worker>`_, que é um framework genérico, multi-backend para escrever "
+"workers em python assíncrono."
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:13
+msgid "Escrevemos alguns posts sobre esse framework, estão aqui:"
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:15
+msgid ""
+"`Asyncworker — Microframework para consumers assíncronos em Python "
+"<https://medium.com/@diogommartins/asyncworker-microframework-de-"
+"consumers-ass%C3%ADncronos-em-python-f97cf64c6d1b>`_"
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:16
+msgid ""
+"`Escrevendo workers assíncronos em python com asyncowrker "
+"<https://daltonmatos.com/2019/03/escrevendo-workers-assincronos-em-"
+"python-com-asyncowrker/>`_"
+msgstr ""
+
+#: ../../devguide/code/legacy-api.rst:18
+msgid ""
+"O início do código da Asgard API está na :ref:`definição das rotas HTTP "
+"<asgard.http>`."
+msgstr ""
+

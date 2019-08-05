@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/code/services.rst:4
+msgid "Services"
+msgstr ""
+
+#: ../../devguide/code/services.rst:7
+msgid ""
+"Service faz o papel da \"ponte\" entre os endpoints HTTP e todo restante "
+"do código. E ideia é que os endppints HTTP só consigam interagir com o "
+"restante do código através de um \"Service\"."
+msgstr ""
+
+#: ../../devguide/code/services.rst:9
+msgid ""
+"A ideia dos \"Services\" é mapear todas as possíveis ações que a Asgard "
+"API pode executar."
+msgstr ""
+
+#: ../../devguide/code/services.rst:12
+msgid "Os services estão hoje divididos em:"
+msgstr ""
+
+#: ../../devguide/code/services.rst:14
+msgid ":py:class:`AgentsService <asgard.services.agents.AgentsService>`"
+msgstr ""
+
+#: ../../devguide/code/services.rst:15
+msgid ":py:class:`AppsSerivce <asgard.services.apps.AppsService>`"
+msgstr ""
+
+#: ../../devguide/code/services.rst:17
+msgid ""
+"Essas são classes concretas e ali estão todas as ações que podem ser "
+"executadas em cada service. À medida em que mais endpints HTTP forem "
+"surgindo podemos criar novos services para que esses endpoints possam "
+"executar suas funções."
+msgstr ""
+
+#: ../../devguide/code/services.rst:19
+msgid ""
+"O papel dos Services é falar com os backends, que são as implementações "
+"efetivas, que realmente vão às APIs que compõem o projeto Asgard."
+msgstr ""
+
+#: ../../devguide/code/services.rst:22
+msgid "AgentsService"
+msgstr ""
+
+#: ../../devguide/code/services.rst:24
+msgid ""
+"Aqui está a implementação do ``AgentsService``, mostrando os métodos "
+"disponíveis:"
+msgstr ""
+
+#: asgard.services.agents.AgentsService.get_agents:1 of
+msgid ""
+"Lista todos os agentes de cluster asgard. Essa litsa vem do orquestrador "
+"que é passado como parametro."
+msgstr ""
+
+#: ../../devguide/code/services.rst:32
+msgid ""
+"Perceba como os métodos do ``AgentsService`` recebem objetos concretos em"
+" vez de tipos primitivos, esses são os :py:mod:`Models <asgard.models>`. "
+"A única exceção é quando precisamos buscar um objeto usando seu "
+"identificador único (``id``), nesse caso passamos o valor do ``id`` "
+"mesmo, já que essa busca é justamente quem vai fazer a troca de um \"id\""
+" por um objeto preenchido."
+msgstr ""
+
+#: ../../devguide/code/services.rst:35
+msgid "AppsService"
+msgstr ""
+
+#: ../../devguide/code/services.rst:37
+msgid ""
+"Aqui está a implementação do :py:class:`AppsService "
+"<asgard.services.apps.AppsServices>`:"
+msgstr ""
+
+#: asgard.services.apps.AppsService.get_app_stats:1 of
+msgid ""
+"Retorna estatísticas de uso de CPU/RAM/CPU thr de uma app. O Cálculo "
+"considera todas as instâncias dessa app. Retorna um objeto "
+":py:class:`AppStats <asgard.models.app.AppStats>`"
+msgstr ""
+

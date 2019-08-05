@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clients &#8212; Asgard API  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="Backends" href="backends.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="clients">
+<span id="asgard-clients"></span><h1>Clients<a class="headerlink" href="#clients" title="Permalink to this headline">¶</a></h1>
+<p>Os clients fazem o papel de implementar a comunicação mais lowlevel com as APIs finals. Por exemplo a comunicação com o Marathon seria feita toda por um client específico.</p>
+<p>Esse client é o mapeamento exato das entradas e saídas dess API com a qual ele se comunica.</p>
+<p>Todos os clients devem enviar e retornar modelos dos recursos que a API em questão expõe. Um exemplo é o client para o chronos:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.clients.chronos.</code><code class="descname">ChronosClient</code><span class="sig-paren">(</span><em>url: str</em>, <em>user: Optional[str] = None</em>, <em>password: Optional[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/clients/chronos/client.html#ChronosClient"><span class="viewcode-link">[source]</span></a></dt>
+<dd><dl class="method">
+<dt>
+<code class="descname">create_job</code><span class="sig-paren">(</span><em>job: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../../_modules/asgard/clients/chronos/client.html#ChronosClient.create_job"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">delete_job</code><span class="sig-paren">(</span><em>job: asgard.clients.chronos.models.job.ChronosJob</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../../_modules/asgard/clients/chronos/client.html#ChronosClient.delete_job"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">get_job_by_id</code><span class="sig-paren">(</span><em>job_id: str</em><span class="sig-paren">)</span> &#x2192; asgard.clients.chronos.models.job.ChronosJob<a class="reference internal" href="../../_modules/asgard/clients/chronos/client.html#ChronosClient.get_job_by_id"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Retorna um Job do Chronos, dado seu id (nome).
+Raise asgard.http.exceptions.HTTPNotFound() se o job não existir</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">search</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; List[asgard.clients.chronos.models.job.ChronosJob]<a class="reference internal" href="../../_modules/asgard/clients/chronos/client.html#ChronosClient.search"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Procura por todos os jobs que contenham o termo <cite>name</cite> em seu nome.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Como exemplo o método <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_job_by_id()</span></code> retorna um modelo que representa um Job no Chronos, exatamente como a API original do Chronos retorna. Esse modelo está aqui:</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.clients.chronos.models.job.</code><code class="descname">ChronosJob</code><span class="sig-paren">(</span><em>**data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/clients/chronos/models/job.html#ChronosJob"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<p>Mapeando todas as entradas e saídas das APIs acabamos tendo validação de schema quando nos comunicamos com essas APIs. Essa é a ideia de um client, apenas ser um wrapper para uma API com validação de schema das entradas e saídas.</p>
+<p>Os clients não possuem uma interface abstrata fixa, podemos escolher quais são as ações disponíveis. Um <a class="reference internal" href="backends.html#asgard-backends"><span class="std std-ref">Backend</span></a> pode usar múltiplas ações de um client para exeutar uma de suas próprias ações.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="organization.html">Organização do código</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="legacy-api.html">Código legado da Asgard API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html">Endpoints HTTP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backends.html">Backends</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Clients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib/index.html">Contribuindo com o projeto</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">&lt;no title&gt;</a><ul>
+  <li><a href="organization.html">Organização do código</a><ul>
+      <li>Previous: <a href="backends.html" title="previous chapter">Backends</a></li>
+      <li>Next: <a href="models.html" title="next chapter">Models</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/code/clients.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

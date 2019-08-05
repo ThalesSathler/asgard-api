@@ -42,7 +42,7 @@
 <span class="kn">from</span> <span class="nn">asgard.http.exceptions</span> <span class="k">import</span> <span class="n">HTTPNotFound</span><span class="p">,</span> <span class="n">HTTPBadRequest</span>
 
 
-<div class="viewcode-block" id="ChronosClient"><a class="viewcode-back" href="../../../../code/clients.html#asgard.clients.chronos.ChronosClient">[docs]</a><span class="k">class</span> <span class="nc">ChronosClient</span><span class="p">:</span>
+<div class="viewcode-block" id="ChronosClient"><a class="viewcode-back" href="../../../../devguide/code/clients.html#asgard.clients.chronos.ChronosClient">[docs]</a><span class="k">class</span> <span class="nc">ChronosClient</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -74,7 +74,7 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;Basic </span><span class="si">{self.auth_data}</span><span class="s2">&quot;</span><span class="p">}</span>
         <span class="k">return</span> <span class="k">await</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">method</span><span class="p">)(</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ChronosClient.get_job_by_id"><a class="viewcode-back" href="../../../../code/clients.html#asgard.clients.chronos.ChronosClient.get_job_by_id">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_job_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
+<div class="viewcode-block" id="ChronosClient.get_job_by_id"><a class="viewcode-back" href="../../../../devguide/code/clients.html#asgard.clients.chronos.ChronosClient.get_job_by_id">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_job_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retorna um Job do Chronos, dado seu id (nome).</span>
 <span class="sd">        Raise asgard.http.exceptions.HTTPNotFound() se o job não existir</span>
@@ -90,7 +90,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">ChronosJob</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ChronosClient.search"><a class="viewcode-back" href="../../../../code/clients.html#asgard.clients.chronos.ChronosClient.search">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosJob</span><span class="p">]:</span>
+<div class="viewcode-block" id="ChronosClient.search"><a class="viewcode-back" href="../../../../devguide/code/clients.html#asgard.clients.chronos.ChronosClient.search">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ChronosJob</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Procura por todos os jobs que contenham o termo `name` em seu nome.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -103,14 +103,14 @@
         <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ChronosJob</span><span class="p">(</span><span class="o">**</span><span class="n">job</span><span class="p">)</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">jobs</span></div>
 
-<div class="viewcode-block" id="ChronosClient.create_job"><a class="viewcode-back" href="../../../../code/clients.html#asgard.clients.chronos.ChronosClient.create_job">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
+<div class="viewcode-block" id="ChronosClient.create_job"><a class="viewcode-back" href="../../../../devguide/code/clients.html#asgard.clients.chronos.ChronosClient.create_job">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.base_url}</span><span class="s2">/iso8601&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">job</span></div>
 
-<div class="viewcode-block" id="ChronosClient.delete_job"><a class="viewcode-back" href="../../../../code/clients.html#asgard.clients.chronos.ChronosClient.delete_job">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
+<div class="viewcode-block" id="ChronosClient.delete_job"><a class="viewcode-back" href="../../../../devguide/code/clients.html#asgard.clients.chronos.ChronosClient.delete_job">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">ChronosJob</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChronosJob</span><span class="p">:</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.base_url}</span><span class="s2">/job/</span><span class="si">{job.name}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">BAD_REQUEST</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">HTTPBadRequest</span><span class="p">()</span>
@@ -136,8 +136,8 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">Introdução</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../code/organization.html">Organização do código</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../devguide/index.html">Guia de desenvolvimento</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog/index.html">Changelog</a></li>
 </ul>
 

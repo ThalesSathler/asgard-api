@@ -12,8 +12,8 @@ Bem vindos à documentação oficial do projeto Asgard
    :titlesonly:
 
    intro.rst
-   code/index.rst
-   contrib/index.rst
+   userguide/index.rst
+   devguide/index.rst
    changelog/index.rst
 
 
