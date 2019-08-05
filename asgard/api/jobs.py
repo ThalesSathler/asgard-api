@@ -99,16 +99,9 @@ async def create_job(request: web.Request):
     )
 
 
-@app.route(["/jobs/{job_id}", "/jobs"], type=RouteTypes.HTTP, methods=["PUT"])
-@auth_required
-@validate_input
-async def update_job(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
-
-    req_body = await request.json()
-    job = ScheduledJob(**req_body)
-
+async def _update_job(
+    job: ScheduledJob, user: User, account: Account
+) -> web.Response:
     try:
         updated_job = await ScheduledJobsService.update_job(
             job, user, account, ChronosScheduledJobsBackend()
@@ -123,6 +116,32 @@ async def update_job(request: web.Request):
         CreateScheduledJobResource(job=updated_job).dict(),
         status=HTTPStatus.ACCEPTED,
     )
+
+
+@app.route(["/jobs"], type=RouteTypes.HTTP, methods=["PUT"])
+@auth_required
+@validate_input
+async def update_job(request: web.Request):
+    user = await User.from_alchemy_obj(request["user"])
+    account = await Account.from_alchemy_obj(request["user"].current_account)
+
+    req_body = await request.json()
+    job = ScheduledJob(**req_body)
+    return await _update_job(job, user, account)
+
+
+@app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["PUT"])
+@auth_required
+@validate_input
+async def update_job_by_id(request: web.Request):
+    user = await User.from_alchemy_obj(request["user"])
+    account = await Account.from_alchemy_obj(request["user"].current_account)
+
+    req_body = await request.json()
+    job = ScheduledJob(**req_body)
+    job.id = request.match_info["job_id"]
+
+    return await _update_job(job, user, account)
 
 
 @app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["DELETE"])
