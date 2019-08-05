@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional
 
-from pydantic import BaseSettings, BaseModel, ValidationError
+from pydantic import BaseSettings, BaseModel
 
 from asgard.models.spec.fetch import FetchURLSpec
 

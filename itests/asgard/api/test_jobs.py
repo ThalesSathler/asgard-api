@@ -1,7 +1,5 @@
 from http import HTTPStatus
 
-from tests.utils import with_json_fixture
-
 from asgard.api import jobs
 from asgard.api.resources import ErrorDetail, ErrorResource
 from asgard.api.resources.jobs import (
@@ -28,6 +26,7 @@ from itests.util import (
     _load_jobs_into_chronos,
     _cleanup_chronos,
 )
+from tests.utils import with_json_fixture
 
 
 class JobsEndpointTestCase(BaseTestCase):
