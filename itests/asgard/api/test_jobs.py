@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+from tests.utils import with_json_fixture
+
 from asgard.api import jobs
 from asgard.api.resources import ErrorDetail, ErrorResource
 from asgard.api.resources.jobs import (
@@ -12,7 +14,9 @@ from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
 from asgard.clients.chronos.models.job import ChronosJob
+from asgard.conf import settings
 from asgard.models.account import Account
+from asgard.models.spec.fetch import FetchURLSpec
 from asgard.models.user import User
 from itests.util import (
     BaseTestCase,
@@ -24,7 +28,6 @@ from itests.util import (
     _load_jobs_into_chronos,
     _cleanup_chronos,
 )
-from tests.utils import with_json_fixture
 
 
 class JobsEndpointTestCase(BaseTestCase):
@@ -257,6 +260,58 @@ class JobsEndpointTestCase(BaseTestCase):
         self.assertEqual(HTTPStatus.OK, resp_created_job.status)
 
     @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_create_job_add_internal_field_values(self, dev_job_fixture):
+        """
+        Conferimos que quando um job é criado adicionamos os valores obrigatórios
+        de alguns campos
+        """
+        await _cleanup_chronos()
+
+        account = Account(**ACCOUNT_DEV_DICT)
+
+        asgard_job_no_namespace = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        ).remove_namespace(account)
+
+        resp = await self.client.post(
+            "/jobs",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job_no_namespace.dict(),
+        )
+        self.assertEqual(HTTPStatus.CREATED, resp.status)
+        resp_data = await resp.json()
+        self.assertEqual(
+            f"{asgard_job_no_namespace.id}",
+            CreateScheduledJobResource(**resp_data).job.id,
+        )
+
+        resp_created_job = await self.client.get(
+            f"/jobs/{asgard_job_no_namespace.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        created_job_resource = ScheduledJobResource(
+            **await resp_created_job.json()
+        )
+        self.assertEqual(HTTPStatus.OK, resp_created_job.status)
+
+        expected_constraints = asgard_job_no_namespace.constraints + [
+            f"owner:LIKE:{account.owner}"
+        ]
+        self.assertEqual(
+            created_job_resource.job.constraints, expected_constraints
+        )
+
+        expected_fetch_uris = asgard_job_no_namespace.fetch + [
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[0].uri),
+            FetchURLSpec(uri=settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[1].uri),
+        ]
+        self.assertEqual(created_job_resource.job.fetch, expected_fetch_uris)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
     async def test_create_job_duplicate_entity(self, dev_job_fixture):
         account = Account(**ACCOUNT_DEV_DICT)
         await _load_jobs_into_chronos(dev_job_fixture)
@@ -407,7 +462,54 @@ class JobsEndpointTestCase(BaseTestCase):
         self.assertEqual(asgard_job.mem, updated_job_resource.job.mem)
 
     @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
+    async def test_update_job_job_exist_add_internal_field_values(
+        self, dev_job_fixture
+    ):
+        """
+        Conferimos que quando um job é atualizado, os campos obrigatórios são
+        inseridos
+        """
+        await _load_jobs_into_chronos(dev_job_fixture)
+        asgard_job = ChronosScheduledJobConverter.to_asgard_model(
+            ChronosJob(**dev_job_fixture)
+        )
+
+        expected_fetch_list = asgard_job.fetch + [
+            settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[0],
+            settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS[1],
+        ]
+        asgard_job.remove_namespace(self.account)
+
+        resp = await self.client.put(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+            json=asgard_job.dict(),
+        )
+        self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
+        updated_job_response = await self.client.get(
+            f"/jobs/{asgard_job.id}",
+            headers={
+                "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
+            },
+        )
+        updated_job_data = await updated_job_response.json()
+        updated_job_resource = CreateScheduledJobResource(**updated_job_data)
+
+        expected_constraints = asgard_job.constraints + [
+            f"owner:LIKE:{self.account.owner}"
+        ]
+        self.assertEqual(
+            updated_job_resource.job.constraints, expected_constraints
+        )
+        self.assertEqual(expected_fetch_list, updated_job_resource.job.fetch)
+
+    @with_json_fixture("scheduled-jobs/chronos/dev-with-infra-in-name.json")
     async def test_update_job_job_exist(self, dev_job_fixture):
+        """
+        Conferimos que um job é atualizado corretamente
+        """
         await _load_jobs_into_chronos(dev_job_fixture)
         asgard_job = ChronosScheduledJobConverter.to_asgard_model(
             ChronosJob(**dev_job_fixture)
@@ -495,12 +597,6 @@ class JobsEndpointTestCase(BaseTestCase):
             json=asgard_job.dict(),
         )
         self.assertEqual(HTTPStatus.ACCEPTED, resp.status)
-        resp_data = await resp.json()
-
-        asgard_job.add_constraint(f"owner:LIKE:{self.account.owner}")
-        self.assertEqual(
-            CreateScheduledJobResource(job=asgard_job).dict(), resp_data
-        )
 
         updated_job_response = await self.client.get(
             f"/jobs/{asgard_job.id}",
