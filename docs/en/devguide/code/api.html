@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Endpoints HTTP &#8212; Asgard API  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Services" href="services.html" />
+    <link rel="prev" title="Código legado da Asgard API" href="legacy-api.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="endpoints-http">
+<span id="asgard-http"></span><h1>Endpoints HTTP<a class="headerlink" href="#endpoints-http" title="Permalink to this headline">¶</a></h1>
+<p>O pacote <code class="docutils literal notranslate"><span class="pre">asgard.api</span></code> contém a definição de todos os endpoints HTTP e os objetos que representam as resposram serializadas por esses endpoints.</p>
+<p>Para cada endpoint na API HTTP, por exemplo, <code class="docutils literal notranslate"><span class="pre">/agents</span></code>, temos nesse pacote a definição das rotas desse endpoint em <code class="docutils literal notranslate"><span class="pre">asgard/api/agents.py</span></code>. Isso deve valer para todas as rotas do projeto.</p>
+<p>Para cada sub-rota de um endpoint, por exemplo, <code class="docutils literal notranslate"><span class="pre">/agents/with-attrs</span></code> temos definido em <code class="docutils literal notranslate"><span class="pre">asgard/api/resources</span></code> um modelo que representa essa resposta que será serializada por essa rota.</p>
+<p>Pegando então o exemplo do endpoint <code class="docutils literal notranslate"><span class="pre">/agents/with-attrs</span></code>, esse é modelo serializado por esse endpoint:</p>
+<p>Perceba que esse modelo faz referência a outros modelos. Já o código da view que vai serializar esse modelo vai apenas construir esse objeto usando os outros objetos menionados acima, ex:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+
+  <span class="n">agents</span> <span class="o">=</span> <span class="n">await</span> <span class="n">agents_service</span><span class="o">.</span><span class="n">get_agents</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">mesos</span><span class="p">)</span>
+  <span class="n">filtered_agents</span> <span class="o">=</span> <span class="n">apply_attr_filter</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span> <span class="n">agents</span><span class="p">)</span>
+
+  <span class="n">stats</span> <span class="o">=</span> <span class="n">calculate_stats</span><span class="p">(</span><span class="n">filtered_agents</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span>
+      <span class="n">AgentsResource</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="n">filtered_agents</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+<p>Essa é a ideia. Rotas HTTP estão mapeadas no pacote <code class="docutils literal notranslate"><span class="pre">asgard.api</span></code> serializando objetos mapeados que estão em <code class="docutils literal notranslate"><span class="pre">asgard.api.resources</span></code>.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="organization.html">Organização do código</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="legacy-api.html">Código legado da Asgard API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Endpoints HTTP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backends.html">Backends</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clients.html">Clients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib/index.html">Contribuindo com o projeto</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">&lt;no title&gt;</a><ul>
+  <li><a href="organization.html">Organização do código</a><ul>
+      <li>Previous: <a href="legacy-api.html" title="previous chapter">Código legado da Asgard API</a></li>
+      <li>Next: <a href="services.html" title="next chapter">Services</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/code/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

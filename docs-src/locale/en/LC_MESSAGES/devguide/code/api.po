@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/code/api.rst:5
+msgid "Endpoints HTTP"
+msgstr ""
+
+#: ../../devguide/code/api.rst:7
+msgid ""
+"O pacote ``asgard.api`` contém a definição de todos os endpoints HTTP e "
+"os objetos que representam as resposram serializadas por esses endpoints."
+msgstr ""
+
+#: ../../devguide/code/api.rst:10
+msgid ""
+"Para cada endpoint na API HTTP, por exemplo, ``/agents``, temos nesse "
+"pacote a definição das rotas desse endpoint em ``asgard/api/agents.py``. "
+"Isso deve valer para todas as rotas do projeto."
+msgstr ""
+
+#: ../../devguide/code/api.rst:12
+msgid ""
+"Para cada sub-rota de um endpoint, por exemplo, ``/agents/with-attrs`` "
+"temos definido em ``asgard/api/resources`` um modelo que representa essa "
+"resposta que será serializada por essa rota."
+msgstr ""
+
+#: ../../devguide/code/api.rst:14
+msgid ""
+"Pegando então o exemplo do endpoint ``/agents/with-attrs``, esse é modelo"
+" serializado por esse endpoint:"
+msgstr ""
+
+#: ../../devguide/code/api.rst:18
+msgid ""
+"Perceba que esse modelo faz referência a outros modelos. Já o código da "
+"view que vai serializar esse modelo vai apenas construir esse objeto "
+"usando os outros objetos menionados acima, ex:"
+msgstr ""
+
+#: ../../devguide/code/api.rst:32
+msgid ""
+"Essa é a ideia. Rotas HTTP estão mapeadas no pacote ``asgard.api`` "
+"serializando objetos mapeados que estão em ``asgard.api.resources``."
+msgstr ""
+

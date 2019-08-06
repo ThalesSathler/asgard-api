@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/code/clients.rst:4
+msgid "Clients"
+msgstr ""
+
+#: ../../devguide/code/clients.rst:6
+msgid ""
+"Os clients fazem o papel de implementar a comunicação mais lowlevel com "
+"as APIs finals. Por exemplo a comunicação com o Marathon seria feita toda"
+" por um client específico."
+msgstr ""
+
+#: ../../devguide/code/clients.rst:8
+msgid ""
+"Esse client é o mapeamento exato das entradas e saídas dess API com a "
+"qual ele se comunica."
+msgstr ""
+
+#: ../../devguide/code/clients.rst:10
+msgid ""
+"Todos os clients devem enviar e retornar modelos dos recursos que a API "
+"em questão expõe. Um exemplo é o client para o chronos:"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.get_job_by_id:1 of
+msgid ""
+"Retorna um Job do Chronos, dado seu id (nome). Raise "
+"asgard.http.exceptions.HTTPNotFound() se o job não existir"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.search:1 of
+msgid "Procura por todos os jobs que contenham o termo `name` em seu nome."
+msgstr ""
+
+#: ../../devguide/code/clients.rst:17
+msgid ""
+"Como exemplo o método "
+":py:meth:`~asgard.clients.chronos.ChronosClient.get_job_by_id()` retorna "
+"um modelo que representa um Job no Chronos, exatamente como a API "
+"original do Chronos retorna. Esse modelo está aqui:"
+msgstr ""
+
+#: ../../devguide/code/clients.rst:22
+msgid ""
+"Mapeando todas as entradas e saídas das APIs acabamos tendo validação de "
+"schema quando nos comunicamos com essas APIs. Essa é a ideia de um "
+"client, apenas ser um wrapper para uma API com validação de schema das "
+"entradas e saídas."
+msgstr ""
+
+#: ../../devguide/code/clients.rst:24
+msgid ""
+"Os clients não possuem uma interface abstrata fixa, podemos escolher "
+"quais são as ações disponíveis. Um :ref:`Backend <asgard.backends>` pode "
+"usar múltiplas ações de um client para exeutar uma de suas próprias "
+"ações."
+msgstr ""
+

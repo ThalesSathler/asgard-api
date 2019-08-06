@@ -49,8 +49,8 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<div class="viewcode-block" id="AgentsBackend"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.AgentsBackend">[docs]</a><span class="k">class</span> <span class="nc">AgentsBackend</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-<div class="viewcode-block" id="AgentsBackend.get_agents"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.AgentsBackend.get_agents">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="AgentsBackend"><a class="viewcode-back" href="../../../devguide/contrib/write-new-orquestrator.html#asgard.backends.base.AgentsBackend">[docs]</a><span class="k">class</span> <span class="nc">AgentsBackend</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="AgentsBackend.get_agents"><a class="viewcode-back" href="../../../devguide/contrib/write-new-orquestrator.html#asgard.backends.base.AgentsBackend.get_agents">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retorna todos os Agents da conta `account`.</span>
@@ -74,23 +74,23 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<div class="viewcode-block" id="Orchestrator"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator">[docs]</a><span class="k">class</span> <span class="nc">Orchestrator</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="Orchestrator"><a class="viewcode-back" href="../../../devguide/contrib/write-new-orquestrator.html#asgard.backends.base.Orchestrator">[docs]</a><span class="k">class</span> <span class="nc">Orchestrator</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Classe abstrata que mapeia todas as ações que um orquestrador pode excutar.</span>
 <span class="sd">    As depdenências injetadas aqui são implementações que efetivamente falam com cada um dos backends suportados.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Orchestrator.__init__"><a class="viewcode-back" href="../../../contrib/write-new-orquestrator.html#asgard.backends.base.Orchestrator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Orchestrator.__init__"><a class="viewcode-back" href="../../../devguide/contrib/write-new-orquestrator.html#asgard.backends.base.Orchestrator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">agents_backend</span><span class="p">:</span> <span class="n">AgentsBackend</span><span class="p">,</span> <span class="n">apps_backend</span><span class="p">:</span> <span class="n">AppsBackend</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents_backend</span> <span class="o">=</span> <span class="n">agents_backend</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apps_backend</span> <span class="o">=</span> <span class="n">apps_backend</span></div>
 
-<div class="viewcode-block" id="Orchestrator.get_agents"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator.get_agents">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Orchestrator.get_agents"><a class="viewcode-back" href="../../../devguide/contrib/write-new-orquestrator.html#asgard.backends.base.Orchestrator.get_agents">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="Orchestrator.get_apps_running_for_agent"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator.get_apps_running_for_agent">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Orchestrator.get_apps_running_for_agent"><a class="viewcode-back" href="../../../devguide/code/backends.html#asgard.backends.base.Orchestrator.get_apps_running_for_agent">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_apps_running_for_agent</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">App</span><span class="p">]:</span>
@@ -99,13 +99,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="Orchestrator.get_agent_by_id"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator.get_agent_by_id">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Orchestrator.get_agent_by_id"><a class="viewcode-back" href="../../../devguide/code/backends.html#asgard.backends.base.Orchestrator.get_agent_by_id">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_agent_by_id</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Agent</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="Orchestrator.get_app_stats"><a class="viewcode-back" href="../../../src/asgard/asgard.backends.html#asgard.backends.base.Orchestrator.get_app_stats">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Orchestrator.get_app_stats"><a class="viewcode-back" href="../../../devguide/code/backends.html#asgard.backends.base.Orchestrator.get_app_stats">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_app_stats</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="n">App</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppStats</span><span class="p">:</span>
@@ -131,8 +131,8 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introdução</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code/organization.html">Organização do código</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contrib/index.html">Contribuindo com o projeto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../devguide/index.html">Guia de desenvolvimento</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog/index.html">Changelog</a></li>
 </ul>
 

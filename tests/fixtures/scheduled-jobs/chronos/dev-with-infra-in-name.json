@@ -46,7 +46,7 @@
    "executorFlags" : "",
    "fetch" : [
      {
-       "uri": "file:///etc/docker.tar.bz2",
+       "uri": "file:///var/data/data.tar.bz2",
        "executable": false,
        "cache": false,
        "extract": true

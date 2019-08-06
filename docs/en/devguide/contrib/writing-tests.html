@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Escrevendo testes para o projeto &#8212; Asgard API  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Escrevendo uma implementação de um novo Orquestrador" href="write-new-orquestrator.html" />
+    <link rel="prev" title="Criando código para o projeto" href="writing-code.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="escrevendo-testes-para-o-projeto">
+<span id="writing-tests"></span><h1>Escrevendo testes para o projeto<a class="headerlink" href="#escrevendo-testes-para-o-projeto" title="Permalink to this headline">¶</a></h1>
+<p>Os testes do projeto Asgard estão dvididos em duas categorias:</p>
+<ul class="simple">
+<li><p>Testes unitários</p></li>
+<li><p>Testes funcionais</p></li>
+</ul>
+<p>Os testes unitários estão abaixo da pasta <code class="docutils literal notranslate"><span class="pre">tests/</span></code> e os funcionais estão abaixo da pasta <code class="docutils literal notranslate"><span class="pre">itests/</span></code>. A diferença entre eles é que os testes funcionais dependem de recursos externos, como por exemplo Banco de daos, ElasticSearch, etc.</p>
+<div class="section" id="localizacao-dos-testes-dentro-de-suas-respectivas-pastas">
+<h2>Localização dos testes dentro de suas respectivas pastas<a class="headerlink" href="#localizacao-dos-testes-dentro-de-suas-respectivas-pastas" title="Permalink to this headline">¶</a></h2>
+<p>Os arquivos de teste devem seguir a mesma hierarquia de pastas do código que está sendo testando. Pegando um exemplo: Os testes da classe <a class="reference internal" href="../../src/asgard/asgard.services.html#asgard.services.apps.AppsService" title="asgard.services.apps.AppsService"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.services.apps.AppsService</span></code></a> que está declarada em <code class="docutils literal notranslate"><span class="pre">asgard/services/apps.py</span></code> devem estar abaixo da pasta <code class="docutils literal notranslate"><span class="pre">tests/asgard/service/</span></code>. Nesse caso estão em <code class="docutils literal notranslate"><span class="pre">tests/asgard/services/test_apps_service.py</span></code>.</p>
+<div class="section" id="testes-unitarios">
+<h3>Testes unitários<a class="headerlink" href="#testes-unitarios" title="Permalink to this headline">¶</a></h3>
+<p>Os testes unitários são escritos com <code class="docutils literal notranslate"><span class="pre">asynctest</span></code> e devem ser subclasse de <code class="docutils literal notranslate"><span class="pre">asynctest.TestCase</span></code>.</p>
+</div>
+<div class="section" id="testes-funcionais">
+<h3>Testes funcionais<a class="headerlink" href="#testes-funcionais" title="Permalink to this headline">¶</a></h3>
+<p>Todos os testes funcionais são subclasses da classe <code class="docutils literal notranslate"><span class="pre">itests.util.BaseTestCase</span></code>. Importante notar que todos as classes de teste precisam implementar os métodos <code class="docutils literal notranslate"><span class="pre">setUp(self)</span></code> e <code class="docutils literal notranslate"><span class="pre">tearDown(self)</span></code>. Esses métodos são, na verdade, corotinas. Então sua classe de teste deve declará-los também como corotinas. Um exemplo de caso de teste para um teste funcional.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyTestCase</span><span class="p">(</span><span class="n">BaseTestCase</span><span class="p">):</span>
+   <span class="n">async</span> <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">await</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyTestCase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
+
+   <span class="n">async</span> <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">await</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyTestCase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">tearDown</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Essa é a base para uma nova classe de teste que implementa testes funcionais.</p>
+<p>Se se teste é um teste que chama a API do asgard, existe uma corotina que que te devolve um <code class="docutils literal notranslate"><span class="pre">aiohttp_client</span></code>, dessa forma:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">asgard.app</span> <span class="kn">import</span> <span class="n">app</span>
+
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">aiohttp_client</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A partir desse momento você pode chamar a API do Asgard usando esse client, como se fosse um cliente http comum.</p>
+</div>
+</div>
+<div class="section" id="usando-aiohttp-client-com-aioresponses">
+<h2>Usando aiohttp_client com aioresponses<a class="headerlink" href="#usando-aiohttp-client-com-aioresponses" title="Permalink to this headline">¶</a></h2>
+<p>Quando estamos escrevendo testes que fazem chamadaas reais à API do Asgard e ao mesmo tempo precisamos mocker alguma outra requisição que o código da API fará, precisamos passar uma opção especial para o aioresponses, que é o <code class="docutils literal notranslate"><span class="pre">passthrough</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tests.conf</span> <span class="kn">import</span> <span class="n">TEST_LOCAL_AIOHTTP_ADDRESS</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">test_uses_api_and_needs_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="n">async</span> <span class="k">with</span> <span class="n">aioresponses</span><span class="p">(</span><span class="n">passthrough</span><span class="o">=</span><span class="p">[</span><span class="n">TEST_LOCAL_AIOHTTP_ADDRESS</span><span class="p">])</span> <span class="k">as</span> <span class="n">rsps</span><span class="p">:</span>
+    <span class="n">rsps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Quaisquer outros serviços HTTP que precisarem ser usados pelo teste (sem mock) devem ser adicionados à lista que está sendo passada para o <code class="docutils literal notranslate"><span class="pre">aioresponses</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../code/organization.html">Organização do código</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Contribuindo com o projeto</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="doc-update.html">Atualizando a documentação do projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="doc-gen.html">Gerando a versão html da documentação</a></li>
+<li class="toctree-l3"><a class="reference internal" href="running-local.html">Rodando o projeto localmente</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing-code.html">Criando código para o projeto</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Escrevendo testes para o projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="write-new-orquestrator.html">Escrevendo uma implementação de um novo Orquestrador</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">Contribuindo com o projeto</a><ul>
+      <li>Previous: <a href="writing-code.html" title="previous chapter">Criando código para o projeto</a></li>
+      <li>Next: <a href="write-new-orquestrator.html" title="next chapter">Escrevendo uma implementação de um novo Orquestrador</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/contrib/writing-tests.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

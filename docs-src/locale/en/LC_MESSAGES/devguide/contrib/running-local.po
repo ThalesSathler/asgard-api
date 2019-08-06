@@ -1,0 +1,242 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/contrib/running-local.rst:5
+msgid "Rodando o projeto localmente"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:7
+msgid "Essa é lista de ENVs já com os valores para o ambiente de desenvolvimento:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:37
+msgid ""
+"Você precisa passar todas as envs para ser possível rodar o código da "
+"API. O jeito mais simples de fazer isso é criar um arquivo chamado "
+"``.env`` na raiz do projeto, contento todas as envs mostradas acima, "
+"exatamente com esses valores. Esse arquivo já está no ``.gitignore``, por"
+" isso não será comitado."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:41
+msgid ""
+"Todas as ENVs com prefrixo ``HOLLOWMAN_`` são usadas pelo :ref:`código "
+"legado <hollowman.api>`. As ENVs novas possuem o prefixo ``ASGARD_``. Aos"
+" poucos vamos migrando o cógido e as envs."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:44
+msgid "Rodando a Asgard API localmente"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:46
+msgid ""
+"O projeto Asgard API usa o `pipenv "
+"<https://pipenv.readthedocs.io/en/latest/>`_ e precisa do python 3.6.x. "
+"Antes de instalar as dependências, certifique-se que o python 3.6 esteja "
+"instalado e funcionando."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:49
+msgid ""
+"Recomendamos o uso do `pyenv <https://github.com/pyenv/pyenv#table-of-"
+"contents>`_ para gerenciar a versões locais do python."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:51
+msgid "Para instalar as dependências rode:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:61
+msgid "Ligando todos os containers necesários para rodar o projeto completo"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:63
+msgid ""
+"Depois disso você precisa subir um ambiente de desenvolvimento local, "
+"contento todas as dependencias que a Asgard API precisa para funcionar. "
+"Isso inclui: Mesos, Elasticsearch, Marathon, Zookeeper, PgSQL, etc."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:65
+msgid "Para subir todos esses containers, rode:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:71
+msgid ""
+"Isso vai baixar todas as imagens docker e rodar todos os conatainers "
+"necessários."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:74
+msgid ""
+"A primeira rodada do asgard-run.sh vai produzir bastante output, pois os "
+"outputs do docker pull também serão exibidos."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:78
+msgid "Desligando todo o ambiente"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:80
+msgid ""
+"Para desligar todos os containers, basta rodar novamente o script "
+"``asgard-run.sh`` e pressionar ``^C`` assim que essa mensagem aparecer:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:89
+msgid ""
+"Esse \"sleep\" que o script faz é justamente para dar tempo de "
+"interrompermos o rodada antes dele começar a ligar todos os containers."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:92
+msgid "Rodando a API"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:94
+msgid "Para rodar a API, use:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:100
+msgid ""
+"Esse script abre a porta ``5000`` e redireciona os requests para a API "
+"correta. Para entender o porque desse script precisamos entender a :ref"
+":`re-escrita de código <hollowman.api>` que estamos fazendo na Asgard "
+"API."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:103
+msgid "Quando tiver a API rodando, você pode fazer um request para validar:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:112
+msgid ""
+"Isso significa que você não está autenticado, o que é verdade, já que nem"
+" criamos seu novo usuário. Faremos isso agora."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:115
+msgid "Criando um novo usuário para desenvolvimento"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:117
+msgid ""
+"Para criar um novo usuário, você pode editar o arquivo "
+"``scripts/sql/user.sql`` a adicionar ali um trecho de SQL que vincula seu"
+" user a uma das contas de dev que existem no banco. Usando um exemplo: "
+"Novo usuário tem email ``mail@server.com``, faríamos o seguinte:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:136
+msgid ""
+"Agora rode novamente o :ref:`script que sobe o ambiente de "
+"desenvolvimento <asgard-run.sh>`. Isso vai recriar todos os componentes, "
+"incluindo o baco de dados."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:138
+msgid "Dessa forma, agora podemos fazer a seguinte requisição:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:147
+msgid ""
+"Agora sim você está vendo sua lista de apps, que obviamente é vazia. "
+"Nesse momento você está pronto para começar a desenvolver novos códigos "
+"para a Asgard API."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:152
+msgid "Logando na UI"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:154
+msgid ""
+"Depois de rodar um ambiente completo com o script ``asgard-run.sh`` você "
+"poderá acessar a Asgard UI no endereço `<http://localhost:4200>`_. O "
+"único login suportado atualmente pela UI é oauth2, especificamente com "
+"Google sendo o provider."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:158
+msgid ""
+"**Atenção**: Para o processo de login funcionar você precisa criar uma "
+"Oauth2 app no console do Google. Mais detalhes aqui: "
+"https://developers.google.com/identity/protocols/OAuth2 Depois de criar "
+"essa app, preencha as ENVs: ``HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_ID`` e "
+"``HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_SECRET`` com os valores que o Google "
+"gerou pra você."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:163
+msgid "Evoluindo o banco de dados"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:165
+#, python-format
+msgid ""
+"Sempre que fizermos uma mudança no banco, vamos guardar o SQL na pasta "
+"``sql/`` . Os arquivos têm nome prefixado por um número (``date "
+"+\"%s\"``), pois isso indica a ordem em que devem ser rodados. Por "
+"enquanto vamos assim até migrar para um projeto que gerencie essas "
+"migrações."
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:168
+msgid ""
+"Para pegar o SQL que o Alchemy gera para um model: Abra o ipython (também"
+" passando as mesmas envs que você passou para rodar a API)"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:180
+msgid "Rodando os testes do projeto"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:182
+msgid ""
+"Os testes estão divididos em dois: Unitários (``tests/``) e de Integração"
+" (``itests/``). [1]_"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:185
+msgid "Rodando os testes unitários"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:192
+msgid "Rodando os testes de integração"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:194
+msgid ""
+"Para rodar os testes de integração você precisa de alguns serviços "
+"rodando. Para ligar esses serviços localmente rode, na raiz do projeto:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:204
+msgid "depois rode os testes:"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:211
+msgid "Notas"
+msgstr ""
+
+#: ../../devguide/contrib/running-local.rst:212
+msgid "Mais sobre os testes do projeto: :ref:`writing-tests`"
+msgstr ""
+

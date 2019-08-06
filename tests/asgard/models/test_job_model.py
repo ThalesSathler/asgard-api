@@ -7,6 +7,7 @@ from asgard.backends.chronos.models.converters import (
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.models.account import Account
 from asgard.models.job import ScheduledJob
+from asgard.models.spec.fetch import FetchURLSpec
 from itests.util import ACCOUNT_DEV_DICT
 from tests.utils import with_json_fixture, get_fixture
 
@@ -290,3 +291,49 @@ class ScheduledJobModelTest(TestCase):
             "rack"
         )
         self.assertCountEqual([], self.asgard_job.constraints)
+
+    async def test_add_fetch_uri(self):
+        expected_fetch_uris = [
+            FetchURLSpec(uri="file:///etc/docker.tar.bz2"),
+            FetchURLSpec(
+                uri="https://static.server.com/file.txt", extract=False
+            ),
+        ]
+        self.assertCountEqual(expected_fetch_uris, self.asgard_job.fetch)
+
+        aditional_fetch_uri = FetchURLSpec(uri="file:///etc/config")
+        self.asgard_job.add_fetch_uri(aditional_fetch_uri)
+        self.assertCountEqual(
+            expected_fetch_uris + [aditional_fetch_uri], self.asgard_job.fetch
+        )
+
+    async def test_add_fetch_uri_emppy_list(self):
+        self.asgard_job.fetch = None
+
+        additional_fetch = FetchURLSpec(uri="file:///config")
+        self.asgard_job.add_fetch_uri(additional_fetch)
+        self.assertCountEqual([additional_fetch], self.asgard_job.fetch)
+
+    async def test_add_fetch_uri_already_exist(self):
+        """
+        Se já existir um fetch com a mesma URI, substituímos
+        """
+        self.asgard_job.fetch = None
+
+        additional_fetch_1 = FetchURLSpec(uri="file:///config")
+        additional_fetch_2 = FetchURLSpec(uri="file:///config", extract=False)
+        self.asgard_job.add_fetch_uri(additional_fetch_1).add_fetch_uri(
+            additional_fetch_2
+        )
+        self.assertCountEqual([additional_fetch_2], self.asgard_job.fetch)
+
+    async def test_add_multiple_fetch_url(self):
+        self.asgard_job.fetch = None
+        additional_fetch_1 = FetchURLSpec(uri="file:///config")
+        additional_fetch_2 = FetchURLSpec(uri="file:///config2")
+        self.asgard_job.add_fetch_uri(additional_fetch_1).add_fetch_uri(
+            additional_fetch_2
+        )
+        self.assertCountEqual(
+            [additional_fetch_1, additional_fetch_2], self.asgard_job.fetch
+        )
