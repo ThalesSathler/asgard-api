@@ -1,9 +1,9 @@
-from functools import wraps
 from http import HTTPStatus
 from json.decoder import JSONDecodeError
 
 from aiohttp import web
 from asyncworker import RouteTypes
+from asyncworker.routes import call_http_handler
 from pydantic import ValidationError
 
 from asgard.api.resources import ErrorDetail, ErrorResource
@@ -24,9 +24,7 @@ from asgard.services.jobs import ScheduledJobsService
 
 @app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["GET"])
 @auth_required
-async def index_jobs(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
+async def index_jobs(request: web.Request, user: User, account: Account):
     job_id = request.match_info["job_id"]
 
     scheduled_job = await ScheduledJobsService.get_job_by_id(
@@ -40,9 +38,7 @@ async def index_jobs(request: web.Request):
 
 @app.route(["/jobs"], type=RouteTypes.HTTP, methods=["GET"])
 @auth_required
-async def list_jobs(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
+async def list_jobs(user: User, account: Account):
 
     jobs = await ScheduledJobsService.list_jobs(
         user, account, ChronosScheduledJobsBackend()
@@ -52,7 +48,6 @@ async def list_jobs(request: web.Request):
 
 
 def validate_input(handler):
-    @wraps(handler)
     async def _wrapper(request: web.Request):
         try:
             req_body = await request.json()
@@ -63,13 +58,15 @@ def validate_input(handler):
             )
 
         try:
-            ScheduledJob(**req_body)
+            job = ScheduledJob(**req_body)
         except ValidationError as e:
             return web.json_response(
                 ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
                 status=HTTPStatus.UNPROCESSABLE_ENTITY,
             )
-        return await handler(request)
+
+        request["types_registry"].set(job)
+        return await call_http_handler(request, handler)
 
     return _wrapper
 
@@ -77,16 +74,11 @@ def validate_input(handler):
 @app.route(["/jobs"], type=RouteTypes.HTTP, methods=["POST"])
 @auth_required
 @validate_input
-async def create_job(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
-
-    req_body = await request.json()
-    asgard_job = ScheduledJob(**req_body)
+async def create_job(job: ScheduledJob, user: User, account: Account):
 
     try:
         created_job = await ScheduledJobsService.create_job(
-            asgard_job, user, account, ChronosScheduledJobsBackend()
+            job, user, account, ChronosScheduledJobsBackend()
         )
     except DuplicateEntity as e:
         return web.json_response(
@@ -121,24 +113,16 @@ async def _update_job(
 @app.route(["/jobs"], type=RouteTypes.HTTP, methods=["PUT"])
 @auth_required
 @validate_input
-async def update_job(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
-
-    req_body = await request.json()
-    job = ScheduledJob(**req_body)
+async def update_job(job: ScheduledJob, user: User, account: Account):
     return await _update_job(job, user, account)
 
 
 @app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["PUT"])
 @auth_required
 @validate_input
-async def update_job_by_id(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
-
-    req_body = await request.json()
-    job = ScheduledJob(**req_body)
+async def update_job_by_id(
+    request: web.Request, job: ScheduledJob, user: User, account: Account
+):
     job.id = request.match_info["job_id"]
 
     return await _update_job(job, user, account)
@@ -146,9 +130,7 @@ async def update_job_by_id(request: web.Request):
 
 @app.route(["/jobs/{job_id}"], type=RouteTypes.HTTP, methods=["DELETE"])
 @auth_required
-async def delete_job(request: web.Request):
-    user = await User.from_alchemy_obj(request["user"])
-    account = await Account.from_alchemy_obj(request["user"].current_account)
+async def delete_job(request: web.Request, user: User, account: Account):
     job_id = request.match_info["job_id"]
 
     scheduled_job = await ScheduledJobsService.get_job_by_id(
