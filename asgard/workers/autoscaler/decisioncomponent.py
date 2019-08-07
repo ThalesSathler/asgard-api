@@ -10,7 +10,7 @@ THRESHOLD_MARGIN = 0.05
 class DecisionComponentInterface(ABC):
     @abstractmethod
     def decide_scaling_actions(self, apps_stats: List[ScalableApp]) -> List[Decision]:
-        pass
+        raise NotImplementedError
 
 
 class DecisionComponent(DecisionComponentInterface):
@@ -21,12 +21,13 @@ class DecisionComponent(DecisionComponentInterface):
             deploy_decision = False
             
             if app.is_set_to_scale_cpu():
+                
                 if app.app_stats.cpu_usage > app.cpu_threshold + THRESHOLD_MARGIN or app.app_stats.cpu_usage < app.cpu_threshold - THRESHOLD_MARGIN:
                     decision.cpu = (app.app_stats.cpu_usage * app.cpu_allocated)/app.cpu_threshold
                     deploy_decision = True
             if app.is_set_to_scale_mem():
                 if app.app_stats.ram_usage > app.mem_threshold + THRESHOLD_MARGIN or app.app_stats.ram_usage < app.mem_threshold - THRESHOLD_MARGIN:
-                    decision.ram = (app.app_stats.ram_usage * app.mem_allocated)/app.mem_threshold
+                    decision.mem = (app.app_stats.ram_usage * app.mem_allocated)/app.mem_threshold
                     deploy_decision = True
             
             if deploy_decision:

@@ -1,5 +1,5 @@
 from aioresponses import aioresponses
-from unittest import TestCase
+from asynctest import TestCase
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
@@ -19,19 +19,28 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app3",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     }
                 ],
             )
@@ -55,15 +64,21 @@ class TestFetchAppsLabels (TestCase):
                 payload=[
                     {
                         "id": "/test_app",
-                        "labels": {}
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": None
                     },
                     {
                         "id": "/test_app2",
-                        "labels": {}
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": None
                     },
                     {
                         "id": "/test_app3",
-                        "labels": {}
+                        "cpu": "0.1",
+                        "mem": "0.2",
+                        "labels": None
                     }
                 ],
             )
@@ -73,9 +88,9 @@ class TestFetchAppsLabels (TestCase):
         self.assertEqual(3, len(apps))
 
         for i in range(3):
-            self.assertEqual(True, apps[i].is_set_to_scale())
-            self.assertEqual(True, apps[i].is_set_to_scale_cpu())
-            self.assertEqual(True, apps[i].is_set_to_scale_mem())
+            self.assertEqual(False, apps[i].is_set_to_scale())
+            self.assertEqual(False, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(False, apps[i].is_set_to_scale_mem())
 
     async def nothing_should_be_scaled_all_ignored(self):
         interface = AsgardInterface()
@@ -87,18 +102,24 @@ class TestFetchAppsLabels (TestCase):
                 payload=[
                     {
                         "id": "/test_app",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "all"
                         }
                     },
                     {
                         "id": "/test_app2",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "all"
                         }
                     },
                     {
                         "id": "/test_app3",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "all"
                         }
@@ -125,18 +146,24 @@ class TestFetchAppsLabels (TestCase):
                 payload=[
                     {
                         "id": "/test_app",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "cpu;mem"
                         }
                     },
                     {
                         "id": "/test_app2",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "cpu;mem"
                         }
                     },
                     {
                         "id": "/test_app3",
+                        "cpu": "0.1",
+                        "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.ignore": "cpu;mem"
                         }
@@ -163,20 +190,29 @@ class TestFetchAppsLabels (TestCase):
                 payload=[
                     {
                         "id": "/test_app",
+                        "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app3",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     }
                 ],
             )
@@ -206,13 +242,18 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app",
                         "mem": "0.2",
                         "cpu": "0.4",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
                         "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2",
                             "asgard.autoscale.ignore": "cpu"
                         }
                     },
@@ -220,7 +261,10 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app3",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     }
                 ],
             )
@@ -253,18 +297,27 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app",
                         "mem": "0.2",
                         "cpu": "0.5",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app3",
                         "cpu": "0.1",
-                        "labels": {}
+                        "mem": "0.1",
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                        }
                     }
                 ],
             )
@@ -294,13 +347,18 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app",
                         "mem": "0.2",
                         "cpu": "0.5",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
                         "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2",
                             "asgard.autoscale.ignore": "mem"
                         }
                     },
@@ -308,7 +366,10 @@ class TestFetchAppsLabels (TestCase):
                         "id": "/test_app3",
                         "cpu": "0.1",
                         "mem": "0.6",
-                        "labels": {}
+                        "labels": {
+                            "asgard.autoscale.cpu": "0.2",
+                            "asgard.autoscale.mem": "0.2"
+                        }
                     }
                 ],
             )

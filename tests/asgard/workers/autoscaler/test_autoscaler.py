@@ -67,6 +67,8 @@ class AutoscalerTest(TestCase):
             # cloud_interface.scale_apps(scaling_decision)
 
             self.assertEqual(1, len(scaling_decision))
+            self.assertEqual(10, scaling_decision[0].mem)
+            self.assertEqual(35, scaling_decision[0].cpu)
 
     async def test_decide_to_scale_all_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -125,6 +127,10 @@ class AutoscalerTest(TestCase):
         # cloud_interface.scale_apps(scaling_decision)
 
         self.assertEqual(len(apps_stats), len(scaling_decision))
+        self.assertEqual(1.25, scaling_decision[0].mem)
+        self.assertEqual(None, scaling_decision[0].cpu)
+        self.assertEqual(None, scaling_decision[1].mem)
+        self.assertEqual(35, scaling_decision[1].cpu)
 
     async def test_decide_to_scale_some_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -193,6 +199,10 @@ class AutoscalerTest(TestCase):
         # cloud_interface.scale_apps(scaling_decision)
 
         self.assertEqual(2, len(scaling_decision))
+        self.assertEqual(10, scaling_decision[0].mem)
+        self.assertEqual(35, scaling_decision[0].cpu)
+        self.assertEqual(None, scaling_decision[1].mem)
+        self.assertEqual(7, scaling_decision[1].cpu)
 
     async def test_decide_to_scale_no_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -250,4 +260,4 @@ class AutoscalerTest(TestCase):
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
         # cloud_interface.scale_apps(scaling_decision)
 
-        self.assertEqual(0, len(apps_stats))
+        self.assertEqual(0, len(scaling_decision))
