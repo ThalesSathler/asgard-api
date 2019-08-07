@@ -20,6 +20,9 @@ class AppConverter(
 
         scalable_app = ScalableApp(appid)
 
+        scalable_app.cpu_allocated = dto_object.cpu
+        scalable_app.mem_allocated = dto_object.mem
+
         if dto_object.labels is not None:
             if "asgard.autoscale.cpu" in dto_object.labels:
                 scalable_app.cpu_threshold = float(dto_object.labels["asgard.autoscale.cpu"])
