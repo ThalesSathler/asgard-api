@@ -7,6 +7,7 @@ from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.scaling_decision import Decision
 from asgard.workers.converters.asgard_converter import AppStatsDto, AppDto, AppConverter, AppStatsConverter
+import asgard.clients.apps.client as asgard_client
 
 
 class CloudInterface(ABC):
@@ -31,19 +32,10 @@ class CloudInterface(ABC):
 class AsgardInterface(CloudInterface):
 
     async def fetch_all_apps(self) -> List[ScalableApp]:
+        app_dtos = await asgard_client.get_all_apps()
+        apps = AppConverter.all_to_model(app_dtos)
 
-        async with http_client as client:
-            response = await client.get(
-                f"{settings.ASGARD_API_ADDRESS}/v2/apps"
-            )
-            all_apps_data = await response.json()
-
-            if all_apps_data:
-                app_dtos = [AppDto(**app_data) for app_data in all_apps_data]
-                apps = AppConverter.all_to_model(app_dtos)
-                return apps
-
-            return list()
+        return apps
 
     async def get_all_scalable_apps(self) -> List[ScalableApp]:
         all_apps = await self.fetch_all_apps()
@@ -53,19 +45,10 @@ class AsgardInterface(CloudInterface):
         return list()
 
     async def get_app_stats(self, app: ScalableApp) -> ScalableApp:
-        async with http_client as client:
-            http_response = await client.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats"
-            )
+        app_stats_dto = await asgard_client.get_app_stats(app.id)
+        app.app_stats = AppStatsConverter.to_model(app_stats_dto)
 
-            response = await http_response.json()
-
-            if len(response["stats"]["errors"]) == 0:
-                app_stats_dto = AppStatsDto(**{"id": app.id, **response})
-
-                app.app_stats = AppStatsConverter.to_model(app_stats_dto)
-
-            return app
+        return app
 
     async def apply_decisions(self, scaling_decisions: List[Decision]) -> List[Dict]:
         post_body = []
