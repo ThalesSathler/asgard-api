@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-from asgard.conf import settings
-from asgard.http.client import http_client
 from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
-from asgard.workers.models.scaling_decision import Decision
-from asgard.workers.converters.asgard_converter import AppStatsDto, AppDto, AppConverter, AppStatsConverter
+from asgard.workers.models.decision import Decision
+from asgard.workers.converters.asgard_converter import AppConverter, AppStatsConverter, DecisionConverter
 import asgard.clients.apps.client as asgard_client
 
 
@@ -51,24 +49,7 @@ class AsgardInterface(CloudInterface):
         return app
 
     async def apply_decisions(self, scaling_decisions: List[Decision]) -> List[Dict]:
-        post_body = []
-
-        for decision in scaling_decisions:
-            app_scaling_json = {
-                "id": decision.id
-            }
-
-            if decision.cpu is not None:
-                app_scaling_json["cpus"] = decision.cpu
-            if decision.mem is not None:
-                app_scaling_json["mem"] = decision.mem
-
-            post_body.append(app_scaling_json)
-
-        async with http_client as client:
-            http_response = await client.put(
-                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
-                json=post_body
-            )
+        decision_dtos = DecisionConverter.all_to_dto(scaling_decisions)
+        post_body = await asgard_client.post_scaling_decisions(decision_dtos)
 
         return post_body

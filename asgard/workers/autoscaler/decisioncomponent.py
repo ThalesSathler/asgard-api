@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from asgard.workers.models.scalable_app import ScalableApp 
-from asgard.workers.models.scaling_decision import Decision
+from asgard.workers.models.decision import Decision
 
 
 THRESHOLD_MARGIN = 0.05

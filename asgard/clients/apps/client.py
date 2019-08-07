@@ -3,6 +3,7 @@ from typing import List, Optional, Dict
 from asgard.http.client import http_client
 from asgard.clients.apps.dtos.app_dto import AppDto
 from asgard.clients.apps.dtos.app_stats_dto import AppStatsDto
+from asgard.clients.apps.dtos.decision_dto import DecisionDto
 from asgard.conf import settings
 
 
@@ -35,3 +36,15 @@ async def get_app_stats(app_id: str) -> Optional[AppStatsDto]:
         app_stats_dto = AppStatsDto(**{"id": app_id, **response})
 
         return app_stats_dto
+
+
+async def post_scaling_decisions(decisions: List[DecisionDto]) -> List[Dict]:
+    post_body = map(DecisionDto.to_dict, decisions)
+
+    async with http_client as client:
+        await client.put(
+            f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+            json=post_body
+        )
+
+    return list(post_body)
