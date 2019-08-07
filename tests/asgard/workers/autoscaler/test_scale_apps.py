@@ -4,7 +4,7 @@ from asynctest import TestCase
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
 from asgard.workers.models.scalable_app import ScalableApp
-from asgard.workers.models.scaling_decision import Decision
+from asgard.workers.models.decision import Decision
 
 
 class TestScaleApps(TestCase):

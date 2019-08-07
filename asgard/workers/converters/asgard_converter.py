@@ -3,9 +3,10 @@ from typing import Optional
 from .converter_interface import Converter
 from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.app_stats import AppStats
-
+from asgard.workers.models.decision import Decision
 from asgard.clients.apps.dtos.app_dto import AppDto
 from asgard.clients.apps.dtos.app_stats_dto import AppStatsDto
+from asgard.clients.apps.dtos.decision_dto import DecisionDto
 
 
 class AppConverter(
@@ -57,12 +58,7 @@ class AppStatsConverter (
         if dto_object.was_not_found():
             return None
 
-        if dto_object.id[0] == '/':
-            appid = dto_object.id[1:]
-        else:
-            appid = dto_object.id
-
-        app_stats = AppStats(appid)
+        app_stats = AppStats()
         app_stats.cpu_usage = float(dto_object.stats.cpu_pct)
         app_stats.ram_usage = float(dto_object.stats.ram_pct)
 
@@ -72,3 +68,21 @@ class AppStatsConverter (
     def to_dto(cls, model_object: AppStats) -> AppStatsDto:
         # conversao nao necessaria
         raise NotImplementedError
+
+
+class DecisionConverter (
+    Converter[Decision, DecisionDto]
+):
+    @classmethod
+    def to_model(cls, dto_object: DecisionDto) -> Decision:
+        # conversao nao necessaria
+        raise NotImplementedError
+
+    @classmethod
+    def to_dto(cls, model_object: Decision) -> DecisionDto:
+        dto_object = DecisionDto()
+        dto_object.id = model_object.id
+        dto_object.cpus = model_object.cpu
+        dto_object.mem = model_object.mem
+
+        return dto_object
