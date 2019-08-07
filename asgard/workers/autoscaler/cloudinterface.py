@@ -6,7 +6,7 @@ from asgard.http.client import http_client
 from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.scaling_decision import Decision
-from asgard.workers.dtos.asgard_app import AppStatsDto, AppDto, AppConverter, AppStatsConverter
+from asgard.workers.converters.asgard_converter import AppStatsDto, AppDto, AppConverter, AppStatsConverter
 
 
 class CloudInterface(ABC):
@@ -48,24 +48,24 @@ class AsgardInterface(CloudInterface):
     async def get_all_scalable_apps(self) -> List[ScalableApp]:
         all_apps = await self.fetch_all_apps()
         if all_apps:
-            return list(filter(ScalableApp.set_to_scale, all_apps))
+            return list(filter(ScalableApp.is_set_to_scale, all_apps))
 
         return list()
 
-    async def get_app_stats(self, app_id: str) -> Optional[AppStats]:
+    async def get_app_stats(self, app: ScalableApp) -> ScalableApp:
         async with http_client as client:
             http_response = await client.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats"
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats"
             )
 
             response = await http_response.json()
 
-            if len(response["stats"]["errors"]) > 0:
-                return None
+            if len(response["stats"]["errors"]) == 0:
+                app_stats_dto = AppStatsDto(**{"id": app.id, **response})
 
-            app_stats_dto = AppStatsDto(**{"id": app_id, **response})
+                app.app_stats = AppStatsConverter.to_model(app_stats_dto)
 
-            return AppStatsConverter.to_model(app_stats_dto)
+            return app
 
     async def apply_decisions(self, scaling_decisions: List[Decision]) -> List[Dict]:
         post_body = []

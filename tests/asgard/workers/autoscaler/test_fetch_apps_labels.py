@@ -41,9 +41,9 @@ class TestFetchAppsLabels (TestCase):
         self.assertEqual(3, len(apps))
 
         for i in range(3):
-            self.assertEqual(True, apps[i].set_to_scale())
-            self.assertEqual(True, apps[i].set_to_scale_cpu())
-            self.assertEqual(True, apps[i].set_to_scale_mem())
+            self.assertEqual(True, apps[i].is_set_to_scale())
+            self.assertEqual(True, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(True, apps[i].is_set_to_scale_mem())
 
     async def test_nothing_should_be_scaled_missing_labels(self):
         interface = AsgardInterface()
@@ -73,9 +73,9 @@ class TestFetchAppsLabels (TestCase):
         self.assertEqual(3, len(apps))
 
         for i in range(3):
-            self.assertEqual(True, apps[i].set_to_scale())
-            self.assertEqual(True, apps[i].set_to_scale_cpu())
-            self.assertEqual(True, apps[i].set_to_scale_mem())
+            self.assertEqual(True, apps[i].is_set_to_scale())
+            self.assertEqual(True, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(True, apps[i].is_set_to_scale_mem())
 
     async def nothing_should_be_scaled_all_ignored(self):
         interface = AsgardInterface()
@@ -111,9 +111,9 @@ class TestFetchAppsLabels (TestCase):
         self.assertEqual(3, len(apps))
 
         for i in range(3):
-            self.assertEqual(False, apps[i].set_to_scale())
-            self.assertEqual(False, apps[i].set_to_scale_cpu())
-            self.assertEqual(False, apps[i].set_to_scale_mem())
+            self.assertEqual(False, apps[i].is_set_to_scale())
+            self.assertEqual(False, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(False, apps[i].is_set_to_scale_mem())
 
     async def nothing_should_be_scaled_all_individually_ignored(self):
         interface = AsgardInterface()
@@ -149,9 +149,9 @@ class TestFetchAppsLabels (TestCase):
         self.assertEqual(3, len(apps))
 
         for i in range(3):
-            self.assertEqual(False, apps[i].set_to_scale())
-            self.assertEqual(False, apps[i].set_to_scale_cpu())
-            self.assertEqual(False, apps[i].set_to_scale_mem())
+            self.assertEqual(False, apps[i].is_set_to_scale())
+            self.assertEqual(False, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(False, apps[i].is_set_to_scale_mem())
 
     async def test_only_cpu_should_not_be_scaled_missing_label(self):
         interface = AsgardInterface()
@@ -185,14 +185,14 @@ class TestFetchAppsLabels (TestCase):
 
         self.assertEqual(3, len(apps))
 
-        self.assertEqual(True, apps[0].set_to_scale())
-        self.assertEqual(False, apps[0].set_to_scale_cpu())
-        self.assertEqual(True, apps[0].set_to_scale_mem())
+        self.assertEqual(True, apps[0].is_set_to_scale())
+        self.assertEqual(False, apps[0].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[0].is_set_to_scale_mem())
 
         for i in range(1, 3):
-            self.assertEqual(True, apps[i].set_to_scale())
-            self.assertEqual(True, apps[i].set_to_scale_cpu())
-            self.assertEqual(True, apps[i].set_to_scale_mem())
+            self.assertEqual(True, apps[i].is_set_to_scale())
+            self.assertEqual(True, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(True, apps[i].is_set_to_scale_mem())
 
     async def test_only_cpu_should_not_be_scaled_cpu_ignored(self):
         interface = AsgardInterface()
@@ -229,17 +229,17 @@ class TestFetchAppsLabels (TestCase):
 
         self.assertEqual(3, len(apps))
 
-        self.assertEqual(True, apps[0].set_to_scale())
-        self.assertEqual(True, apps[0].set_to_scale_cpu())
-        self.assertEqual(True, apps[0].set_to_scale_mem())
+        self.assertEqual(True, apps[0].is_set_to_scale())
+        self.assertEqual(True, apps[0].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[0].is_set_to_scale_mem())
 
-        self.assertEqual(True, apps[1].set_to_scale())
-        self.assertEqual(False, apps[1].set_to_scale_cpu())
-        self.assertEqual(True, apps[1].set_to_scale_mem())
+        self.assertEqual(True, apps[1].is_set_to_scale())
+        self.assertEqual(False, apps[1].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[1].is_set_to_scale_mem())
 
-        self.assertEqual(True, apps[2].set_to_scale())
-        self.assertEqual(True, apps[2].set_to_scale_cpu())
-        self.assertEqual(True, apps[2].set_to_scale_mem())
+        self.assertEqual(True, apps[2].is_set_to_scale())
+        self.assertEqual(True, apps[2].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[2].is_set_to_scale_mem())
 
     async def test_only_mem_should_not_be_scaled_missing_label(self):
         interface = AsgardInterface()
@@ -273,14 +273,14 @@ class TestFetchAppsLabels (TestCase):
 
         self.assertEqual(3, len(apps))
 
-        self.assertEqual(True, apps[2].set_to_scale())
-        self.assertEqual(True, apps[2].set_to_scale_cpu())
-        self.assertEqual(False, apps[2].set_to_scale_mem())
+        self.assertEqual(True, apps[2].is_set_to_scale())
+        self.assertEqual(True, apps[2].is_set_to_scale_cpu())
+        self.assertEqual(False, apps[2].is_set_to_scale_mem())
 
         for i in range(2):
-            self.assertEqual(True, apps[i].set_to_scale())
-            self.assertEqual(True, apps[i].set_to_scale_cpu())
-            self.assertEqual(True, apps[i].set_to_scale_mem())
+            self.assertEqual(True, apps[i].is_set_to_scale())
+            self.assertEqual(True, apps[i].is_set_to_scale_cpu())
+            self.assertEqual(True, apps[i].is_set_to_scale_mem())
 
     async def test_only_mem_should_not_be_scaled_mem_ignored(self):
         interface = AsgardInterface()
@@ -317,14 +317,14 @@ class TestFetchAppsLabels (TestCase):
 
         self.assertEqual(3, len(apps))
 
-        self.assertEqual(True, apps[0].set_to_scale())
-        self.assertEqual(True, apps[0].set_to_scale_cpu())
-        self.assertEqual(True, apps[0].set_to_scale_mem())
+        self.assertEqual(True, apps[0].is_set_to_scale())
+        self.assertEqual(True, apps[0].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[0].is_set_to_scale_mem())
 
-        self.assertEqual(True, apps[1].set_to_scale())
-        self.assertEqual(True, apps[1].set_to_scale_cpu())
-        self.assertEqual(False, apps[1].set_to_scale_mem())
+        self.assertEqual(True, apps[1].is_set_to_scale())
+        self.assertEqual(True, apps[1].is_set_to_scale_cpu())
+        self.assertEqual(False, apps[1].is_set_to_scale_mem())
 
-        self.assertEqual(True, apps[2].set_to_scale())
-        self.assertEqual(True, apps[2].set_to_scale_cpu())
-        self.assertEqual(True, apps[2].set_to_scale_mem())
+        self.assertEqual(True, apps[2].is_set_to_scale())
+        self.assertEqual(True, apps[2].is_set_to_scale_cpu())
+        self.assertEqual(True, apps[2].is_set_to_scale_mem())

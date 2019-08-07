@@ -1,31 +1,11 @@
-from typing import Dict, Optional
+from typing import Optional
 
 from .converter_interface import Converter
 from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.app_stats import AppStats
-from pydantic import BaseModel
 
-
-class AppDto(BaseModel):
-    id: str
-    cpu: float
-    mem: float
-    labels: Optional[Dict[str, str]]
-
-
-class StatsSpec(BaseModel):
-    type: str
-    cpu_pct: str
-    ram_pct: str
-    cpu_thr_pct: str
-
-
-class AppStatsDto(BaseModel):
-    id: str
-    stats: StatsSpec
-
-    def was_not_found(self) -> bool:
-        return self.stats.cpu_pct == "0" and self.stats.ram_pct == "0" and self.stats.cpu_thr_pct == "0"
+from asgard.clients.apps.dtos.app_dto import AppDto
+from asgard.clients.apps.dtos.app_stats_dto import AppStatsDto
 
 
 class AppConverter(
@@ -42,20 +22,20 @@ class AppConverter(
 
         if dto_object.labels is not None:
             if "asgard.autoscale.cpu" in dto_object.labels:
-                scalable_app.autoscale_cpu = float(dto_object.labels["asgard.autoscale.cpu"])
+                scalable_app.cpu_threshold = float(dto_object.labels["asgard.autoscale.cpu"])
 
             if "asgard.autoscale.mem" in dto_object.labels:
-                scalable_app.autoscale_mem = float(dto_object.labels["asgard.autoscale.mem"])
+                scalable_app.mem_threshold = float(dto_object.labels["asgard.autoscale.mem"])
 
             if "asgard.autoscale.ignore" in dto_object.labels:
                 if "all" in dto_object.labels["asgard.autoscale.ignore"]:
-                    scalable_app.autoscale_cpu = None
-                    scalable_app.autoscale_mem = None
+                    scalable_app.cpu_threshold = None
+                    scalable_app.mem_threshold = None
                 else:
                     if "cpu" in dto_object.labels["asgard.autoscale.ignore"]:
-                        scalable_app.autoscale_cpu = None
+                        scalable_app.cpu_threshold = None
                     if "mem" in dto_object.labels["asgard.autoscale.ignore"]:
-                        scalable_app.autoscale_mem = None
+                        scalable_app.mem_threshold = None
 
         return scalable_app
 

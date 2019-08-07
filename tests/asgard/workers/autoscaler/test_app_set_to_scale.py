@@ -5,33 +5,33 @@ from asgard.workers.models.scalable_app import ScalableApp
 
 class TestAppSetToScale(TestCase):
     def test_everything_should_be_scaled(self):
-        app = ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8)
+        app = ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8)
 
-        set_to_scale = app.set_to_scale()
-        set_to_scale_cpu = app.set_to_scale_cpu()
-        set_to_scale_mem = app.set_to_scale_mem()
+        set_to_scale = app.is_set_to_scale()
+        set_to_scale_cpu = app.is_set_to_scale_cpu()
+        set_to_scale_mem = app.is_set_to_scale_mem()
 
         self.assertEqual(True, set_to_scale)
         self.assertEqual(True, set_to_scale_cpu)
         self.assertEqual(True, set_to_scale_mem)
 
     def test_only_cpu_should_be_scaled(self):
-        app = ScalableApp("test_app1", autoscale_cpu=0.3)
+        app = ScalableApp("test_app1", cpu_threshold=0.3)
 
-        set_to_scale = app.set_to_scale()
-        set_to_scale_cpu = app.set_to_scale_cpu()
-        set_to_scale_mem = app.set_to_scale_mem()
+        set_to_scale = app.is_set_to_scale()
+        set_to_scale_cpu = app.is_set_to_scale_cpu()
+        set_to_scale_mem = app.is_set_to_scale_mem()
 
         self.assertEqual(True, set_to_scale)
         self.assertEqual(True, set_to_scale_cpu)
         self.assertEqual(False, set_to_scale_mem)
 
     def test_only_mem_should_be_scaled(self):
-        app = ScalableApp("test_app1", autoscale_mem=0.8)
+        app = ScalableApp("test_app1", mem_threshold=0.8)
 
-        set_to_scale = app.set_to_scale()
-        set_to_scale_cpu = app.set_to_scale_cpu()
-        set_to_scale_mem = app.set_to_scale_mem()
+        set_to_scale = app.is_set_to_scale()
+        set_to_scale_cpu = app.is_set_to_scale_cpu()
+        set_to_scale_mem = app.is_set_to_scale_mem()
 
         self.assertEqual(True, set_to_scale)
         self.assertEqual(False, set_to_scale_cpu)
@@ -40,9 +40,9 @@ class TestAppSetToScale(TestCase):
     def test_application_should_not_be_scaled_missing_attributes(self):
         app = ScalableApp("id")
 
-        set_to_scale = app.set_to_scale()
-        set_to_scale_cpu = app.set_to_scale_cpu()
-        set_to_scale_mem = app.set_to_scale_mem()
+        set_to_scale = app.is_set_to_scale()
+        set_to_scale_cpu = app.is_set_to_scale_cpu()
+        set_to_scale_mem = app.is_set_to_scale_mem()
 
         self.assertEqual(False, set_to_scale)
         self.assertEqual(False, set_to_scale_cpu)
@@ -51,8 +51,8 @@ class TestAppSetToScale(TestCase):
     # def test_application_should_not_be_scaled_label_ignore_all(self):
     #     fixture = ScalableApp(
     #         "test_app1",
-    #         autoscale_cpu=0.3,
-    #         autoscale_mem=0.8,
+    #         cpu_threshold=0.3,
+    #         mem_threshold=0.8,
     #         autoscale_ignore="all",
     #     )
     #
@@ -67,8 +67,8 @@ class TestAppSetToScale(TestCase):
     # ):
     #     fixture = ScalableApp(
     #         "test_app1",
-    #         autoscale_cpu=0.3,
-    #         autoscale_mem=0.8,
+    #         cpu_threshold=0.3,
+    #         mem_threshold=0.8,
     #         autoscale_ignore="cpu;mem",
     #     )
     #
@@ -82,7 +82,7 @@ class TestAppSetToScale(TestCase):
     #     self
     # ):
     #     fixture = ScalableApp(
-    #         "test_app1", autoscale_cpu=0.3, autoscale_ignore="cpu"
+    #         "test_app1", cpu_threshold=0.3, autoscale_ignore="cpu"
     #     )
     #
     #     scaler = AsgardInterface()
@@ -95,7 +95,7 @@ class TestAppSetToScale(TestCase):
     #     self
     # ):
     #     fixture = ScalableApp(
-    #         "test_app1", autoscale_mem=0.3, autoscale_ignore="mem"
+    #         "test_app1", mem_threshold=0.3, autoscale_ignore="mem"
     #     )
     # 
     #     scaler = AsgardInterface()

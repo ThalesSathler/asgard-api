@@ -103,9 +103,9 @@ class TestFetchAppsData(TestCase):
             ]
 
             fixture = [
-                ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8),
-                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
-                ScalableApp("test_app3", autoscale_cpu=0.5, autoscale_mem=0.7),
+                ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8),
+                ScalableApp("test_app2", cpu_threshold=0.1, mem_threshold=0.1),
+                ScalableApp("test_app3", cpu_threshold=0.5, mem_threshold=0.7),
             ]
 
             rsps.get(
@@ -120,8 +120,8 @@ class TestFetchAppsData(TestCase):
 
             for i in range(len(fixture)):
                 self.assertEqual(fixture[i].id, apps[i].id)
-                self.assertEqual(fixture[i].autoscale_cpu, apps[i].autoscale_cpu)
-                self.assertEqual(fixture[i].autoscale_mem, apps[i].autoscale_mem)
+                self.assertEqual(fixture[i].cpu_threshold, apps[i].cpu_threshold)
+                self.assertEqual(fixture[i].mem_threshold, apps[i].mem_threshold)
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
         scaler = AsgardInterface()
@@ -208,18 +208,18 @@ class TestFetchAppsData(TestCase):
             fixture = [
                 ScalableApp(
                     "test_app1",
-                    autoscale_cpu=None,
-                    autoscale_mem=None,
+                    cpu_threshold=None,
+                    mem_threshold=None,
                 ),
                 ScalableApp(
                     "test_app2",
-                    autoscale_cpu=0.1,
-                    autoscale_mem=0.1
+                    cpu_threshold=0.1,
+                    mem_threshold=0.1
                 ),
                 ScalableApp(
                     "test_app3",
-                    autoscale_cpu=None,
-                    autoscale_mem=None
+                    cpu_threshold=None,
+                    mem_threshold=None
                 ),
             ]
 
@@ -234,8 +234,8 @@ class TestFetchAppsData(TestCase):
             self.assertEqual(1, len(apps))
 
             self.assertEqual(fixture[1].id, apps[0].id)
-            self.assertEqual(fixture[1].autoscale_cpu, apps[0].autoscale_cpu)
-            self.assertEqual(fixture[1].autoscale_mem, apps[0].autoscale_mem)
+            self.assertEqual(fixture[1].cpu_threshold, apps[0].cpu_threshold)
+            self.assertEqual(fixture[1].mem_threshold, apps[0].mem_threshold)
 
     async def test_get_all_apps_which_should_be_scaled_one_app_should_not(self):
         scaler = AsgardInterface()
@@ -272,9 +272,9 @@ class TestFetchAppsData(TestCase):
             ]
 
             fixture = [
-                ScalableApp("test_app1", autoscale_cpu=0.3, autoscale_mem=0.8),
-                ScalableApp("test_app2", autoscale_cpu=0.1, autoscale_mem=0.1),
-                ScalableApp("test_app3", autoscale_cpu=None, autoscale_mem=None),
+                ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8),
+                ScalableApp("test_app2", cpu_threshold=0.1, mem_threshold=0.1),
+                ScalableApp("test_app3", cpu_threshold=None, mem_threshold=None),
             ]
 
             rsps.get(
@@ -288,12 +288,12 @@ class TestFetchAppsData(TestCase):
             self.assertEqual(2, len(apps))
 
             self.assertEqual(fixture[0].id, apps[0].id)
-            self.assertEqual(fixture[0].autoscale_cpu, apps[0].autoscale_cpu)
-            self.assertEqual(fixture[0].autoscale_mem, apps[0].autoscale_mem)
+            self.assertEqual(fixture[0].cpu_threshold, apps[0].cpu_threshold)
+            self.assertEqual(fixture[0].mem_threshold, apps[0].mem_threshold)
 
             self.assertEqual(fixture[1].id, apps[1].id)
-            self.assertEqual(fixture[1].autoscale_cpu, apps[1].autoscale_cpu)
-            self.assertEqual(fixture[1].autoscale_mem, apps[1].autoscale_mem)
+            self.assertEqual(fixture[1].cpu_threshold, apps[1].cpu_threshold)
+            self.assertEqual(fixture[1].mem_threshold, apps[1].mem_threshold)
 
     async def test_get_app_stats_existing_app_id(self):
         scaler = AsgardInterface()
@@ -308,21 +308,20 @@ class TestFetchAppsData(TestCase):
                     "cpu_thr_pct": "0.06",
                 }
             }
-            app_id = "app_test1"
+            app = ScalableApp("app_test1")
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats",
                 status=200,
                 payload=payload,
             )
 
-            fixture = AppStats(app_id, cpu_usage=0.93, ram_usage=8.91)
+            fixture = AppStats(cpu_usage=0.93, ram_usage=8.91)
 
-            stats = await scaler.get_app_stats(app_id)
+            app_with_stats = await scaler.get_app_stats(app)
 
-            self.assertEqual(fixture.id, stats.id)
-            self.assertEqual(fixture.cpu_usage, stats.cpu_usage)
-            self.assertEqual(fixture.ram_usage, stats.ram_usage)
+            self.assertEqual(fixture.cpu_usage, app_with_stats.app_stats.cpu_usage)
+            self.assertEqual(fixture.ram_usage, app_with_stats.app_stats.ram_usage)
 
     async def test_get_app_stats_non_existing_app_id(self):
         scaler = AsgardInterface()
@@ -337,14 +336,14 @@ class TestFetchAppsData(TestCase):
                     "cpu_thr_pct": "0",
                 }
             }
-            app_id = "app_test1"
+            app = ScalableApp("app_test1")
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats",
                 status=200,
                 payload=fixture,
             )
 
-            stats = await scaler.get_app_stats(app_id)
+            stats = await scaler.get_app_stats(app)
 
-            self.assertEqual(None, stats)
+            self.assertEqual(None, app.app_stats)

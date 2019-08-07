@@ -14,7 +14,7 @@ class PeriodicStateChecker:
         resp = []
         if apps:
             for app in apps:
-                app_stats = await self.cloud_interface.get_app_stats(app.id)
+                app_stats = await self.cloud_interface.get_app_stats(app)
                 resp.append(app_stats)
 
         return resp
