@@ -20,35 +20,35 @@ class TestFetchAppsData(TestCase):
                         "id": "/test_app",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {},
                     },
                     {
                         "id": "/test_app2",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {},
                     },
                     {
                         "id": "/test_app3",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {},
                     },
                     {
                         "id": "/test_app4",
                         "cpu": "0.1",
                         "mem": "0.2",
-                        "labels": {}
+                        "labels": {},
                     },
                 ],
             )
             apps = await scaler.fetch_all_apps()
 
         fixture = [
-            ScalableApp('test_app'),
-            ScalableApp('test_app2'),
-            ScalableApp('test_app3'),
-            ScalableApp('test_app4')
+            ScalableApp("test_app"),
+            ScalableApp("test_app2"),
+            ScalableApp("test_app3"),
+            ScalableApp("test_app4"),
         ]
 
         self.assertEqual(len(fixture), len(apps))
@@ -120,8 +120,12 @@ class TestFetchAppsData(TestCase):
 
             for i in range(len(fixture)):
                 self.assertEqual(fixture[i].id, apps[i].id)
-                self.assertEqual(fixture[i].cpu_threshold, apps[i].cpu_threshold)
-                self.assertEqual(fixture[i].mem_threshold, apps[i].mem_threshold)
+                self.assertEqual(
+                    fixture[i].cpu_threshold, apps[i].cpu_threshold
+                )
+                self.assertEqual(
+                    fixture[i].mem_threshold, apps[i].mem_threshold
+                )
 
     async def test_get_all_apps_which_should_be_scaled_no_app_should(self):
         scaler = AsgardInterface()
@@ -207,19 +211,11 @@ class TestFetchAppsData(TestCase):
 
             fixture = [
                 ScalableApp(
-                    "test_app1",
-                    cpu_threshold=None,
-                    mem_threshold=None,
+                    "test_app1", cpu_threshold=None, mem_threshold=None
                 ),
+                ScalableApp("test_app2", cpu_threshold=0.1, mem_threshold=0.1),
                 ScalableApp(
-                    "test_app2",
-                    cpu_threshold=0.1,
-                    mem_threshold=0.1
-                ),
-                ScalableApp(
-                    "test_app3",
-                    cpu_threshold=None,
-                    mem_threshold=None
+                    "test_app3", cpu_threshold=None, mem_threshold=None
                 ),
             ]
 
@@ -274,7 +270,9 @@ class TestFetchAppsData(TestCase):
             fixture = [
                 ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8),
                 ScalableApp("test_app2", cpu_threshold=0.1, mem_threshold=0.1),
-                ScalableApp("test_app3", cpu_threshold=None, mem_threshold=None),
+                ScalableApp(
+                    "test_app3", cpu_threshold=None, mem_threshold=None
+                ),
             ]
 
             rsps.get(
@@ -320,8 +318,12 @@ class TestFetchAppsData(TestCase):
 
             app_with_stats = await scaler.get_app_stats(app)
 
-            self.assertEqual(fixture.cpu_usage, app_with_stats.app_stats.cpu_usage)
-            self.assertEqual(fixture.ram_usage, app_with_stats.app_stats.ram_usage)
+            self.assertEqual(
+                fixture.cpu_usage, app_with_stats.app_stats.cpu_usage
+            )
+            self.assertEqual(
+                fixture.ram_usage, app_with_stats.app_stats.ram_usage
+            )
 
     async def test_get_app_stats_non_existing_app_id(self):
         scaler = AsgardInterface()

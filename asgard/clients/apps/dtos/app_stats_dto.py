@@ -13,4 +13,8 @@ class AppStatsDto(BaseModel):
     stats: StatsSpec
 
     def was_not_found(self) -> bool:
-        return self.stats.cpu_pct == "0" and self.stats.ram_pct == "0" and self.stats.cpu_thr_pct == "0"
+        return (
+            self.stats.cpu_pct == "0"
+            and self.stats.ram_pct == "0"
+            and self.stats.cpu_thr_pct == "0"
+        )
