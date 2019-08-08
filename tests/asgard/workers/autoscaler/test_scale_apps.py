@@ -1,10 +1,11 @@
 from aioresponses import aioresponses
 from asynctest import TestCase
+from yarl import URL
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
-from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.decision import Decision
+from asgard.workers.models.scalable_app import ScalableApp
 
 
 class TestScaleApps(TestCase):
@@ -17,10 +18,7 @@ class TestScaleApps(TestCase):
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test1",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test1", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -38,17 +36,14 @@ class TestScaleApps(TestCase):
         decisions = [
             Decision(app1.id, cpu=0.2, mem=10),
             Decision(app2.id, cpu=0.4, mem=20),
-            Decision(app3.id, cpu=0.1, mem=9)
+            Decision(app3.id, cpu=0.1, mem=9),
         ]
 
         with aioresponses() as rsps:
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test2",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test2", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -67,10 +62,7 @@ class TestScaleApps(TestCase):
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test1",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test1", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -88,17 +80,14 @@ class TestScaleApps(TestCase):
         decisions = [
             Decision(app1.id, mem=10),
             Decision(app2.id, cpu=0.4),
-            Decision(app3.id, cpu=0.1, mem=9)
+            Decision(app3.id, cpu=0.1, mem=9),
         ]
 
         with aioresponses() as rsps:
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test2",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test2", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -115,3 +104,27 @@ class TestScaleApps(TestCase):
         self.assertEqual(applied_decisions[2]["id"], decisions[2].id)
         self.assertEqual(applied_decisions[2]["mem"], decisions[2].mem)
         self.assertEqual(applied_decisions[2]["cpus"], decisions[2].cpu)
+
+    async def test_http_request_is_sent_with_correct_parameters(self):
+        interface = AsgardInterface()
+
+        decisions = [Decision("test", mem=64, cpu=0.4)]
+
+        body_fixture = [{"id": "test", "mem": 64, "cpus": 0.4}]
+        headers_fixture = {"Content-Type": "application/json"}
+
+        with aioresponses() as rsps:
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
+            await interface.apply_decisions(decisions)
+            calls = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+            self.assertIsNotNone(calls)
+            self.assertEqual(body_fixture, calls[0].kwargs.get("json"))
+            self.assertEqual(headers_fixture, calls[0].kwargs.get("headers"))
