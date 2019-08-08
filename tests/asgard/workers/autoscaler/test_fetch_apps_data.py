@@ -2,7 +2,7 @@ from aioresponses import aioresponses
 from asynctest import TestCase
 
 from asgard.conf import settings
-from asgard.workers.autoscaler.cloudinterface import AsgardInterface
+from asgard.workers.autoscaler.asgard_cloudinterface import AsgardInterface
 from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.scalable_app import ScalableApp
 

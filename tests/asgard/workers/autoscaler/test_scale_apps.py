@@ -3,7 +3,7 @@ from asynctest import TestCase
 from yarl import URL
 
 from asgard.conf import settings
-from asgard.workers.autoscaler.cloudinterface import AsgardInterface
+from asgard.workers.autoscaler.asgard_cloudinterface import AsgardInterface
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
 

@@ -2,7 +2,7 @@ from aioresponses import aioresponses
 from asynctest import TestCase
 
 from asgard.conf import settings
-from asgard.workers.autoscaler.cloudinterface import AsgardInterface
+from asgard.workers.autoscaler.asgard_cloudinterface import AsgardInterface
 
 
 class TestFetchAppsLabels(TestCase):
