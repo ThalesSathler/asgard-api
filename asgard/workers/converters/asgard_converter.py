@@ -1,20 +1,19 @@
 from typing import Optional
 
-from .converter_interface import Converter
-from asgard.workers.models.scalable_app import ScalableApp
-from asgard.workers.models.app_stats import AppStats
-from asgard.workers.models.decision import Decision
 from asgard.clients.apps.dtos.app_dto import AppDto
 from asgard.clients.apps.dtos.app_stats_dto import AppStatsDto
 from asgard.clients.apps.dtos.decision_dto import DecisionDto
+from asgard.workers.models.app_stats import AppStats
+from asgard.workers.models.decision import Decision
+from asgard.workers.models.scalable_app import ScalableApp
+
+from .converter_interface import Converter
 
 
-class AppConverter(
-    Converter[ScalableApp, AppDto]
-):
+class AppConverter(Converter[ScalableApp, AppDto]):
     @classmethod
     def to_model(cls, dto_object: AppDto) -> ScalableApp:
-        if dto_object.id[0] == '/':
+        if dto_object.id[0] == "/":
             appid = dto_object.id[1:]
         else:
             appid = dto_object.id
@@ -26,10 +25,14 @@ class AppConverter(
 
         if dto_object.labels is not None:
             if "asgard.autoscale.cpu" in dto_object.labels:
-                scalable_app.cpu_threshold = float(dto_object.labels["asgard.autoscale.cpu"])
+                scalable_app.cpu_threshold = float(
+                    dto_object.labels["asgard.autoscale.cpu"]
+                )
 
             if "asgard.autoscale.mem" in dto_object.labels:
-                scalable_app.mem_threshold = float(dto_object.labels["asgard.autoscale.mem"])
+                scalable_app.mem_threshold = float(
+                    dto_object.labels["asgard.autoscale.mem"]
+                )
 
             if "asgard.autoscale.ignore" in dto_object.labels:
                 if "all" in dto_object.labels["asgard.autoscale.ignore"]:
@@ -49,9 +52,7 @@ class AppConverter(
         raise NotImplementedError
 
 
-class AppStatsConverter (
-    Converter[AppStats, AppStatsDto]
-):
+class AppStatsConverter(Converter[AppStats, AppStatsDto]):
     @classmethod
     def to_model(cls, dto_object: AppStatsDto) -> Optional[AppStats]:
 
@@ -70,9 +71,7 @@ class AppStatsConverter (
         raise NotImplementedError
 
 
-class DecisionConverter (
-    Converter[Decision, DecisionDto]
-):
+class DecisionConverter(Converter[Decision, DecisionDto]):
     @classmethod
     def to_model(cls, dto_object: DecisionDto) -> Decision:
         # conversao nao necessaria

@@ -1,18 +1,16 @@
 from typing import List, Optional, Dict
 
-from asgard.http.client import http_client
 from asgard.clients.apps.dtos.app_dto import AppDto
 from asgard.clients.apps.dtos.app_stats_dto import AppStatsDto
 from asgard.clients.apps.dtos.decision_dto import DecisionDto
 from asgard.conf import settings
+from asgard.http.client import http_client
 
 
 async def get_all_apps() -> List[AppDto]:
 
     async with http_client as client:
-        response = await client.get(
-            f"{settings.ASGARD_API_ADDRESS}/v2/apps"
-        )
+        response = await client.get(f"{settings.ASGARD_API_ADDRESS}/v2/apps")
         all_apps_data = await response.json()
 
         if all_apps_data:
@@ -43,8 +41,7 @@ async def post_scaling_decisions(decisions: List[DecisionDto]) -> List[Dict]:
 
     async with http_client as client:
         await client.put(
-            f"{settings.ASGARD_API_ADDRESS}/v2/apps",
-            json=post_body
+            f"{settings.ASGARD_API_ADDRESS}/v2/apps", json=post_body
         )
 
     return list(post_body)

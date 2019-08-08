@@ -13,9 +13,7 @@ class TestStateChecker(TestCase):
         state_checker = PeriodicStateChecker(AsgardCloudInterface())
         with aioresponses() as rsps:
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
-                status=200,
-                payload=[],
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=[]
             )
 
             scalable_apps = await state_checker.get_scalable_apps_stats()

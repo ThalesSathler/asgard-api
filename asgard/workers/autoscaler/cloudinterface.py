@@ -1,15 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 
-from asgard.workers.models.app_stats import AppStats
-from asgard.workers.models.scalable_app import ScalableApp
-from asgard.workers.models.decision import Decision
-from asgard.workers.converters.asgard_converter import AppConverter, AppStatsConverter, DecisionConverter
 import asgard.clients.apps.client as asgard_client
+from asgard.workers.converters.asgard_converter import (
+    AppConverter,
+    AppStatsConverter,
+    DecisionConverter,
+)
+from asgard.workers.models.app_stats import AppStats
+from asgard.workers.models.decision import Decision
+from asgard.workers.models.scalable_app import ScalableApp
 
 
 class CloudInterface(ABC):
-
     @abstractmethod
     async def fetch_all_apps(self) -> List[ScalableApp]:
         raise NotImplementedError
@@ -23,12 +26,13 @@ class CloudInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
+    async def apply_decisions(
+        self, scaling_decisions: Decision
+    ) -> List[Decision]:
         raise NotImplementedError
 
 
 class AsgardInterface(CloudInterface):
-
     async def fetch_all_apps(self) -> List[ScalableApp]:
         app_dtos = await asgard_client.get_all_apps()
         apps = AppConverter.all_to_model(app_dtos)
@@ -48,7 +52,9 @@ class AsgardInterface(CloudInterface):
 
         return app
 
-    async def apply_decisions(self, scaling_decisions: List[Decision]) -> List[Dict]:
+    async def apply_decisions(
+        self, scaling_decisions: List[Decision]
+    ) -> List[Dict]:
         decision_dtos = DecisionConverter.all_to_dto(scaling_decisions)
         post_body = await asgard_client.post_scaling_decisions(decision_dtos)
 

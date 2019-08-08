@@ -3,8 +3,8 @@ from asynctest import TestCase
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.cloudinterface import AsgardInterface
-from asgard.workers.models.scalable_app import ScalableApp
 from asgard.workers.models.decision import Decision
+from asgard.workers.models.scalable_app import ScalableApp
 
 
 class TestScaleApps(TestCase):
@@ -17,10 +17,7 @@ class TestScaleApps(TestCase):
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test1",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test1", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -38,17 +35,14 @@ class TestScaleApps(TestCase):
         decisions = [
             Decision(app1.id, cpu=0.2, mem=10),
             Decision(app2.id, cpu=0.4, mem=20),
-            Decision(app3.id, cpu=0.1, mem=9)
+            Decision(app3.id, cpu=0.1, mem=9),
         ]
 
         with aioresponses() as rsps:
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test2",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test2", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -67,10 +61,7 @@ class TestScaleApps(TestCase):
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test1",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test1", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
@@ -88,17 +79,14 @@ class TestScaleApps(TestCase):
         decisions = [
             Decision(app1.id, mem=10),
             Decision(app2.id, cpu=0.4),
-            Decision(app3.id, cpu=0.1, mem=9)
+            Decision(app3.id, cpu=0.1, mem=9),
         ]
 
         with aioresponses() as rsps:
             rsps.put(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "deploymentId": "test2",
-                    "version": "1.0"
-                }
+                payload={"deploymentId": "test2", "version": "1.0"},
             )
             applied_decisions = await interface.apply_decisions(decisions)
 
