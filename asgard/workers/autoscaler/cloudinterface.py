@@ -12,19 +12,19 @@ class CloudInterface(ABC):
 
     @abstractmethod
     async def fetch_all_apps(self) -> List[ScalableApp]:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     async def get_all_scalable_apps(self) -> List[ScalableApp]:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     async def get_app_stats(self, app_id) -> AppStats:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     async def apply_decisions(self, scaling_decisions: Decision) -> List[Decision]:
-        pass
+        raise NotImplementedError
 
 
 class AsgardInterface(CloudInterface):
