@@ -1,1 +1,5 @@
-from aiohttp.web_exceptions import HTTPNotFound, HTTPBadRequest
+from aiohttp.web_exceptions import (
+    HTTPNotFound,
+    HTTPBadRequest,
+    HTTPInternalServerError,
+)
