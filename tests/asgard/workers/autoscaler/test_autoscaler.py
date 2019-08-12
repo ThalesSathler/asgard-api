@@ -5,8 +5,10 @@ from asgard.conf import settings
 from asgard.workers.autoscaler.asgard_cloudinterface import (
     AsgardInterface as AsgardCloudInterface,
 )
-from asgard.workers.autoscaler.simple_decision_component import DecisionComponent
 from asgard.workers.autoscaler.periodicstatechecker import PeriodicStateChecker
+from asgard.workers.autoscaler.simple_decision_component import (
+    DecisionComponent,
+)
 
 
 class AutoscalerTest(TestCase):
@@ -285,9 +287,9 @@ class AutoscalerTest(TestCase):
                     "mem": 1.0,
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8
+                        "asgard.autoscale.mem": 0.8,
                     },
-                },
+                }
             ]
 
             rsps.get(
@@ -310,7 +312,7 @@ class AutoscalerTest(TestCase):
         self.assertEqual(1, len(apps_stats), "fetched one app")
         self.assertEqual(0, len(scaling_decision), "chose to not scale app")
 
-    async def test_scales_when_difference_more_than_5_percent (self):
+    async def test_scales_when_difference_more_than_5_percent(self):
         cloud_interface = AsgardCloudInterface()
         state_checker = PeriodicStateChecker(cloud_interface)
         decision_maker = DecisionComponent()
@@ -333,9 +335,9 @@ class AutoscalerTest(TestCase):
                     "mem": 1.0,
                     "labels": {
                         "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8
+                        "asgard.autoscale.mem": 0.8,
                     },
-                },
+                }
             ]
 
             rsps.get(
@@ -357,5 +359,11 @@ class AutoscalerTest(TestCase):
 
         self.assertEqual(1, len(apps_stats), "fetched one app")
         self.assertEqual(1, len(scaling_decision), "chose to scale the app")
-        self.assertEqual(2.905, scaling_decision[0].cpu, "scaled cpu to the correct value")
-        self.assertEqual(1.06375, scaling_decision[0].mem, "scaled memory to the correct value")
+        self.assertEqual(
+            2.905, scaling_decision[0].cpu, "scaled cpu to the correct value"
+        )
+        self.assertEqual(
+            1.06375,
+            scaling_decision[0].mem,
+            "scaled memory to the correct value",
+        )

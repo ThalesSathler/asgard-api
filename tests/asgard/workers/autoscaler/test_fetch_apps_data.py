@@ -314,16 +314,12 @@ class TestFetchAppsData(TestCase):
                 payload=payload,
             )
 
-            fixture = AppStats(cpu_usage=0.93, ram_usage=8.91)
+            fixture = AppStats(cpu_usage=0.93, mem_usage=8.91)
 
             app_stats = await scaler.get_app_stats(app)
 
-            self.assertEqual(
-                fixture.cpu_usage, app_stats.cpu_usage
-            )
-            self.assertEqual(
-                fixture.ram_usage, app_stats.ram_usage
-            )
+            self.assertEqual(fixture.cpu_usage, app_stats.cpu_usage)
+            self.assertEqual(fixture.mem_usage, app_stats.mem_usage)
 
     async def test_get_app_stats_non_existing_app_id(self):
         scaler = AsgardInterface()

@@ -7,9 +7,9 @@ from asgard.workers.converters.asgard_converter import (
     AppStatsConverter,
     DecisionConverter,
 )
+from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
-from asgard.workers.models.app_stats import AppStats
 
 
 class AsgardInterface(CloudInterface):
