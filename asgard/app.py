@@ -17,8 +17,6 @@ async def patched_startup(app):
 
     app[RouteTypes.HTTP] = {}
     routes = app.routes_registry.http_routes
-    if not routes:
-        return
 
     app[RouteTypes.HTTP]["app"] = http_app = web.Application()
     for route in routes:
