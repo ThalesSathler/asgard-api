@@ -316,13 +316,13 @@ class TestFetchAppsData(TestCase):
 
             fixture = AppStats(cpu_usage=0.93, ram_usage=8.91)
 
-            app_with_stats = await scaler.get_app_stats(app)
+            app_stats = await scaler.get_app_stats(app)
 
             self.assertEqual(
-                fixture.cpu_usage, app_with_stats.app_stats.cpu_usage
+                fixture.cpu_usage, app_stats.cpu_usage
             )
             self.assertEqual(
-                fixture.ram_usage, app_with_stats.app_stats.ram_usage
+                fixture.ram_usage, app_stats.ram_usage
             )
 
     async def test_get_app_stats_non_existing_app_id(self):
@@ -348,4 +348,5 @@ class TestFetchAppsData(TestCase):
 
             stats = await scaler.get_app_stats(app)
 
+            self.assertEqual(None, stats)
             self.assertEqual(None, app.app_stats)

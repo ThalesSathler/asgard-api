@@ -1,12 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import List
 
-import asgard.clients.apps.client as asgard_client
-from asgard.workers.converters.asgard_converter import (
-    AppConverter,
-    AppStatsConverter,
-    DecisionConverter,
-)
 from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
@@ -22,7 +16,7 @@ class CloudInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_app_stats(self, app_id) -> AppStats:
+    async def get_app_stats(self, app: ScalableApp) -> AppStats:
         raise NotImplementedError
 
     @abstractmethod
