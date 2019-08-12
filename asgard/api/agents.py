@@ -1,10 +1,8 @@
 from decimal import Decimal
 from typing import Any, Dict, List
 
-import aiohttp_cors
 from aiohttp import web
 from asyncworker import RouteTypes
-from asyncworker.conf import settings
 
 from asgard.api.resources.agents import AgentsResource
 from asgard.api.resources.apps import AppsResource
@@ -95,42 +93,3 @@ async def agent_apps(request: web.Request):
     if agent:
         apps = agent.applications
     return web.json_response(AppsResource(apps=apps).dict())
-
-
-async def patched_startup(app):
-
-    app[RouteTypes.HTTP] = {}
-    routes = app.routes_registry.http_routes
-    if not routes:
-        return
-
-    app[RouteTypes.HTTP]["app"] = http_app = web.Application()
-    for route in routes:
-        http_app.router.add_route(**route)
-
-    cors = aiohttp_cors.setup(
-        http_app,
-        defaults={
-            "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True, expose_headers="*", allow_headers="*"
-            )
-        },
-    )
-
-    # Configure CORS on all routes.
-    for route in list(http_app.router.routes()):
-        cors.add(route)
-
-    app[RouteTypes.HTTP]["runner"] = web.AppRunner(http_app)
-    await app[RouteTypes.HTTP]["runner"].setup()
-    app[RouteTypes.HTTP]["site"] = web.TCPSite(
-        runner=app[RouteTypes.HTTP]["runner"],
-        host=settings.HTTP_HOST,
-        port=settings.HTTP_PORT,
-    )
-
-    await app[RouteTypes.HTTP]["site"].start()
-
-
-app._on_startup.clear()
-app._on_startup.append(patched_startup)
