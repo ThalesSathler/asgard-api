@@ -172,6 +172,7 @@ class HttpClient:
                 timeout=timeout,
                 raise_for_status=raise_for_status,
                 allow_redirects=True,
+                **kwargs,
             )
         except ClientResponseError as ce:
             if ce.status == HTTPStatus.NOT_FOUND:

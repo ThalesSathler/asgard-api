@@ -485,3 +485,22 @@ class HttpClientTest(TestCase):
             raise_for_status=True,
             allow_redirects=True,
         )
+
+    async def test_can_pass_extra_kwarg_to_aiohttp_client_sesson(self):
+        """
+        Confirmamos que quando passamos argumentos extras para o HttpClient
+        isso é repassado para o ClientSession
+        """
+        client = HttpClient()
+        client.session_class = self.session_class_mock
+
+        await client.put(TEST_URL, json={"key": "value"})
+        client._session.request.assert_awaited_with(
+            "put",
+            TEST_URL,
+            timeout=None,
+            headers={},
+            raise_for_status=True,
+            allow_redirects=True,
+            json={"key": "value"},
+        )
