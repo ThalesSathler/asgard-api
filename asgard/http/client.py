@@ -175,11 +175,12 @@ class HttpClient:
             )
         except ClientResponseError as ce:
             if ce.status == HTTPStatus.NOT_FOUND:
-                raise HTTPNotFound()
+                raise HTTPNotFound(request_info=ce.request_info)
             if ce.status == HTTPStatus.INTERNAL_SERVER_ERROR:
-                raise HTTPInternalServerError()
+                raise HTTPInternalServerError(request_info=ce.request_info)
             if ce.status == HTTPStatus.BAD_REQUEST:
-                raise HTTPBadRequest()
+                raise HTTPBadRequest(request_info=ce.request_info)
+            raise ce
 
         return resp
 

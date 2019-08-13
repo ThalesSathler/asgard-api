@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from aiohttp import ClientTimeout
+from aiohttp.client_exceptions import ClientResponseError
 from aioresponses import aioresponses
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock, Mock, ANY
@@ -327,23 +328,66 @@ class HttpClientTest(TestCase):
             allow_redirects=True,
         )
 
-    async def test_raise_not_found_exception_when_response_is_404(self):
-        client = HttpClient()
+    async def test_exceptions_have_detail_info_about_the_request_that_failed(
+        self
+    ):
+        """
+        Cada exceção lançada deve carregar algumas infos sobre o request original.
+        A ClientResponseError da aiohttp tem tudo que queremos.
 
-        with self.assertRaises(HTTPNotFound):
-            await client.get("https://httpbin.org/staus/404")
+        A exception lançada pelo client contém:
+          - request_info original
+          - status (int)
+        """
+        client = HttpClient()
+        url = "https://httpbin.org/status/404"
+
+        try:
+            await client.get(url)
+        except HTTPNotFound as e:
+            self.assertEqual(HTTPStatus.NOT_FOUND, e.status)
+            self.assertEqual(url, str(e.request_info.url))
+            self.assertEqual("GET", e.request_info.method)
+            self.assertIsNotNone(e.request_info.headers)
 
     async def test_raise_internal_error_exception_when_response_is_500(self):
         client = HttpClient()
+        url = "https://httpbin.org/status/500"
 
-        with self.assertRaises(HTTPInternalServerError):
-            await client.get("https://httpbin.org/status/500")
+        try:
+            await client.get(url)
+        except HTTPInternalServerError as e:
+            self.assertEqual(HTTPStatus.INTERNAL_SERVER_ERROR, e.status)
+            self.assertEqual(url, str(e.request_info.url))
+            self.assertEqual("GET", e.request_info.method)
+            self.assertIsNotNone(e.request_info.headers)
 
     async def test_raise_bad_request_exception_when_response_is_400(self):
         client = HttpClient()
+        url = "https://httpbin.org/status/400"
 
-        with self.assertRaises(HTTPBadRequest):
-            await client.get("https://httpbin.org/status/400")
+        try:
+            await client.get(url)
+        except HTTPBadRequest as e:
+            self.assertEqual(HTTPStatus.BAD_REQUEST, e.status)
+            self.assertEqual(url, str(e.request_info.url))
+            self.assertEqual("GET", e.request_info.method)
+            self.assertIsNotNone(e.request_info.headers)
+
+    async def test_re_raise_original_exception(self):
+        """
+        Se o request lançar uma exception que não estamos tratando, devemos re-lançar.
+        """
+        client = HttpClient()
+        url = "https://httpbin.org/status/415"
+
+        try:
+            await client.get(url)
+        except ClientResponseError as e:
+            self.assertEqual(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, e.status)
+            self.assertEqual(url, str(e.request_info.url))
+            self.assertEqual("GET", e.request_info.method)
+            self.assertIsNotNone(e.request_info.headers)
 
     async def test_always_make_request_with_follow_redirect(self):
         """
