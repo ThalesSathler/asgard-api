@@ -111,7 +111,10 @@ class TestScaleApps(TestCase):
         decisions = [Decision("test", mem=64, cpu=0.4)]
 
         body_fixture = [{"id": "test", "mem": 64, "cpus": 0.4}]
-        headers_fixture = {"Content-Type": "application/json"}
+        headers_fixture = {
+            "Content-Type": "application/json",
+            "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}",
+        }
 
         with aioresponses() as rsps:
             rsps.put(

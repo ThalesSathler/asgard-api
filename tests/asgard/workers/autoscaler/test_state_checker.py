@@ -1,5 +1,6 @@
 from aioresponses import aioresponses
 from asynctest import TestCase
+from yarl import URL
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.asgard_cloudinterface import (
@@ -73,3 +74,23 @@ class TestStateChecker(TestCase):
             scalable_apps = await state_checker.get_scalable_apps_stats()
 
             self.assertEqual(1, len(scalable_apps))
+
+    async def test_sending_auth_in_headers(self):
+        state_checker = PeriodicStateChecker(AsgardCloudInterface())
+        with aioresponses() as rsps:
+            rsps.get(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=[]
+            )
+
+            headers_fixture = {
+                "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}"
+            }
+
+            scalable_apps = await state_checker.get_scalable_apps_stats()
+
+            calls = rsps.requests.get(
+                ("GET", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+            self.assertIsNotNone(calls)
+            self.assertEqual(headers_fixture, calls[0].kwargs.get("headers"))
