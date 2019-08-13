@@ -34,7 +34,11 @@ class AsgardInterface(CloudInterface):
     async def apply_decisions(
         self, scaling_decisions: List[Decision]
     ) -> List[Dict]:
-        decision_dtos = DecisionConverter.all_to_dto(scaling_decisions)
-        post_body = await asgard_client.post_scaling_decisions(decision_dtos)
+        if scaling_decisions:
+            decision_dtos = DecisionConverter.all_to_dto(scaling_decisions)
+            post_body = await asgard_client.post_scaling_decisions(
+                decision_dtos
+            )
+            return post_body
 
-        return post_body
+        return []

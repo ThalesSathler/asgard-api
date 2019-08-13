@@ -1,5 +1,6 @@
 from aioresponses import aioresponses
 from asynctest import TestCase
+from yarl import URL
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.asgard_cloudinterface import (
@@ -55,20 +56,30 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            # for app in apps_fixture:
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/apps/test_app2/stats",
                 status=200,
                 payload=stats_fixture,
             )
 
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
             apps_stats = await state_checker.get_scalable_apps_stats()
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
-            # cloud_interface.scale_apps(scaling_decision)
+            await cloud_interface.apply_decisions(scaling_decision)
 
-            self.assertEqual(1, len(scaling_decision))
-            self.assertEqual(10, scaling_decision[0].mem)
-            self.assertEqual(35, scaling_decision[0].cpu)
+            scale_spy = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+        self.assertEqual(1, len(scaling_decision))
+        self.assertEqual(10, scaling_decision[0].mem)
+        self.assertEqual(35, scaling_decision[0].cpu)
+        self.assertIsNotNone(scale_spy)
 
     async def test_decide_to_scale_all_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -122,15 +133,26 @@ class AutoscalerTest(TestCase):
                     payload=stats_fixture,
                 )
 
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
             apps_stats = await state_checker.get_scalable_apps_stats()
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
-        # cloud_interface.scale_apps(scaling_decision)
+            await cloud_interface.apply_decisions(scaling_decision)
+
+            scale_spy = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
 
         self.assertEqual(len(apps_stats), len(scaling_decision))
         self.assertEqual(1.25, scaling_decision[0].mem)
         self.assertEqual(None, scaling_decision[0].cpu)
         self.assertEqual(None, scaling_decision[1].mem)
         self.assertEqual(35, scaling_decision[1].cpu)
+        self.assertIsNotNone(scale_spy)
 
     async def test_decide_to_scale_some_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -194,15 +216,26 @@ class AutoscalerTest(TestCase):
                     payload=stats_fixture,
                 )
 
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
             apps_stats = await state_checker.get_scalable_apps_stats()
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
-        # cloud_interface.scale_apps(scaling_decision)
+            await cloud_interface.apply_decisions(scaling_decision)
+
+            scale_spy = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
 
         self.assertEqual(2, len(scaling_decision))
         self.assertEqual(10, scaling_decision[0].mem)
         self.assertEqual(35, scaling_decision[0].cpu)
         self.assertEqual(None, scaling_decision[1].mem)
         self.assertEqual(7, scaling_decision[1].cpu)
+        self.assertIsNotNone(scale_spy)
 
     async def test_decide_to_scale_no_apps(self):
         cloud_interface = AsgardCloudInterface()
@@ -249,6 +282,12 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
             for app in apps_fixture:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
@@ -258,6 +297,11 @@ class AutoscalerTest(TestCase):
 
             apps_stats = await state_checker.get_scalable_apps_stats()
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
-        # cloud_interface.scale_apps(scaling_decision)
+            await cloud_interface.apply_decisions(scaling_decision)
+
+            scale_spy = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
 
         self.assertEqual(0, len(scaling_decision))
+        self.assertIsNone(scale_spy)
