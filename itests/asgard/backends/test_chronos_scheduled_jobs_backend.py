@@ -3,7 +3,6 @@ from base64 import b64encode
 from http import HTTPStatus
 
 import aiohttp
-from aiohttp.client_exceptions import ClientResponseError
 from aioresponses import aioresponses
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock
@@ -17,7 +16,7 @@ from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
 from asgard.exceptions import DuplicateEntity, NotFoundEntity
 from asgard.http.client import http_client
-from asgard.http.exceptions import HTTPNotFound, HTTPBadRequest
+from asgard.http.exceptions import HTTPNotFound
 from asgard.models.account import Account
 from asgard.models.spec.fetch import FetchURLSpec
 from asgard.models.user import User
@@ -487,7 +486,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
             )
             rsps.get(
                 f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
-                exception=HTTPNotFound(),
+                exception=HTTPNotFound(request_info=None),
             )
             rsps.delete(
                 f"{CHRONOS_BASE_URL}/job/{self.chronos_dev_job_fixture['name']}",
