@@ -81,6 +81,7 @@ class AutoscalerTest(TestCase):
 
         self.assertEqual(1, len(scaling_decision))
         self.assertEqual(10, scaling_decision[0].mem)
+        self.assertEqual("test_app2", scaling_decision[0].id)
         self.assertEqual(35, scaling_decision[0].cpu)
         self.assertIsNotNone(scale_spy)
 
@@ -152,7 +153,9 @@ class AutoscalerTest(TestCase):
 
         self.assertEqual(len(apps_stats), len(scaling_decision))
         self.assertEqual(1.25, scaling_decision[0].mem)
+        self.assertEqual("test_app1", scaling_decision[0].id)
         self.assertEqual(None, scaling_decision[0].cpu)
+        self.assertEqual("test_app2", scaling_decision[1].id)
         self.assertEqual(None, scaling_decision[1].mem)
         self.assertEqual(35, scaling_decision[1].cpu)
         self.assertIsNotNone(scale_spy)
@@ -235,7 +238,9 @@ class AutoscalerTest(TestCase):
 
         self.assertEqual(2, len(scaling_decision))
         self.assertEqual(10, scaling_decision[0].mem)
+        self.assertEqual("test_app2", scaling_decision[0].id)
         self.assertEqual(35, scaling_decision[0].cpu)
+        self.assertEqual("test_app3", scaling_decision[1].id)
         self.assertEqual(None, scaling_decision[1].mem)
         self.assertEqual(7, scaling_decision[1].cpu)
         self.assertIsNotNone(scale_spy)
@@ -364,8 +369,10 @@ class AutoscalerTest(TestCase):
             )
 
         self.assertEqual(0, len(scaling_decision))
-        self.assertEqual(1, len(apps_stats), "fetched one app")
-        self.assertEqual(0, len(scaling_decision), "chose to not scale app")
+        self.assertEqual(1, len(apps_stats), "didn't fetch one app")
+        self.assertEqual(
+            0, len(scaling_decision), "didn't make scaling decision"
+        )
         self.assertIsNone(scale_spy)
 
     async def test_scales_when_difference_more_than_5_percent(self):
@@ -422,14 +429,17 @@ class AutoscalerTest(TestCase):
                 ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
-        self.assertEqual(1, len(apps_stats), "fetched one app")
-        self.assertEqual(1, len(scaling_decision), "chose to scale the app")
+        self.assertEqual(1, len(apps_stats), "didn't fetch one app")
         self.assertEqual(
-            2.905, scaling_decision[0].cpu, "scaled cpu to the correct value"
+            1, len(scaling_decision), "didn't make scaling decision"
         )
         self.assertEqual(
-            1.06375,
-            scaling_decision[0].mem,
-            "scaled memory to the correct value",
+            "test_app1", scaling_decision[0].id, "made decision for wrong app"
+        )
+        self.assertEqual(
+            2.905, scaling_decision[0].cpu, "scaled cpu to incorrect value"
+        )
+        self.assertEqual(
+            1.06375, scaling_decision[0].mem, "scaled memory to incorrect value"
         )
         self.assertIsNotNone(scale_spy)
