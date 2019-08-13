@@ -7,6 +7,7 @@ from asgard.workers.converters.asgard_converter import (
     AppStatsConverter,
     DecisionConverter,
 )
+from asgard.workers.models.app_stats import AppStats
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
 
@@ -25,11 +26,11 @@ class AsgardInterface(CloudInterface):
 
         return list()
 
-    async def get_app_stats(self, app: ScalableApp) -> ScalableApp:
+    async def get_app_stats(self, app: ScalableApp) -> AppStats:
         app_stats_dto = await asgard_client.get_app_stats(app.id)
         app.app_stats = AppStatsConverter.to_model(app_stats_dto)
 
-        return app
+        return app.app_stats
 
     async def apply_decisions(
         self, scaling_decisions: List[Decision]

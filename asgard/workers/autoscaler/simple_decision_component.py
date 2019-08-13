@@ -1,18 +1,12 @@
-from abc import ABC, abstractmethod
 from typing import List
 
+from asgard.workers.autoscaler.decision_component_interface import (
+    DecisionComponentInterface,
+)
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
 
 THRESHOLD_MARGIN = 0.05
-
-
-class DecisionComponentInterface(ABC):
-    @abstractmethod
-    def decide_scaling_actions(
-        self, apps_stats: List[ScalableApp]
-    ) -> List[Decision]:
-        raise NotImplementedError
 
 
 class DecisionComponent(DecisionComponentInterface):
@@ -38,13 +32,13 @@ class DecisionComponent(DecisionComponentInterface):
                     deploy_decision = True
             if app.is_set_to_scale_mem():
                 if (
-                    app.app_stats.ram_usage
+                    app.app_stats.mem_usage
                     > app.mem_threshold + THRESHOLD_MARGIN
-                    or app.app_stats.ram_usage
+                    or app.app_stats.mem_usage
                     < app.mem_threshold - THRESHOLD_MARGIN
                 ):
                     decision.mem = (
-                        app.app_stats.ram_usage * app.mem_allocated
+                        app.app_stats.mem_usage * app.mem_allocated
                     ) / app.mem_threshold
                     deploy_decision = True
 
