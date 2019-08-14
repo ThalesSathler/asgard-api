@@ -20,7 +20,7 @@ class AppConverter(Converter[ScalableApp, AppDto]):
 
         scalable_app = ScalableApp(appid)
 
-        scalable_app.cpu_allocated = dto_object.cpu
+        scalable_app.cpu_allocated = dto_object.cpus
         scalable_app.mem_allocated = dto_object.mem
 
         if dto_object.labels is not None:

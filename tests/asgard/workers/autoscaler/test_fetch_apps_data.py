@@ -20,25 +20,25 @@ class TestFetchAppsData(TestCase):
                     "apps": [
                         {
                             "id": "/test_app",
-                            "cpu": "0.1",
+                            "cpus": "0.1",
                             "mem": "0.2",
                             "labels": {},
                         },
                         {
                             "id": "/test_app2",
-                            "cpu": "0.1",
+                            "cpus": "0.1",
                             "mem": "0.2",
                             "labels": {},
                         },
                         {
                             "id": "/test_app3",
-                            "cpu": "0.1",
+                            "cpus": "0.1",
                             "mem": "0.2",
                             "labels": {},
                         },
                         {
                             "id": "/test_app4",
-                            "cpu": "0.1",
+                            "cpus": "0.1",
                             "mem": "0.2",
                             "labels": {},
                         },
@@ -81,7 +81,7 @@ class TestFetchAppsData(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -90,7 +90,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -99,7 +99,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app3",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.5,
@@ -142,7 +142,7 @@ class TestFetchAppsData(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -152,7 +152,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -162,7 +162,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app3",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.5,
@@ -191,7 +191,7 @@ class TestFetchAppsData(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -201,7 +201,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -210,7 +210,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app3",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.5,
@@ -252,7 +252,7 @@ class TestFetchAppsData(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -261,7 +261,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -270,7 +270,7 @@ class TestFetchAppsData(TestCase):
                     },
                     {
                         "id": "/test_app3",
-                        "cpu": "0.2",
+                        "cpus": "0.2",
                         "mem": "0.2",
                         "labels": {
                             "asgard.autoscale.cpu": 0.5,

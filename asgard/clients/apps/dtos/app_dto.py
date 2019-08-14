@@ -5,6 +5,6 @@ from pydantic import BaseModel
 
 class AppDto(BaseModel):
     id: str
-    cpu: float
+    cpus: float
     mem: float
     labels: Optional[Dict[str, str]]

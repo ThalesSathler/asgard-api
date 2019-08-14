@@ -34,7 +34,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -44,7 +44,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -108,7 +108,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -118,7 +118,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -185,7 +185,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -195,7 +195,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -205,7 +205,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app3",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.5,
@@ -272,7 +272,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -282,7 +282,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
@@ -342,7 +342,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -406,7 +406,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -474,7 +474,7 @@ class AutoscalerTest(TestCase):
                 "apps": [
                     {
                         "id": "/test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -484,7 +484,7 @@ class AutoscalerTest(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,

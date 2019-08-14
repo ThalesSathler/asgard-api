@@ -31,7 +31,7 @@ class TestStateChecker(TestCase):
                 "apps": [
                     {
                         "id": "test_app1",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.3,
@@ -41,7 +41,7 @@ class TestStateChecker(TestCase):
                     },
                     {
                         "id": "/test_app2",
-                        "cpu": 3.5,
+                        "cpus": 3.5,
                         "mem": 1.0,
                         "labels": {
                             "asgard.autoscale.cpu": 0.1,
