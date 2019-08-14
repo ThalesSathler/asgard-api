@@ -28,9 +28,9 @@ class AsgardInterface(CloudInterface):
 
     async def get_app_stats(self, app: ScalableApp) -> AppStats:
         app_stats_dto = await asgard_client.get_app_stats(app.id)
-        app.app_stats = AppStatsConverter.to_model(app_stats_dto)
+        app_stats = AppStatsConverter.to_model(app_stats_dto)
 
-        return app.app_stats
+        return app_stats
 
     async def apply_decisions(
         self, scaling_decisions: List[Decision]

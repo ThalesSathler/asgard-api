@@ -3,6 +3,7 @@ from asynctest import TestCase
 from yarl import URL
 
 from asgard.conf import settings
+from asgard.workers.autoscaler.app import scale_all_apps
 from asgard.workers.autoscaler.asgard_cloudinterface import (
     AsgardInterface as AsgardCloudInterface,
 )
@@ -443,3 +444,74 @@ class AutoscalerTest(TestCase):
             1.06375, scaling_decision[0].mem, "scaled memory to incorrect value"
         )
         self.assertIsNotNone(scale_spy)
+
+    async def test_worker_polling(self):
+
+        with aioresponses() as rsps:
+            stats_fixture = {
+                "stats": {
+                    "type": "ASGARD",
+                    "errors": {},
+                    "cpu_pct": "1",
+                    "ram_pct": "1",
+                    "cpu_thr_pct": "0",
+                }
+            }
+
+            apps_fixture = [
+                {
+                    "id": "/test_app1",
+                    "cpu": 3.5,
+                    "mem": 1.0,
+                    "labels": {
+                        "asgard.autoscale.cpu": 0.3,
+                        "asgard.autoscale.mem": 0.8,
+                        "asgard.autoscale.ignore": "all",
+                    },
+                },
+                {
+                    "id": "/test_app2",
+                    "cpu": 3.5,
+                    "mem": 1.0,
+                    "labels": {
+                        "asgard.autoscale.cpu": 0.1,
+                        "asgard.autoscale.mem": 0.1,
+                        "asgard.autoscale.ignore": "",
+                    },
+                },
+            ]
+
+            body_fixture = [{"id": "test_app2", "mem": 10.0, "cpus": 35.0}]
+            headers_fixture = {
+                "Content-Type": "application/json",
+                "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}",
+            }
+
+            rsps.get(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload=apps_fixture,
+            )
+
+            for app in apps_fixture:
+                rsps.get(
+                    f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
+                    status=200,
+                    payload=stats_fixture,
+                )
+
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
+            await scale_all_apps(None)
+
+            scale_spy = rsps.requests.get(
+                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+        self.assertIsNotNone(scale_spy)
+        self.assertEqual(body_fixture, scale_spy[0].kwargs.get("json"))
+        self.assertEqual(headers_fixture, scale_spy[0].kwargs.get("headers"))
