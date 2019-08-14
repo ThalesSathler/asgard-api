@@ -15,7 +15,6 @@ from asgard.clients.chronos import ChronosClient
 from asgard.clients.chronos.models.job import ChronosJob
 from asgard.conf import settings
 from asgard.exceptions import DuplicateEntity, NotFoundEntity
-from asgard.http.client import http_client
 from asgard.http.exceptions import HTTPNotFound
 from asgard.models.account import Account
 from asgard.models.spec.fetch import FetchURLSpec
@@ -31,6 +30,8 @@ from tests.utils import with_json_fixture, get_fixture
 
 
 class ChronosScheduledJobsBackendTest(TestCase):
+    use_default_loop = True
+
     async def setUp(self):
         self.backend = ChronosScheduledJobsBackend()
 
@@ -79,11 +80,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
     @with_json_fixture("scheduled-jobs/chronos/infra-purge-logs-job.json")
     async def test_get_job_by_id_job_exists(self, job_fixture):
         job_fixture["name"] = "dev-scheduled-job"
-        async with http_client as client:
-            await client.post(
-                f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler/iso8601",
-                json=job_fixture,
-            )
+        await _load_jobs_into_chronos(job_fixture)
 
         # Para dar tempo do chronos registra e responder no request log abaixo
         await asyncio.sleep(1)
