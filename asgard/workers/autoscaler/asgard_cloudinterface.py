@@ -21,7 +21,10 @@ class AsgardInterface(CloudInterface):
 
     async def get_all_scalable_apps(self) -> List[ScalableApp]:
         all_apps = await self.fetch_all_apps()
-        return [ScalableApp.is_set_to_scale(app) for app in all_apps]
+        if all_apps:
+            return list(filter(ScalableApp.is_set_to_scale, all_apps))
+
+        return list()
 
     async def get_app_stats(self, app: ScalableApp) -> AppStats:
         app_stats_dto = await asgard_client.get_app_stats(app.id)
