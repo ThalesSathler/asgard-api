@@ -21,7 +21,8 @@ VALUES = {
     "SCHEDULED_JOBS_SERVICE_AUTH": json.dumps(
         {"user": "chronos", "password": "secret"}
     ),
-    "AUTOSCALER_AUTH_TOKEN": 'anytoken'
+    "AUTOSCALER_AUTH_TOKEN": "anytoken",
+    "AUTOSCALER_MARGIN_THRESHOLD": "0.05",
 }
 
 

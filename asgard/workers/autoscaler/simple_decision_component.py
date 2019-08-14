@@ -1,12 +1,11 @@
 from typing import List
 
+from asgard.conf import settings
 from asgard.workers.autoscaler.decision_component_interface import (
     DecisionComponentInterface,
 )
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
-
-THRESHOLD_MARGIN = 0.05
 
 
 class DecisionComponent(DecisionComponentInterface):
@@ -22,9 +21,9 @@ class DecisionComponent(DecisionComponentInterface):
 
                 if (
                     app.app_stats.cpu_usage
-                    > app.cpu_threshold + THRESHOLD_MARGIN
+                    > app.cpu_threshold + settings.AUTOSCALER_MARGIN_THRESHOLD
                     or app.app_stats.cpu_usage
-                    < app.cpu_threshold - THRESHOLD_MARGIN
+                    < app.cpu_threshold - settings.AUTOSCALER_MARGIN_THRESHOLD
                 ):
                     decision.cpu = (
                         app.app_stats.cpu_usage * app.cpu_allocated
@@ -33,9 +32,9 @@ class DecisionComponent(DecisionComponentInterface):
             if app.is_set_to_scale_mem():
                 if (
                     app.app_stats.mem_usage
-                    > app.mem_threshold + THRESHOLD_MARGIN
+                    > app.mem_threshold + settings.AUTOSCALER_MARGIN_THRESHOLD
                     or app.app_stats.mem_usage
-                    < app.mem_threshold - THRESHOLD_MARGIN
+                    < app.mem_threshold - settings.AUTOSCALER_MARGIN_THRESHOLD
                 ):
                     decision.mem = (
                         app.app_stats.mem_usage * app.mem_allocated

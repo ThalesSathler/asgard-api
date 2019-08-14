@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     SCHEDULED_JOBS_SERVICE_ADDRESS: str
     SCHEDULED_JOBS_SERVICE_AUTH: AuthSpec = AuthSpec()
     AUTOSCALER_AUTH_TOKEN: str
+    AUTOSCALER_MARGIN_THRESHOLD: float
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"
