@@ -1,9 +1,13 @@
-class DecisionDto:
-    id: str
-    mem: int
-    cpus: float
+from pydantic import BaseModel
+from typing import Optional
 
-    def to_dict(self):
+
+class DecisionDto(BaseModel):
+    id: str
+    mem: Optional[float]
+    cpus: Optional[float]
+
+    def dict(self, *args, **kwargs):
         decision_dict = {"id": self.id}
 
         if self.cpus:

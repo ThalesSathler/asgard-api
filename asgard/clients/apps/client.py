@@ -30,16 +30,13 @@ async def get_app_stats(app_id: str) -> Optional[AppStatsDto]:
 
         response = await http_response.json()
 
-        if len(response["stats"]["errors"]) > 0:
-            return None
-
         app_stats_dto = AppStatsDto(**{"id": app_id, **response})
 
         return app_stats_dto
 
 
 async def post_scaling_decisions(decisions: List[DecisionDto]) -> List[Dict]:
-    post_body = list(map(DecisionDto.to_dict, decisions))
+    post_body = list(map(DecisionDto.dict, decisions))
 
     async with http_client as client:
         await client.put(

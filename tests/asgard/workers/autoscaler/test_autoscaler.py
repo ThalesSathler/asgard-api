@@ -24,8 +24,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "1",
-                    "ram_pct": "1",
+                    "cpu_pct": "100",
+                    "ram_pct": "100",
                     "cpu_thr_pct": "0",
                 }
             }
@@ -98,8 +98,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "1",
-                    "ram_pct": "1",
+                    "cpu_pct": "100",
+                    "ram_pct": "100",
                     "cpu_thr_pct": "0",
                 }
             }
@@ -175,8 +175,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "1",
-                    "ram_pct": "1",
+                    "cpu_pct": "100",
+                    "ram_pct": "100",
                     "cpu_thr_pct": "0",
                 }
             }
@@ -332,8 +332,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "0.251",
-                    "ram_pct": "0.849",
+                    "cpu_pct": "25.1",
+                    "ram_pct": "84.9",
                     "cpu_thr_pct": "0",
                 }
             }
@@ -396,8 +396,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "0.249",
-                    "ram_pct": "0.851",
+                    "cpu_pct": "24.9",
+                    "ram_pct": "85.1",
                     "cpu_thr_pct": "0",
                 }
             }
@@ -464,8 +464,8 @@ class AutoscalerTest(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "1",
-                    "ram_pct": "1",
+                    "cpu_pct": "100",
+                    "ram_pct": "100",
                     "cpu_thr_pct": "0",
                 }
             }

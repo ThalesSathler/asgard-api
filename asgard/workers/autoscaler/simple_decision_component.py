@@ -17,27 +17,30 @@ class DecisionComponent(DecisionComponentInterface):
             decision = Decision(app.id)
             deploy_decision = False
 
+            cpu_usage = app.app_stats.cpu_usage/100
+            mem_usage = app.app_stats.mem_usage/100
+
             if app.is_set_to_scale_cpu():
 
                 if (
-                    app.app_stats.cpu_usage
+                    cpu_usage
                     > app.cpu_threshold + settings.AUTOSCALER_MARGIN_THRESHOLD
-                    or app.app_stats.cpu_usage
+                    or cpu_usage
                     < app.cpu_threshold - settings.AUTOSCALER_MARGIN_THRESHOLD
                 ):
                     decision.cpu = (
-                        app.app_stats.cpu_usage * app.cpu_allocated
+                        cpu_usage * app.cpu_allocated
                     ) / app.cpu_threshold
                     deploy_decision = True
             if app.is_set_to_scale_mem():
                 if (
-                    app.app_stats.mem_usage
+                    mem_usage
                     > app.mem_threshold + settings.AUTOSCALER_MARGIN_THRESHOLD
-                    or app.app_stats.mem_usage
+                    or mem_usage
                     < app.mem_threshold - settings.AUTOSCALER_MARGIN_THRESHOLD
                 ):
                     decision.mem = (
-                        app.app_stats.mem_usage * app.mem_allocated
+                        mem_usage * app.mem_allocated
                     ) / app.mem_threshold
                     deploy_decision = True
 

@@ -16,7 +16,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=0.5,
                 mem_threshold=0.7,
-                app_stats=AppStats(cpu_usage=0.4499, mem_usage=0.7501),
+                app_stats=AppStats(cpu_usage=44.99, mem_usage=75.01),
             )
         ]
 
@@ -34,7 +34,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=0.5,
                 mem_threshold=0.7,
-                app_stats=AppStats(cpu_usage=0.4501, mem_usage=0.7499),
+                app_stats=AppStats(cpu_usage=45.01, mem_usage=74.99),
             )
         ]
 
@@ -51,7 +51,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=None,
                 mem_threshold=0.7,
-                app_stats=AppStats(cpu_usage=0.8, mem_usage=0.3),
+                app_stats=AppStats(cpu_usage=80, mem_usage=30),
             )
         ]
 
@@ -71,7 +71,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=0.7,
                 mem_threshold=None,
-                app_stats=AppStats(cpu_usage=0.8, mem_usage=0.3),
+                app_stats=AppStats(cpu_usage=80, mem_usage=30),
             )
         ]
 
@@ -93,7 +93,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=None,
                 mem_threshold=None,
-                app_stats=AppStats(cpu_usage=0.8, mem_usage=0.3),
+                app_stats=AppStats(cpu_usage=80, mem_usage=30),
             )
         ]
 
@@ -110,7 +110,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=0.1,
                 mem_threshold=0.1,
-                app_stats=AppStats(cpu_usage=1.0, mem_usage=1.0),
+                app_stats=AppStats(cpu_usage=100, mem_usage=100),
             ),
             ScalableApp(
                 "test2",
@@ -118,7 +118,7 @@ class TestDecisionComponent(TestCase):
                 mem_allocated=1.0,
                 cpu_threshold=0.5,
                 mem_threshold=0.7,
-                app_stats=AppStats(cpu_usage=1.0, mem_usage=1.0),
+                app_stats=AppStats(cpu_usage=100, mem_usage=100),
             ),
         ]
 
@@ -142,3 +142,22 @@ class TestDecisionComponent(TestCase):
             round(decisions[1].mem, 4),
             "decides correct values for memory",
         )
+
+    async def test_does_not_make_any_decision_when_everything_is_ignored(self):
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=None,
+                mem_threshold=0.2,
+                app_stats=AppStats(cpu_usage=41.29, mem_usage=62.62),
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(1, len(decisions), "did not return any decisions")
+        self.assertEqual(400.768, decisions[0].mem)
+
