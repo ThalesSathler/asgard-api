@@ -61,7 +61,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -135,7 +135,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -222,7 +222,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -305,7 +305,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -364,7 +364,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -428,7 +428,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -507,7 +507,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,

@@ -66,9 +66,7 @@ class TestFetchAppsData(TestCase):
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "apps": []
-                }
+                payload={"apps": []},
             )
 
             apps = await scaler.fetch_all_apps()

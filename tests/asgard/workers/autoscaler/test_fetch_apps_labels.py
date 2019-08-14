@@ -42,8 +42,8 @@ class TestFetchAppsLabels(TestCase):
                                 "asgard.autoscale.mem": "0.2",
                             },
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -82,8 +82,8 @@ class TestFetchAppsLabels(TestCase):
                             "mem": "0.2",
                             "labels": None,
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -122,8 +122,8 @@ class TestFetchAppsLabels(TestCase):
                             "mem": "0.2",
                             "labels": {"asgard.autoscale.ignore": "all"},
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -162,8 +162,8 @@ class TestFetchAppsLabels(TestCase):
                             "mem": "0.2",
                             "labels": {"asgard.autoscale.ignore": "cpu;mem"},
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -208,8 +208,8 @@ class TestFetchAppsLabels(TestCase):
                                 "asgard.autoscale.mem": "0.2",
                             },
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -262,8 +262,8 @@ class TestFetchAppsLabels(TestCase):
                                 "asgard.autoscale.mem": "0.2",
                             },
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -315,8 +315,8 @@ class TestFetchAppsLabels(TestCase):
                             "mem": "0.1",
                             "labels": {"asgard.autoscale.cpu": "0.2"},
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()
@@ -369,8 +369,8 @@ class TestFetchAppsLabels(TestCase):
                                 "asgard.autoscale.mem": "0.2",
                             },
                         },
-                    ],
-                }
+                    ]
+                },
             )
 
             apps = await interface.fetch_all_apps()

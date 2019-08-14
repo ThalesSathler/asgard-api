@@ -16,9 +16,7 @@ class TestStateChecker(TestCase):
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    "apps": []
-                }
+                payload={"apps": []},
             )
 
             scalable_apps = await state_checker.get_scalable_apps_stats()
@@ -30,7 +28,7 @@ class TestStateChecker(TestCase):
         with aioresponses() as rsps:
 
             apps_fixture = {
-                    "apps": [
+                "apps": [
                     {
                         "id": "test_app1",
                         "cpu": 3.5,
@@ -70,7 +68,7 @@ class TestStateChecker(TestCase):
                 }
             }
 
-            for app in apps_fixture['apps']:
+            for app in apps_fixture["apps"]:
                 rsps.get(
                     f'{settings.ASGARD_API_ADDRESS}/apps{app["id"]}/stats',
                     status=200,
@@ -87,9 +85,7 @@ class TestStateChecker(TestCase):
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload={
-                    'apps': []
-                }
+                payload={"apps": []},
             )
 
             headers_fixture = {
