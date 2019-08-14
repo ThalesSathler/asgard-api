@@ -30,28 +30,30 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
-                        "asgard.autoscale.ignore": "",
+                    {
+                        "id": "/test_app2",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                            "asgard.autoscale.ignore": "",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -59,7 +61,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -102,28 +104,30 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "cpu",
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "cpu",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.6,
-                        "asgard.autoscale.ignore": "mem",
+                    {
+                        "id": "/test_app2",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.6,
+                            "asgard.autoscale.ignore": "mem",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -131,7 +135,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -177,38 +181,40 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
-                        "asgard.autoscale.ignore": "",
+                    {
+                        "id": "/test_app2",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                            "asgard.autoscale.ignore": "",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app3",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.5,
-                        "asgard.autoscale.mem": 0.7,
-                        "asgard.autoscale.ignore": "mem",
+                    {
+                        "id": "/test_app3",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.5,
+                            "asgard.autoscale.mem": 0.7,
+                            "asgard.autoscale.ignore": "mem",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -216,7 +222,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -262,28 +268,30 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
-                        "asgard.autoscale.ignore": "cpu,mem",
+                    {
+                        "id": "/test_app2",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                            "asgard.autoscale.ignore": "cpu,mem",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -297,7 +305,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -330,17 +338,19 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                    },
-                }
-            ]
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                        },
+                    }
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -354,7 +364,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -392,17 +402,19 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                    },
-                }
-            ]
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                        },
+                    }
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -416,7 +428,7 @@ class AutoscalerTest(TestCase):
                 payload={"deploymentId": "test", "version": "1.0"},
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,
@@ -458,28 +470,30 @@ class AutoscalerTest(TestCase):
                 }
             }
 
-            apps_fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            apps_fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": 3.5,
-                    "mem": 1.0,
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
-                        "asgard.autoscale.ignore": "",
+                    {
+                        "id": "/test_app2",
+                        "cpu": 3.5,
+                        "mem": 1.0,
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                            "asgard.autoscale.ignore": "",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             body_fixture = [{"id": "test_app2", "mem": 10.0, "cpus": 35.0}]
             headers_fixture = {
@@ -493,7 +507,7 @@ class AutoscalerTest(TestCase):
                 payload=apps_fixture,
             )
 
-            for app in apps_fixture:
+            for app in apps_fixture['apps']:
                 rsps.get(
                     f"{settings.ASGARD_API_ADDRESS}/apps{app['id']}/stats",
                     status=200,

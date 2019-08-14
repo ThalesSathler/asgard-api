@@ -16,32 +16,34 @@ class TestFetchAppsData(TestCase):
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
                 status=200,
-                payload=[
-                    {
-                        "id": "/test_app",
-                        "cpu": "0.1",
-                        "mem": "0.2",
-                        "labels": {},
-                    },
-                    {
-                        "id": "/test_app2",
-                        "cpu": "0.1",
-                        "mem": "0.2",
-                        "labels": {},
-                    },
-                    {
-                        "id": "/test_app3",
-                        "cpu": "0.1",
-                        "mem": "0.2",
-                        "labels": {},
-                    },
-                    {
-                        "id": "/test_app4",
-                        "cpu": "0.1",
-                        "mem": "0.2",
-                        "labels": {},
-                    },
-                ],
+                payload={
+                    "apps": [
+                        {
+                            "id": "/test_app",
+                            "cpu": "0.1",
+                            "mem": "0.2",
+                            "labels": {},
+                        },
+                        {
+                            "id": "/test_app2",
+                            "cpu": "0.1",
+                            "mem": "0.2",
+                            "labels": {},
+                        },
+                        {
+                            "id": "/test_app3",
+                            "cpu": "0.1",
+                            "mem": "0.2",
+                            "labels": {},
+                        },
+                        {
+                            "id": "/test_app4",
+                            "cpu": "0.1",
+                            "mem": "0.2",
+                            "labels": {},
+                        },
+                    ]
+                },
             )
             apps = await scaler.fetch_all_apps()
 
@@ -62,7 +64,11 @@ class TestFetchAppsData(TestCase):
 
         with aioresponses() as rsps:
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/v2/apps", status=200, payload=[]
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={
+                    "apps": []
+                }
             )
 
             apps = await scaler.fetch_all_apps()
@@ -73,35 +79,37 @@ class TestFetchAppsData(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            payload = [
-                {
-                    "id": "/test_app1",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
+            payload = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
+                    {
+                        "id": "/test_app2",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                        },
                     },
-                },
-                {
-                    "id": "/test_app3",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.5,
-                        "asgard.autoscale.mem": 0.7,
+                    {
+                        "id": "/test_app3",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.5,
+                            "asgard.autoscale.mem": 0.7,
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             fixture = [
                 ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8),
@@ -132,37 +140,39 @@ class TestFetchAppsData(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            fixture = [
-                {
-                    "id": "/test_app1",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            fixture = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
-                        "asgard.autoscale.ignore": "cpu;mem",
+                    {
+                        "id": "/test_app2",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                            "asgard.autoscale.ignore": "cpu;mem",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app3",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.5,
-                        "asgard.autoscale.ignore": "cpu",
+                    {
+                        "id": "/test_app3",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.5,
+                            "asgard.autoscale.ignore": "cpu",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             rsps.get(
                 f"{settings.ASGARD_API_ADDRESS}/v2/apps",
@@ -179,36 +189,38 @@ class TestFetchAppsData(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            payload = [
-                {
-                    "id": "/test_app1",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
-                        "asgard.autoscale.ignore": "all",
+            payload = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                            "asgard.autoscale.ignore": "all",
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
+                    {
+                        "id": "/test_app2",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                        },
                     },
-                },
-                {
-                    "id": "/test_app3",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.5,
-                        "asgard.autoscale.ignore": "cpu",
+                    {
+                        "id": "/test_app3",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.5,
+                            "asgard.autoscale.ignore": "cpu",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             fixture = [
                 ScalableApp(
@@ -238,35 +250,37 @@ class TestFetchAppsData(TestCase):
         scaler = AsgardInterface()
 
         with aioresponses() as rsps:
-            payload = [
-                {
-                    "id": "/test_app1",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.3,
-                        "asgard.autoscale.mem": 0.8,
+            payload = {
+                "apps": [
+                    {
+                        "id": "/test_app1",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.3,
+                            "asgard.autoscale.mem": 0.8,
+                        },
                     },
-                },
-                {
-                    "id": "/test_app2",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.1,
-                        "asgard.autoscale.mem": 0.1,
+                    {
+                        "id": "/test_app2",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.1,
+                            "asgard.autoscale.mem": 0.1,
+                        },
                     },
-                },
-                {
-                    "id": "/test_app3",
-                    "cpu": "0.2",
-                    "mem": "0.2",
-                    "labels": {
-                        "asgard.autoscale.cpu": 0.5,
-                        "asgard.autoscale.ignore": "cpu",
+                    {
+                        "id": "/test_app3",
+                        "cpu": "0.2",
+                        "mem": "0.2",
+                        "labels": {
+                            "asgard.autoscale.cpu": 0.5,
+                            "asgard.autoscale.ignore": "cpu",
+                        },
                     },
-                },
-            ]
+                ]
+            }
 
             fixture = [
                 ScalableApp("test_app1", cpu_threshold=0.3, mem_threshold=0.8),

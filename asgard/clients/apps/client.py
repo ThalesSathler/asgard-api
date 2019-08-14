@@ -16,11 +16,10 @@ async def get_all_apps() -> List[AppDto]:
         )
         all_apps_data = await response.json()
 
-        if all_apps_data:
-            app_dtos = [AppDto(**app_data) for app_data in all_apps_data]
-            return app_dtos
+        print(all_apps_data)
 
-        return list()
+        app_dtos = [AppDto(**app_data) for app_data in all_apps_data['apps']]
+        return app_dtos
 
 
 async def get_app_stats(app_id: str) -> Optional[AppStatsDto]:
