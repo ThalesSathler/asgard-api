@@ -2,6 +2,7 @@ from aioresponses import aioresponses
 from asynctest import TestCase
 from freezegun import freeze_time
 
+from asgard.backends.base import Interval
 from asgard.backends.marathon.impl import MarathonAppsBackend
 from asgard.backends.mesos.models.app import MesosApp
 from asgard.conf import settings
@@ -18,6 +19,7 @@ class MarathonAppsBackendTest(TestCase):
         self.user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
         self.account = Account(**ACCOUNT_DEV_DICT)
         self.apps_backend = MarathonAppsBackend()
+        self.interval = Interval.ONE_HOUR
 
     @freeze_time("2019-03-29")
     async def test_get_app_stats_has_some_data(self):
@@ -28,7 +30,10 @@ class MarathonAppsBackendTest(TestCase):
                 rsps, agent_id, index_name="asgard-app-stats-2019-03-29-*"
             )
             stats = await self.apps_backend.get_app_stats(
-                MesosApp(id="infra-asgard-api"), self.user, self.account
+                MesosApp(id="infra-asgard-api"),
+                self.interval,
+                self.user,
+                self.account,
             )
             self.assertEqual(
                 AppStats(cpu_pct="4.51", ram_pct="22.68", cpu_thr_pct="2.89"),
@@ -49,7 +54,10 @@ class MarathonAppsBackendTest(TestCase):
             rsps.get(url, exception=Exception("Connection error to ES"))
 
             stats = await self.apps_backend.get_app_stats(
-                MesosApp(id="infra-asgard-api"), self.user, self.account
+                MesosApp(id="infra-asgard-api"),
+                self.interval,
+                self.user,
+                self.account,
             )
             self.assertEqual(
                 AppStats(

@@ -2,8 +2,6 @@ from datetime import datetime, timezone
 from http import HTTPStatus
 
 from aioresponses import aioresponses
-from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
-from tests.utils import build_mesos_cluster, get_fixture
 
 from asgard.api import apps
 from asgard.app import app
@@ -14,6 +12,8 @@ from itests.util import (
     ACCOUNT_DEV_ID,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
 )
+from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
+from tests.utils import build_mesos_cluster, get_fixture
 
 
 class AppStatsTest(BaseTestCase):

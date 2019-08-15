@@ -4,6 +4,7 @@ from asyncworker import RouteTypes
 from asgard.api.resources.apps import AppStatsResource
 from asgard.app import app
 from asgard.backends import mesos
+from asgard.backends.base import Interval
 from asgard.http.auth import auth_required
 from asgard.models.account import Account
 from asgard.models.user import User
@@ -19,6 +20,8 @@ async def app_stats(request: web.Request):
     user = await User.from_alchemy_obj(request["user"])
 
     account = await Account.from_alchemy_obj(request["user"].current_account)
-    stats = await AppsService.get_app_stats(app_id, user, account, mesos)
+    stats = await AppsService.get_app_stats(
+        app_id, Interval.ONE_HOUR, user, account, mesos
+    )
 
     return web.json_response(AppStatsResource(stats=stats).dict())
