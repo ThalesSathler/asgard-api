@@ -26,4 +26,3 @@ class ScalableApp:
 
     def is_set_to_scale(self) -> bool:
         return self.is_set_to_scale_cpu() or self.is_set_to_scale_mem()
-
