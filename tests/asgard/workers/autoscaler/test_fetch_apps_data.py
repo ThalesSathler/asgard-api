@@ -322,7 +322,7 @@ class TestFetchAppsData(TestCase):
             app = ScalableApp("app_test1")
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min",
                 status=200,
                 payload=payload,
             )
@@ -350,7 +350,7 @@ class TestFetchAppsData(TestCase):
             app = ScalableApp("app_test1")
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min",
                 status=200,
                 payload=fixture,
             )
@@ -380,7 +380,7 @@ class TestFetchAppsData(TestCase):
             }
 
             rsps.get(
-                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats",
+                f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min",
                 status=200,
                 payload=payload,
             )
@@ -390,7 +390,9 @@ class TestFetchAppsData(TestCase):
             calls = rsps.requests.get(
                 (
                     "GET",
-                    URL(f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats"),
+                    URL(
+                        f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min"
+                    ),
                 )
             )
 

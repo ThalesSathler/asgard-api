@@ -24,7 +24,7 @@ async def get_app_stats(app_id: str) -> Optional[AppStatsDto]:
     async with http_client as client:
         headers = {"Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}"}
         http_response = await client.get(
-            f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats",
+            f"{settings.ASGARD_API_ADDRESS}/apps/{app_id}/stats/avg-1min",
             headers=headers,
         )
 
