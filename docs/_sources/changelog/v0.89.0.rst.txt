@@ -1,0 +1,10 @@
+0.89.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #162 <https://github.com/B2W-BIT/asgard-api/pull/162>`_] Feature/accept put method to update scheduled job on root url
+- [`PR #161 <https://github.com/B2W-BIT/asgard-api/pull/161>`_] Feature/add default fetch uri
+- [`PR #160 <https://github.com/B2W-BIT/asgard-api/pull/160>`_] Bump requests from 2.18.3 to 2.20.0

@@ -25,7 +25,7 @@ class ChronosClientTest(TestCase):
         self.auth_header = {"Authorization": f"Basic {auth_data}"}
 
     def assert_auth_header_present(self, rsps, method, url, auth_header):
-        all_mock_request = rsps.requests.get((method.upper(), URL(url)))
+        all_mock_request = rsps.requests.get((method, URL(url)))
         self.assertIsNotNone(all_mock_request)
         first_request = all_mock_request[0]
         self.assertEqual(auth_header, first_request.kwargs.get("headers"))
@@ -65,16 +65,15 @@ class ChronosClientTest(TestCase):
             resp = await self.client.get_job_by_id("job-id")
             self.assertEqual(chronos_job.dict(), resp.dict())
             self.assert_auth_header_present(
-                rsps, "get", "http://chronos/v1/scheduler/job/job-id", None
+                rsps, "get", "http://chronos/v1/scheduler/job/job-id", {}
             )
 
     @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")
     async def test_use_auth_data_on_search(self, dev_job_fixture):
         url = "http://chronos/v1/scheduler/jobs/search?name=job"
-        chronos_job = ChronosJob(**dev_job_fixture)
         with aioresponses() as rsps:
             rsps.get(url, status=200, payload=[])
-            resp = await self.client_with_auth.search(name="job")
+            await self.client_with_auth.search(name="job")
             self.assert_auth_header_present(rsps, "get", url, self.auth_header)
 
     @with_json_fixture("scheduled-jobs/chronos/dev-another-job.json")

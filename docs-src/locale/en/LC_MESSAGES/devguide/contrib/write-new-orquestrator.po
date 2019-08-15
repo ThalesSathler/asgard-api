@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:2
+msgid "Escrevendo uma implementação de um novo Orquestrador"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:4
+msgid ""
+"Aqui descreveremos como implementar o suporte a um novo orquestrador, "
+"quais classes abstratas temos que implementar, com organizar o código de "
+"forma que fique análogo ao que já existe e por isso fique mais fácil de "
+"compreender, à medida que o codebase for crescendo."
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:7
+msgid ""
+"A implementação do suporte a um novo Orquestrador começa na classe "
+":py:class:`asgard.backends.base.Orchestrator`."
+msgstr ""
+
+#: asgard.backends.base.Orchestrator:1 of
+msgid ""
+"Classe abstrata que mapeia todas as ações que um orquestrador pode "
+"excutar. As depdenências injetadas aqui são implementações que "
+"efetivamente falam com cada um dos backends suportados."
+msgstr ""
+
+#: asgard.backends.base.Orchestrator.__init__:1 of
+msgid "Initialize self.  See help(type(self)) for accurate signature."
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:16
+msgid ""
+"Perceba que o ``__init__()`` já recebe dois parametros, que são dois "
+"backends. Um para Apps e outro para Agents. Como o ``Orchestrator`` é uma"
+" classse abstrata, precisamos implementar todos os métodos. Cada método "
+"tem relação com algum backend, nesse caso a implementação vai usar esse "
+"backend específico para poder obter as informações."
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:19
+msgid "Vejamos os métodos de cada backend."
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:22
+msgid "Agents backend"
+msgstr ""
+
+#: asgard.backends.base.AgentsBackend.get_agents:1 of
+msgid "Retorna todos os Agents da conta `account`."
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:30
+msgid ""
+"Vamos pegar como exemplo o método "
+":py:meth:`~asgard.backends.base.AgentsBackend.get_agents`. Esse método é "
+"quem deve retornar a lista de agents desse novo orquestrador. Então uma "
+"possível implementação, considerando um backend fictício chamado ``K8S``,"
+" poderia ser:"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:33
+msgid "Modelo:"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:46
+msgid "Código do ``AgentsBackend``:"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:70
+msgid "Código do ``K8SOrchestrator``:"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:84
+msgid ""
+"Com uma implementação nessa linha, seria possível listar todos os agents "
+"desse novo Orchestrador dessa forma:"
+msgstr ""
+
+#: ../../devguide/contrib/write-new-orquestrator.rst:95
+msgid ""
+"Pensando nos endpoints HTTP, que são todos autenticados, o valor de "
+"``user`` (:py:class:`asgard.models.user.User`) e ``account`` "
+"(:py:class:`asgard.models.account.Account`) são descobertos assim que a "
+"view HTTP começa a rodar."
+msgstr ""
+

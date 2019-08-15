@@ -56,6 +56,10 @@ class ChronosScheduledJobsBackend(ScheduledJobsBackend):
         self, job: ScheduledJob, user: User, account: Account
     ) -> ScheduledJob:
         job.add_constraint(f"owner:LIKE:{account.owner}")
+        [
+            job.add_fetch_uri(fetch)
+            for fetch in settings.SCHEDULED_JOBS_DEFAULT_FETCH_URIS
+        ]
 
         namespaced_job_id = f"{account.namespace}-{job.id}"
         chronos_job = ChronosScheduledJobConverter.to_client_model(job)

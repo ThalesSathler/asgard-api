@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gerando a versão html da documentação &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+    <link rel="next" title="Rodando o projeto localmente" href="running-local.html" />
+    <link rel="prev" title="Atualizando a documentação do projeto" href="doc-update.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gerando-a-versao-html-da-documentacao">
+<span id="asgard-doc-gen"></span><h1>Gerando a versão html da documentação<a class="headerlink" href="#gerando-a-versao-html-da-documentacao" title="Link permanente para este título">¶</a></h1>
+<p>Antes de conseguir gerar a documentação do projeto você precisa estar com ele <a class="reference internal" href="running-local.html#asgard-running-local"><span class="std std-ref">Rodando localmente</span></a>.</p>
+<p>Para gerar a versão final da documentação, entre na pasta <code class="docutils literal notranslate"><span class="pre">docs-src/</span></code> e rode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pipenv</span> <span class="n">run</span> <span class="n">make</span> <span class="n">docs</span>
+</pre></div>
+</div>
+<p>Isso vai gerar todas as documentações, em todas as línguas configuradas. Atualmente <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code> em <code class="docutils literal notranslate"><span class="pre">en</span></code>. A documentação <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code> será gerada na pasta <code class="docutils literal notranslate"><span class="pre">docs/</span></code> e as traduçõees estarão também dentro dessa pasta, abaixo de sub-pastas com o código da língua escolhida.</p>
+<p>por exemplo, a tradução para <code class="docutils literal notranslate"><span class="pre">en</span></code> estará em <code class="docutils literal notranslate"><span class="pre">docs/en</span></code>.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../code/organization.html">Organização do código</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Contribuindo com o projeto</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="doc-update.html">Atualizando a documentação do projeto</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Gerando a versão html da documentação</a></li>
+<li class="toctree-l3"><a class="reference internal" href="running-local.html">Rodando o projeto localmente</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing-code.html">Criando código para o projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing-tests.html">Escrevendo testes para o projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="write-new-orquestrator.html">Escrevendo uma implementação de um novo Orquestrador</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">Contribuindo com o projeto</a><ul>
+      <li>Previous: <a href="doc-update.html" title="capítulo anterior">Atualizando a documentação do projeto</a></li>
+      <li>Next: <a href="running-local.html" title="próximo capítulo">Rodando o projeto localmente</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/contrib/doc-gen.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name="asgard-api",
-    version="0.88.0",
+    version="0.89.0",
     description="API for the Asgard Project",
     long_description="",
     url="https://github.com/B2W-BIT/asgard-api",
@@ -18,7 +18,10 @@ setup(
     author="Dalton Barreto",
     author_email="daltonmatos@gmail.com",
     license="MIT",
-    classifiers=["Programming Language :: Python :: 3.6"],
+    classifiers=[
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+    ],
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
     install_requires=[],
     entry_points={},

@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../devguide/contrib/writing-code.rst:3
+msgid "Criando código para o projeto"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:5
+msgid ""
+"Todos os PRs do projeto passam por um pipeline que conferem algumas "
+"coisas:"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:7
+msgid "type checking (feito com mypy)"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:8
+msgid "code formatting (feito com black)"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:9
+msgid "import sorting (feito com isort)"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:11
+msgid ""
+"Todas as checagens estão disponíveis como comandos do ``pipenv``. Então "
+"antes de cada push o ideal é rodas todas essas checagens."
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:13
+msgid "Para rodar as checagens faça:"
+msgstr ""
+
+#: ../../devguide/contrib/writing-code.rst:21
+msgid ""
+"O recomendado é que essas checagens estejam configuradas para rodarem "
+"automaticamente na ferramenta que você estiver usando para desenvolver o "
+"projeto. As opções que são passadas para cada check podem ser vistas no "
+"``Pipfile``."
+msgstr ""
+

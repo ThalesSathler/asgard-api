@@ -23,6 +23,12 @@ VALUES = {
     ),
     "AUTOSCALER_AUTH_TOKEN": "anytoken",
     "AUTOSCALER_MARGIN_THRESHOLD": "0.05",
+    "SCHEDULED_JOBS_DEFAULT_FETCH_URIS": json.dumps(
+        [
+            {"uri": "file:///etc/docker.tar.bz2"},
+            {"uri": "file:///etc/config.bz2"},
+        ]
+    ),
 }
 
 

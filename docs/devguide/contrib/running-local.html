@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Rodando o projeto localmente &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+    <link rel="next" title="Criando código para o projeto" href="writing-code.html" />
+    <link rel="prev" title="Gerando a versão html da documentação" href="doc-gen.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="rodando-o-projeto-localmente">
+<span id="asgard-running-local"></span><h1>Rodando o projeto localmente<a class="headerlink" href="#rodando-o-projeto-localmente" title="Link permanente para este título">¶</a></h1>
+<p>Essa é lista de ENVs já com os valores para o ambiente de desenvolvimento:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ASGARD_CACHE_KEY_PREFIX</span><span class="o">=</span><span class="n">asgard</span><span class="o">-</span><span class="n">api</span><span class="o">-</span><span class="n">dev</span><span class="o">/</span>
+<span class="n">ASGARD_DB_URL</span><span class="o">=</span><span class="n">postgresql</span><span class="p">:</span><span class="o">//</span><span class="n">postgres</span><span class="p">:</span><span class="nd">@172</span><span class="o">.</span><span class="mf">18.0</span><span class="o">.</span><span class="mi">41</span><span class="o">/</span><span class="n">asgard</span>
+<span class="n">ASGARD_FILTER_TRANSFORMJSON_ENABLED</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">ASGARD_LOGLEVEL</span><span class="o">=</span><span class="n">DEBUG</span>
+<span class="n">ASGARD_MESOS_API_URLS</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;http://172.18.0.11:5050&quot;</span><span class="p">,</span> <span class="s2">&quot;http://172.18.0.12:5050&quot;</span><span class="p">,</span> <span class="s2">&quot;http://172.18.0.13:5050&quot;</span><span class="p">]</span>
+<span class="n">ASGARD_STATS_API_URL</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">70.1</span><span class="p">:</span><span class="mi">9200</span>
+<span class="n">ASGARD_SCHEDULED_JOBS_SERVICE_ADDRESS</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.40</span><span class="p">:</span><span class="mi">9090</span>
+<span class="n">ASGARD_SCHEDULED_JOBS_SERVICE_AUTH</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;chronos&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;secret&quot;</span><span class="p">}</span>
+<span class="n">HOLLOWMAN_CORS_WHITELIST</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">4200</span><span class="p">,</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span>
+<span class="n">HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="n">HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="n">HOLLOWMAN_MARATHON_ADDRESS_0</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.31</span><span class="p">:</span><span class="mi">8080</span>
+<span class="n">HOLLOWMAN_MARATHON_ADDRESS_0</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.31</span><span class="p">:</span><span class="mi">8080</span>
+<span class="n">HOLLOWMAN_MARATHON_ADDRESS_1</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.31</span><span class="p">:</span><span class="mi">8080</span>
+<span class="n">HOLLOWMAN_MARATHON_ADDRESS_2</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.31</span><span class="p">:</span><span class="mi">8080</span>
+<span class="n">HOLLOWMAN_MESOS_ADDRESS_0</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.11</span><span class="p">:</span><span class="mi">5050</span>
+<span class="n">HOLLOWMAN_MESOS_ADDRESS_1</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.12</span><span class="p">:</span><span class="mi">5050</span>
+<span class="n">HOLLOWMAN_MESOS_ADDRESS_2</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.13</span><span class="p">:</span><span class="mi">5050</span>
+<span class="n">HOLLOWMAN_METRICS_ZK_ID_0</span><span class="o">=</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.2</span>
+<span class="n">HOLLOWMAN_METRICS_ZK_ID_1</span><span class="o">=</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.3</span>
+<span class="n">HOLLOWMAN_METRICS_ZK_ID_2</span><span class="o">=</span><span class="mf">172.18</span><span class="o">.</span><span class="mf">0.4</span>
+<span class="n">HOLLOWMAN_REDIRECT_AFTER_LOGIN</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">4200</span><span class="o">/</span><span class="n">authenticated</span><span class="o">/</span>
+<span class="n">HOLLOWMAN_SECRET_KEY</span><span class="o">=</span><span class="n">secret__</span>
+<span class="n">MARATHON_CREDENTIALS</span><span class="o">=</span><span class="n">marathon</span><span class="p">:</span><span class="n">secret</span>
+<span class="n">UWSGI_EXTRA_ARGS</span><span class="o">=--</span><span class="n">static</span><span class="o">-</span><span class="n">map2</span> <span class="o">/</span><span class="n">static</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">app</span> <span class="o">--</span><span class="n">honour</span><span class="o">-</span><span class="n">stdin</span>
+</pre></div>
+</div>
+<p>Você precisa passar todas as envs para ser possível rodar o código da API. O jeito mais simples de fazer isso é criar um arquivo chamado <code class="docutils literal notranslate"><span class="pre">.env</span></code>
+na raiz do projeto, contento todas as envs mostradas acima, exatamente com esses valores. Esse arquivo já está no <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>, por isso não será comitado.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Todas as ENVs com prefrixo <code class="docutils literal notranslate"><span class="pre">HOLLOWMAN_</span></code> são usadas pelo <a class="reference internal" href="../code/legacy-api.html#hollowman-api"><span class="std std-ref">código legado</span></a>. As ENVs novas possuem o prefixo <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code>. Aos poucos vamos migrando o cógido e as envs.</p>
+</div>
+<div class="section" id="rodando-a-asgard-api-localmente">
+<h2>Rodando a Asgard API localmente<a class="headerlink" href="#rodando-a-asgard-api-localmente" title="Link permanente para este título">¶</a></h2>
+<p>O projeto Asgard API usa o <a class="reference external" href="https://pipenv.readthedocs.io/en/latest/">pipenv</a> e precisa do python 3.6.x. Antes de instalar as dependências, certifique-se que o python 3.6 esteja instalado e funcionando.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Recomendamos o uso do <a class="reference external" href="https://github.com/pyenv/pyenv#table-of-contents">pyenv</a> para gerenciar a versões locais do python.</p>
+</div>
+<p>Para instalar as dependências rode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pipenv install --dev
+</pre></div>
+</div>
+</div>
+<div class="section" id="ligando-todos-os-containers-necesarios-para-rodar-o-projeto-completo">
+<span id="asgard-run-sh"></span><h2>Ligando todos os containers necesários para rodar o projeto completo<a class="headerlink" href="#ligando-todos-os-containers-necesarios-para-rodar-o-projeto-completo" title="Link permanente para este título">¶</a></h2>
+<p>Depois disso você precisa subir um ambiente de desenvolvimento local, contento todas as dependencias que a Asgard API precisa para funcionar. Isso inclui: Mesos, Elasticsearch, Marathon, Zookeeper, PgSQL, etc.</p>
+<p>Para subir todos esses containers, rode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./asgard-run.sh
+</pre></div>
+</div>
+<p>Isso vai baixar todas as imagens docker e rodar todos os conatainers necessários.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>A primeira rodada do asgard-run.sh vai produzir bastante output, pois os outputs do docker pull também serão exibidos.</p>
+</div>
+</div>
+<div class="section" id="desligando-todo-o-ambiente">
+<h2>Desligando todo o ambiente<a class="headerlink" href="#desligando-todo-o-ambiente" title="Link permanente para este título">¶</a></h2>
+<p>Para desligar todos os containers, basta rodar novamente o script <code class="docutils literal notranslate"><span class="pre">asgard-run.sh</span></code> e pressionar <code class="docutils literal notranslate"><span class="pre">^C</span></code> assim que essa mensagem aparecer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">asgard</span><span class="o">-</span><span class="n">run</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">Removing</span> <span class="nb">any</span> <span class="n">old</span> <span class="n">containers</span><span class="o">...</span>
+<span class="n">Sleeping</span> <span class="k">for</span> <span class="mi">3</span><span class="n">s</span><span class="p">,</span> <span class="o">^</span><span class="n">C</span> <span class="n">to</span> <span class="n">cancel</span> <span class="n">now</span><span class="o">.</span>
+<span class="o">^</span><span class="n">C</span>
+</pre></div>
+</div>
+<p>Esse “sleep” que o script faz é justamente para dar tempo de interrompermos o rodada antes dele começar a ligar todos os containers.</p>
+</div>
+<div class="section" id="rodando-a-api">
+<h2>Rodando a API<a class="headerlink" href="#rodando-a-api" title="Link permanente para este título">¶</a></h2>
+<p>Para rodar a API, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./run-api-proxy.sh
+</pre></div>
+</div>
+<p>Esse script abre a porta <code class="docutils literal notranslate"><span class="pre">5000</span></code> e redireciona os requests para a API correta. Para entender o porque desse script precisamos entender a <a class="reference internal" href="../code/legacy-api.html#hollowman-api"><span class="std std-ref">re-escrita de código</span></a> que estamos fazendo na Asgard API.</p>
+<p>Quando tiver a API rodando, você pode fazer um request para validar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -i http://127.0.0.1:5000/v2/apps/
+{&quot;msg&quot;: &quot;Authorization token is invalid&quot;}%
+</pre></div>
+</div>
+<p>Isso significa que você não está autenticado, o que é verdade, já que nem criamos seu novo usuário. Faremos isso agora.</p>
+</div>
+<div class="section" id="criando-um-novo-usuario-para-desenvolvimento">
+<h2>Criando um novo usuário para desenvolvimento<a class="headerlink" href="#criando-um-novo-usuario-para-desenvolvimento" title="Link permanente para este título">¶</a></h2>
+<p>Para criar um novo usuário, você pode editar o arquivo <code class="docutils literal notranslate"><span class="pre">scripts/sql/user.sql</span></code> a adicionar ali um trecho de SQL que vincula seu user a uma das contas
+de dev que existem no banco. Usando um exemplo: Novo usuário tem email <code class="docutils literal notranslate"><span class="pre">mail&#64;server.com</span></code>, faríamos o seguinte:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">&quot;user&quot;</span> <span class="p">(</span><span class="n">tx_name</span><span class="p">,</span> <span class="n">tx_email</span><span class="p">,</span> <span class="n">tx_authkey</span><span class="p">,</span> <span class="n">bl_system</span><span class="p">)</span>
+  <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Novo User&#39;</span><span class="p">,</span> <span class="s1">&#39;mail@server.com&#39;</span><span class="p">,</span> <span class="s1">&#39;a648638d589740879f25bf55648ccc21&#39;</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">user_has_account</span> <span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="n">id</span> <span class="k">from</span> <span class="n">account</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Asgard/DEV&#39;</span><span class="p">),</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="n">id</span> <span class="k">from</span> <span class="ss">&quot;user&quot;</span> <span class="k">where</span> <span class="n">tx_email</span><span class="o">=</span><span class="s1">&#39;mail@server.com&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">user_has_account</span> <span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="n">id</span> <span class="k">from</span> <span class="n">account</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Asgard/INFRA&#39;</span><span class="p">),</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="n">id</span> <span class="k">from</span> <span class="ss">&quot;user&quot;</span> <span class="k">where</span> <span class="n">tx_email</span><span class="o">=</span><span class="s1">&#39;mail@server.com&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Agora rode novamente o <a class="reference internal" href="#asgard-run-sh"><span class="std std-ref">script que sobe o ambiente de desenvolvimento</span></a>. Isso vai recriar todos os componentes, incluindo o baco de dados.</p>
+<p>Dessa forma, agora podemos fazer a seguinte requisição:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Authorization: Token a648638d589740879f25bf55648ccc21&quot;</span> \
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">v2</span><span class="o">/</span><span class="n">apps</span>
+<span class="p">{</span><span class="s2">&quot;apps&quot;</span><span class="p">:</span> <span class="p">[]}</span><span class="o">%</span>
+</pre></div>
+</div>
+<p>Agora sim você está vendo sua lista de apps, que obviamente é vazia. Nesse momento você está pronto
+para começar a desenvolver novos códigos para a Asgard API.</p>
+</div>
+<div class="section" id="logando-na-ui">
+<h2>Logando na UI<a class="headerlink" href="#logando-na-ui" title="Link permanente para este título">¶</a></h2>
+<p>Depois de rodar um ambiente completo com o script <code class="docutils literal notranslate"><span class="pre">asgard-run.sh</span></code> você poderá acessar a Asgard UI no endereço <a class="reference external" href="http://localhost:4200">http://localhost:4200</a>.
+O único login suportado atualmente pela UI é oauth2, especificamente com Google sendo o provider.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p><strong>Atenção</strong>: Para o processo de login funcionar você precisa criar uma Oauth2 app no console do Google. Mais detalhes aqui: <a class="reference external" href="https://developers.google.com/identity/protocols/OAuth2">https://developers.google.com/identity/protocols/OAuth2</a>
+Depois de criar essa app, preencha as ENVs: <code class="docutils literal notranslate"><span class="pre">HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_ID</span></code> e <code class="docutils literal notranslate"><span class="pre">HOLLOWMAN_GOOGLE_OAUTH2_CLIENT_SECRET</span></code> com os valores que o Google gerou pra você.</p>
+</div>
+</div>
+<div class="section" id="evoluindo-o-banco-de-dados">
+<h2>Evoluindo o banco de dados<a class="headerlink" href="#evoluindo-o-banco-de-dados" title="Link permanente para este título">¶</a></h2>
+<p>Sempre que fizermos uma mudança no banco, vamos guardar o SQL na pasta <code class="docutils literal notranslate"><span class="pre">sql/</span></code> . Os arquivos têm nome prefixado por um número (<code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">+&quot;%s&quot;</span></code>),
+pois isso indica a ordem em que devem ser rodados. Por enquanto vamos assim até migrar para um projeto que gerencie essas migrações.</p>
+<p>Para pegar o SQL que o Alchemy gera para um model:
+Abra o ipython (também passando as mesmas envs que você passou para rodar a API)</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="kn">import</span> <span class="n">CreateTable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">hollowman.models</span> <span class="kn">import</span> <span class="o">&lt;</span><span class="n">Model</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">hollowman.models</span> <span class="kn">import</span> <span class="n">engine</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="p">(</span><span class="n">CreateTable</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">__table__</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">engine</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rodando-os-testes-do-projeto">
+<h2>Rodando os testes do projeto<a class="headerlink" href="#rodando-os-testes-do-projeto" title="Link permanente para este título">¶</a></h2>
+<p>Os testes estão divididos em dois: Unitários (<code class="docutils literal notranslate"><span class="pre">tests/</span></code>) e de Integração (<code class="docutils literal notranslate"><span class="pre">itests/</span></code>). <a class="footnote-reference brackets" href="#id2" id="id1">1</a></p>
+<div class="section" id="rodando-os-testes-unitarios">
+<h3>Rodando os testes unitários<a class="headerlink" href="#rodando-os-testes-unitarios" title="Link permanente para este título">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PIPENV_DONT_LOAD_ENV</span><span class="o">=</span><span class="mi">1</span> <span class="n">pipenv</span> <span class="n">run</span> <span class="n">test</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rodando-os-testes-de-integracao">
+<h3>Rodando os testes de integração<a class="headerlink" href="#rodando-os-testes-de-integracao" title="Link permanente para este título">¶</a></h3>
+<p>Para rodar os testes de integração você precisa de alguns serviços rodando.
+Para ligar esses serviços localmente rode, na raiz do projeto:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">dev</span><span class="o">/</span><span class="nb">vars</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">source</span> <span class="n">dev</span><span class="o">/</span><span class="n">network</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">source</span> <span class="n">dev</span><span class="o">/</span><span class="n">pgsql</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">source</span> <span class="n">dev</span><span class="o">/</span><span class="n">elasticsearch</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>depois rode os testes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PIPENV_DONT_LOAD_ENV</span><span class="o">=</span><span class="mi">1</span> <span class="n">pipenv</span> <span class="n">run</span> <span class="n">itest</span>
+</pre></div>
+</div>
+<p class="rubric">Notas</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Mais sobre os testes do projeto: <a class="reference internal" href="writing-tests.html#writing-tests"><span class="std std-ref">Escrevendo testes para o projeto</span></a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../code/organization.html">Organização do código</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Contribuindo com o projeto</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="doc-update.html">Atualizando a documentação do projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="doc-gen.html">Gerando a versão html da documentação</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Rodando o projeto localmente</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing-code.html">Criando código para o projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing-tests.html">Escrevendo testes para o projeto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="write-new-orquestrator.html">Escrevendo uma implementação de um novo Orquestrador</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">Contribuindo com o projeto</a><ul>
+      <li>Previous: <a href="doc-gen.html" title="capítulo anterior">Gerando a versão html da documentação</a></li>
+      <li>Next: <a href="writing-code.html" title="próximo capítulo">Criando código para o projeto</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/contrib/running-local.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,7 +1,9 @@
 import os
 from typing import List, Optional
 
-from pydantic import BaseSettings, BaseModel, ValidationError
+from pydantic import BaseSettings, BaseModel
+
+from asgard.models.spec.fetch import FetchURLSpec
 
 ASGARD_RABBITMQ_HOST = "127.0.0.1"
 ASGARD_RABBITMQ_USER = "guest"
@@ -38,6 +40,7 @@ class Settings(BaseSettings):
     SCHEDULED_JOBS_SERVICE_AUTH: AuthSpec = AuthSpec()
     AUTOSCALER_AUTH_TOKEN: str
     AUTOSCALER_MARGIN_THRESHOLD: float
+    SCHEDULED_JOBS_DEFAULT_FETCH_URIS: List[FetchURLSpec] = []
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"

@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Variáveis de Ambiente &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+    <link rel="next" title="Guia de desenvolvimento" href="../../devguide/index.html" />
+    <link rel="prev" title="Instalando a Asgard API" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="variaveis-de-ambiente">
+<h1>Variáveis de Ambiente<a class="headerlink" href="#variaveis-de-ambiente" title="Link permanente para este título">¶</a></h1>
+<p>Toda a parametrização da asgard API é feita via variáveis de ambiente. Nesse documento vamos explicar cada uma das variáveis de ambiente (ENVs) que a Asgard API conhece.</p>
+<p>Todas as ENVs são lidas no arquivo <a class="reference internal" href="../../src/asgard/asgard.html#module-asgard.conf" title="asgard.conf"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard.conf</span></code></a>. Todas as envs estão sendo movidas para o objeto <a class="reference internal" href="../../src/asgard/asgard.html#asgard.conf.Settings" title="asgard.conf.Settings"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.conf.Settings</span></code></a>, que é um objeto <code class="docutils literal notranslate"><span class="pre">BaseSettings</span></code> do pydantic (<a class="reference external" href="https://pydantic-docs.helpmanual.io/#settings">docs</a>).</p>
+<p>As envs estão sempre prefixadas com algum valor. O prefixo padrão, caso você não escolhada nada é <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code>.</p>
+<p>Abaixo está a transcrição completa do modulo <a class="reference internal" href="../../src/asgard/asgard.html#module-asgard.conf" title="asgard.conf"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard.conf</span></code></a>.</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="k">import</span> <span class="n">BaseSettings</span><span class="p">,</span> <span class="n">BaseModel</span>
+
+<span class="kn">from</span> <span class="nn">asgard.models.spec.fetch</span> <span class="k">import</span> <span class="n">FetchURLSpec</span>
+
+<span class="n">ASGARD_RABBITMQ_HOST</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
+<span class="n">ASGARD_RABBITMQ_USER</span> <span class="o">=</span> <span class="s2">&quot;guest&quot;</span>
+<span class="n">ASGARD_RABBITMQ_PASS</span> <span class="o">=</span> <span class="s2">&quot;guest&quot;</span>
+<span class="n">ASGARD_RABBITMQ_PREFETCH</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="n">ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Configs que foram migradas do pacote `hollowman.conf`.</span>
+<span class="c1"># Depois vamos mudar o prefixo de `HOLLOWMAN_` para `ASGARD_`</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HOLLOWMAN_SECRET_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;secret&quot;</span><span class="p">)</span>
+<span class="n">TASK_FILEREAD_MAX_OFFSET</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ASGARD_TASK_FILEREAD_MAX_OFFSET&quot;</span><span class="p">,</span> <span class="mi">52_428_800</span><span class="p">)</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AuthSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">Settings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+
+    <span class="n">MESOS_API_URLS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">DB_URL</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">STATS_API_URL</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">SCHEDULED_JOBS_SERVICE_ADDRESS</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">SCHEDULED_JOBS_SERVICE_AUTH</span><span class="p">:</span> <span class="n">AuthSpec</span> <span class="o">=</span> <span class="n">AuthSpec</span><span class="p">()</span>
+    <span class="n">SCHEDULED_JOBS_DEFAULT_FETCH_URIS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FetchURLSpec</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">env_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ENV&quot;</span><span class="p">,</span> <span class="s2">&quot;ASGARD&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+
+
+<span class="n">settings</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Todos os atributos da classe <a class="reference internal" href="../../src/asgard/asgard.html#asgard.conf.Settings" title="asgard.conf.Settings"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.conf.Settings</span></code></a> já lêm seus valores de envs <strong>com prefixo</strong>.</p>
+<div class="section" id="lista-de-envs-conhecidas-pela-asgard-api">
+<h2>Lista de ENVs conhecidas pela Asgard API<a class="headerlink" href="#lista-de-envs-conhecidas-pela-asgard-api" title="Link permanente para este título">¶</a></h2>
+<p><strong>Nota</strong>: Todos nomes descritos aqui devem receber o prefixo <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code> quando forem cridas as ENVs no momento de rodar a Asgard API.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MESOS_API_URLS</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Recebe uma lista, contendo os endereços de todos os mesos que formam o cluster. Ex: <code class="docutils literal notranslate"><span class="pre">[&quot;http://10.0.0.1:5050&quot;,</span> <span class="pre">&quot;http://10.0.0.2:5050&quot;]</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DB_URL</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Recebe a URI de conexão com o banco de dados. Esse banco guarda os dados relacionaos de usuários e contas. O código da Asgard API usa <a class="reference external" href="https://www.sqlalchemy.org/">SQLAlchemy</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">STATS_API_URL</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Endereço da API onde as estatísticas de uso de recursos das apps serão gravadas. Atualmente Asgard API fala com <a class="reference external" href="https://www.elastic.co/pt/products/elasticsearch">ElasticSearch</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULED_JOBS_SERVICE_ADDRESS</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Endereço da API responsável pela gerência de tarefas agendadas. Atualmente a asgard API suporta falar com o <a class="reference external" href="https://mesos.github.io/chronos/docs/api.html">Chronos</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULED_JOBS_SERVICE_AUTH</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Opcional. Dados de autenticação para falar com a API de tarefas agendadas. Recebe um objeto (<a class="reference internal" href="../../src/asgard/asgard.html#asgard.conf.AuthSpec" title="asgard.conf.AuthSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.conf.AuthSpec</span></code></a>) com user e password. Ex: <code class="docutils literal notranslate"><span class="pre">{&quot;user&quot;:</span> <span class="pre">&quot;chronos&quot;,</span> <span class="pre">&quot;password&quot;:</span> <span class="pre">&quot;secret&quot;}</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULED_JOBS_DEFAULT_FETCH_URIS</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Opcional. Recebe uma lista de objetos <a class="reference internal" href="../../src/asgard/asgard.models.spec.html#asgard.models.spec.fetch.FetchURLSpec" title="asgard.models.spec.fetch.FetchURLSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.models.spec.fetch.FetchURLSpec</span></code></a>. Ex: <code class="docutils literal notranslate"><span class="pre">[{&quot;uri&quot;:</span> <span class="pre">&quot;http://static.server.com.br/content.txt&quot;},</span> <span class="pre">{&quot;uri&quot;:</span> <span class="pre">&quot;file:///etc/config.tar.bz2&quot;}]</span></code></p>
+</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de Usuário</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Instalando a Asgard API</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Variáveis de Ambiente</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../devguide/index.html">Guia de desenvolvimento</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de Usuário</a><ul>
+  <li><a href="index.html">Instalando a Asgard API</a><ul>
+      <li>Previous: <a href="index.html" title="capítulo anterior">Instalando a Asgard API</a></li>
+      <li>Next: <a href="../../devguide/index.html" title="próximo capítulo">Guia de desenvolvimento</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/userguide/install/envvars.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
