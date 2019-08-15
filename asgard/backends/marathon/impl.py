@@ -23,7 +23,7 @@ class MarathonAppsBackend(AppsBackend):
             "bool",
             must=[
                 Q("term", appname__keyword=f"/{account.namespace}/{app.id}"),
-                Q("range", timestamp={"gte": "now-1h"}),
+                Q("range", timestamp={"gte": f"now-{interval}"}),
             ],
         )
         query = Search().query(bool_query).extra(size=2)
