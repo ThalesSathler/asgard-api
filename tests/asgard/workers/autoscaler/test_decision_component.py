@@ -143,7 +143,7 @@ class TestDecisionComponent(TestCase):
             "decides correct values for memory",
         )
 
-    async def test_does_not_make_any_decision_when_everything_is_ignored(self):
+    async def test_scales_memory_to_correct_value(self):
         apps = [
             ScalableApp(
                 "test",

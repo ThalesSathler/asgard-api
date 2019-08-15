@@ -27,8 +27,3 @@ class ScalableApp:
     def is_set_to_scale(self) -> bool:
         return self.is_set_to_scale_cpu() or self.is_set_to_scale_mem()
 
-    def __str__(self):
-        return f"{{appid={self.id}, autoscale_cpu={self.cpu_threshold}, autoscale_mem={self.mem_threshold}}}"
-
-    def __repr__(self):
-        return self.__str__()
