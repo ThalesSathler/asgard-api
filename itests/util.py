@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Type, Set
 
 import asyncworker
 from aioelasticsearch import Elasticsearch
-from aiohttp import web
+from aiohttp import web, ClientSession
 from aiohttp.test_utils import TestClient, TestServer
 from aiopg.sa import Engine
 from asynctest import TestCase
@@ -17,7 +17,7 @@ from sqlalchemy.sql.ddl import CreateTable
 import asgard.backends.users
 from asgard.conf import settings
 from asgard.db import _SessionMaker
-from asgard.http.client import http_client
+from asgard.http.client import HttpClient
 from asgard.models.account import AccountDB as Account
 from asgard.models.user import UserDB as User
 from asgard.models.user_has_account import UserHasAccount
@@ -270,21 +270,19 @@ class BaseTestCase(TestCase):
 
 CHRONOS_BASE_URL = f"{settings.SCHEDULED_JOBS_SERVICE_ADDRESS}/v1/scheduler"
 
+http_client = HttpClient()
+
 
 async def _cleanup_chronos():
-    async with http_client.get(f"{CHRONOS_BASE_URL}/jobs") as resp:
-        all_jobs_json = await resp.json()
-        for job in all_jobs_json:
-            async with http_client.delete(
-                f"{CHRONOS_BASE_URL}/job/{job['name']}"
-            ):
-                pass
+    resp = await http_client.get(f"{CHRONOS_BASE_URL}/jobs")
+    all_jobs_json = await resp.json()
+    for job in all_jobs_json:
+        await http_client.delete(f"{CHRONOS_BASE_URL}/job/{job['name']}")
 
 
 async def _load_jobs_into_chronos(*jobs_list):
     await _cleanup_chronos()
     for job in jobs_list:
-        async with http_client.post(f"{CHRONOS_BASE_URL}/iso8601", json=job):
-            pass
+        await http_client.post(f"{CHRONOS_BASE_URL}/iso8601", json=job)
 
     await asyncio.sleep(1)
