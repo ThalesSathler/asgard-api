@@ -1,6 +1,9 @@
 from datetime import datetime, timezone
+from http import HTTPStatus
 
 from aioresponses import aioresponses
+from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
+from tests.utils import build_mesos_cluster, get_fixture
 
 from asgard.api import apps
 from asgard.app import app
@@ -11,8 +14,6 @@ from itests.util import (
     ACCOUNT_DEV_ID,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
 )
-from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
-from tests.utils import build_mesos_cluster, get_fixture
 
 
 class AppStatsTest(BaseTestCase):
@@ -27,7 +28,8 @@ class AppStatsTest(BaseTestCase):
     async def tearDown(self):
         await super(AppStatsTest, self).tearDown()
         await self.esclient.indices.delete(
-            index=self.INDEX_NAME, ignore=[400, 404]
+            index=self.INDEX_NAME,
+            ignore=[HTTPStatus.BAD_REQUEST, HTTPStatus.NOT_FOUND],
         )
 
     async def test_apps_stats_empty_stats_for_existing_app(self):
@@ -51,7 +53,7 @@ class AppStatsTest(BaseTestCase):
                     "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
                 },
             )
-            self.assertEqual(200, resp.status)
+            self.assertEqual(HTTPStatus.OK, resp.status)
             data = await resp.json()
             self.assertEqual(
                 AppStats(
@@ -77,7 +79,7 @@ class AppStatsTest(BaseTestCase):
                     "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
                 },
             )
-            self.assertEqual(200, resp.status)
+            self.assertEqual(HTTPStatus.OK, resp.status)
             data = await resp.json()
             self.assertEqual(
                 AppStats(cpu_pct="0", ram_pct="0", cpu_thr_pct="0").dict(),
@@ -97,7 +99,7 @@ class AppStatsTest(BaseTestCase):
                     "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
                 },
             )
-            self.assertEqual(200, resp.status)
+            self.assertEqual(HTTPStatus.OK, resp.status)
 
             resp = await self.client.get(
                 f"/apps/asgard/pgsql-9..4/stats?account_id={ACCOUNT_DEV_ID}",
@@ -105,4 +107,4 @@ class AppStatsTest(BaseTestCase):
                     "Authorization": f"Token {USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY}"
                 },
             )
-            self.assertEqual(200, resp.status)
+            self.assertEqual(HTTPStatus.OK, resp.status)
