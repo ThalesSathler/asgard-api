@@ -79,6 +79,8 @@ class DecisionConverter(Converter[Decision, DecisionDto]):
 
     @classmethod
     def to_dto(cls, model_object: Decision) -> DecisionDto:
-        dto_object = DecisionDto(id=model_object.id, cpus=model_object.cpu, mem=model_object.mem)
+        dto_object = DecisionDto(
+            id=model_object.id, cpus=model_object.cpu, mem=model_object.mem
+        )
 
         return dto_object

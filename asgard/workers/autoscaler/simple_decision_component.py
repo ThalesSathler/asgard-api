@@ -17,8 +17,8 @@ class DecisionComponent(DecisionComponentInterface):
             decision = Decision(app.id)
             deploy_decision = False
 
-            cpu_usage = app.app_stats.cpu_usage/100
-            mem_usage = app.app_stats.mem_usage/100
+            cpu_usage = app.app_stats.cpu_usage / 100
+            mem_usage = app.app_stats.mem_usage / 100
 
             if app.is_set_to_scale_cpu():
 

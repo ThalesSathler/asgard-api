@@ -5,8 +5,10 @@ from asgard.workers.autoscaler.periodicstatechecker import PeriodicStateChecker
 from asgard.workers.autoscaler.simple_decision_component import (
     DecisionComponent,
 )
-from asgard.workers.converters.asgard_converter import DecisionConverter
-from asgard.workers.converters.asgard_converter import AppConverter
+from asgard.workers.converters.asgard_converter import (
+    DecisionConverter,
+    AppConverter,
+)
 from hollowman.log import logger
 
 app = App("", "", "", 123)

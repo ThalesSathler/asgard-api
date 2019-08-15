@@ -160,4 +160,3 @@ class TestDecisionComponent(TestCase):
 
         self.assertEqual(1, len(decisions), "did not return any decisions")
         self.assertEqual(400.768, decisions[0].mem)
-
