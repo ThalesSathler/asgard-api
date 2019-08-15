@@ -20,7 +20,8 @@ async def patched_startup(app):
 
     app[RouteTypes.HTTP]["app"] = http_app = web.Application()
     for route in routes:
-        http_app.router.add_route(**route)
+        for route_def in route.aiohttp_routes():
+            route_def.register(http_app.router)
 
     cors = aiohttp_cors.setup(
         http_app,
