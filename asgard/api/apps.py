@@ -11,20 +11,24 @@ from asgard.models.user import User
 from asgard.services.apps import AppsService
 
 
-@app.route(
-    ["/apps/{app_id:[.a-z0-9/-]+}/stats"], type=RouteTypes.HTTP, methods=["GET"]
-)
-@auth_required
-async def app_stats(request: web.Request):
+async def get_app_stats(request: web.Request, interval: Interval):
     app_id: str = request.match_info["app_id"]
     user = await User.from_alchemy_obj(request["user"])
 
     account = await Account.from_alchemy_obj(request["user"].current_account)
     stats = await AppsService.get_app_stats(
-        app_id, Interval.ONE_HOUR, user, account, mesos
+        app_id, interval, user, account, mesos
     )
 
     return web.json_response(AppStatsResource(stats=stats).dict())
+
+
+@app.route(
+    ["/apps/{app_id:[.a-z0-9/-]+}/stats"], type=RouteTypes.HTTP, methods=["GET"]
+)
+@auth_required
+async def app_stats(request: web.Request):
+    return await get_app_stats(request, Interval.ONE_HOUR)
 
 
 @app.route(
@@ -34,12 +38,4 @@ async def app_stats(request: web.Request):
 )
 @auth_required
 async def app_stats_avg_1min(request: web.Request):
-    app_id: str = request.match_info["app_id"]
-    user = await User.from_alchemy_obj(request["user"])
-
-    account = await Account.from_alchemy_obj(request["user"].current_account)
-    stats = await AppsService.get_app_stats(
-        app_id, Interval.ONE_MINUTE, user, account, mesos
-    )
-
-    return web.json_response(AppStatsResource(stats=stats).dict())
+    return await get_app_stats(request, Interval.ONE_MINUTE)
