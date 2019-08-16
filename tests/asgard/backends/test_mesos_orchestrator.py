@@ -1,10 +1,13 @@
 from aioresponses import aioresponses
 from asynctest import TestCase, mock
 
+from asgard.backends.base import Interval
 from asgard.backends.marathon.impl import MarathonAppsBackend
 from asgard.backends.mesos.impl import MesosOrchestrator, MesosAgentsBackend
+from asgard.backends.mesos.models.app import MesosApp
 from asgard.conf import settings
 from asgard.models.account import Account
+from asgard.models.app import App
 from asgard.models.user import User
 from hollowman import log
 from itests.util import USER_WITH_MULTIPLE_ACCOUNTS_DICT, ACCOUNT_DEV_DICT
@@ -229,3 +232,19 @@ class MesosOrchestratorTest(TestCase):
                 ]
             )
             self.assertEqual(expected_app_ids, sorted([app.id for app in apps]))
+
+    async def test_get_app_stats_calls_backend_with_correct_parameters(self):
+        app = MesosApp(id="my-app")
+        interval = Interval.ONE_HOUR
+        apps_backend_mock = mock.CoroutineMock(
+            get_app_stats=mock.CoroutineMock()
+        )
+        mesos_orchestrator = MesosOrchestrator(
+            MesosAgentsBackend(), apps_backend_mock
+        )
+        await mesos_orchestrator.get_app_stats(
+            app, self.user, interval, self.account
+        )
+        apps_backend_mock.get_app_stats.assert_awaited_with(
+            app, self.user, interval, self.account
+        )
