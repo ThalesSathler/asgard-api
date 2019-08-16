@@ -35,10 +35,8 @@
 <span></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="kn">import</span> <span class="nn">aiohttp_cors</span>
 <span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">web</span>
 <span class="kn">from</span> <span class="nn">asyncworker</span> <span class="k">import</span> <span class="n">RouteTypes</span>
-<span class="kn">from</span> <span class="nn">asyncworker.conf</span> <span class="k">import</span> <span class="n">settings</span>
 
 <span class="kn">from</span> <span class="nn">asgard.api.resources.agents</span> <span class="k">import</span> <span class="n">AgentsResource</span>
 <span class="kn">from</span> <span class="nn">asgard.api.resources.apps</span> <span class="k">import</span> <span class="n">AppsResource</span>
@@ -129,45 +127,6 @@
     <span class="k">if</span> <span class="n">agent</span><span class="p">:</span>
         <span class="n">apps</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">applications</span>
     <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">AppsResource</span><span class="p">(</span><span class="n">apps</span><span class="o">=</span><span class="n">apps</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span></div>
-
-
-<div class="viewcode-block" id="patched_startup"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.agents.patched_startup">[documentos]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">patched_startup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-
-    <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">routes</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">routes_registry</span><span class="o">.</span><span class="n">http_routes</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">routes</span><span class="p">:</span>
-        <span class="k">return</span>
-
-    <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;app&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">http_app</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
-        <span class="n">http_app</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="o">**</span><span class="n">route</span><span class="p">)</span>
-
-    <span class="n">cors</span> <span class="o">=</span> <span class="n">aiohttp_cors</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
-        <span class="n">http_app</span><span class="p">,</span>
-        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="n">aiohttp_cors</span><span class="o">.</span><span class="n">ResourceOptions</span><span class="p">(</span>
-                <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expose_headers</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">allow_headers</span><span class="o">=</span><span class="s2">&quot;*&quot;</span>
-            <span class="p">)</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Configure CORS on all routes.</span>
-    <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">http_app</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">routes</span><span class="p">()):</span>
-        <span class="n">cors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
-
-    <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;runner&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">AppRunner</span><span class="p">(</span><span class="n">http_app</span><span class="p">)</span>
-    <span class="k">await</span> <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;runner&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
-    <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;site&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">TCPSite</span><span class="p">(</span>
-        <span class="n">runner</span><span class="o">=</span><span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;runner&quot;</span><span class="p">],</span>
-        <span class="n">host</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">HTTP_HOST</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">HTTP_PORT</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">await</span> <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;site&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
-
-
-<span class="n">app</span><span class="o">.</span><span class="n">_on_startup</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-<span class="n">app</span><span class="o">.</span><span class="n">_on_startup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patched_startup</span><span class="p">)</span>
 </pre></div>
 
           </div>

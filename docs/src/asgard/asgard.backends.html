@@ -147,7 +147,24 @@
 <dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <dl class="method">
 <dt id="asgard.backends.base.AppsBackend.get_app_stats">
-<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.models.app.App</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.app.AppStats<a class="reference internal" href="../../_modules/asgard/backends/base.html#AppsBackend.get_app_stats"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.base.AppsBackend.get_app_stats" title="Link permanente para esta definição">¶</a></dt>
+<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.models.app.App</em>, <em>interval: asgard.backends.base.Interval</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.app.AppStats<a class="reference internal" href="../../_modules/asgard/backends/base.html#AppsBackend.get_app_stats"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.base.AppsBackend.get_app_stats" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="asgard.backends.base.Interval">
+<em class="property">class </em><code class="descclassname">asgard.backends.base.</code><code class="descname">Interval</code><a class="reference internal" href="../../_modules/asgard/backends/base.html#Interval"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.base.Interval" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="asgard.backends.base.Interval.ONE_HOUR">
+<code class="descname">ONE_HOUR</code><em class="property"> = '1h'</em><a class="headerlink" href="#asgard.backends.base.Interval.ONE_HOUR" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="asgard.backends.base.Interval.ONE_MINUTE">
+<code class="descname">ONE_MINUTE</code><em class="property"> = '1m'</em><a class="headerlink" href="#asgard.backends.base.Interval.ONE_MINUTE" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -170,7 +187,7 @@ As depdenências injetadas aqui são implementações que efetivamente falam com
 
 <dl class="method">
 <dt id="asgard.backends.base.Orchestrator.get_app_stats">
-<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.models.app.App</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.app.AppStats<a class="reference internal" href="../../_modules/asgard/backends/base.html#Orchestrator.get_app_stats"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.base.Orchestrator.get_app_stats" title="Link permanente para esta definição">¶</a></dt>
+<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.models.app.App</em>, <em>interval: asgard.backends.base.Interval</em>, <em>user: asgard.models.user.User</em>, <em>account: asgard.models.account.Account</em><span class="sig-paren">)</span> &#x2192; asgard.models.app.AppStats<a class="reference internal" href="../../_modules/asgard/backends/base.html#Orchestrator.get_app_stats"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#asgard.backends.base.Orchestrator.get_app_stats" title="Link permanente para esta definição">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
