@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Códigos utilitátios internos &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+    <link rel="next" title="Contribuindo com o projeto" href="../contrib/index.html" />
+    <link rel="prev" title="Models" href="models.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="codigos-utilitatios-internos">
+<h1>Códigos utilitátios internos<a class="headerlink" href="#codigos-utilitatios-internos" title="Link permanente para este título">¶</a></h1>
+<div class="section" id="httpclient">
+<h2>HttpClient<a class="headerlink" href="#httpclient" title="Link permanente para este título">¶</a></h2>
+<p>Esse é um cliente que deve ser usado em todos os momentos em que qualquer código precisar fazer
+uma requisição HTTP/HTTPS.</p>
+<p>Caso alguma funcionalidade necessária para fazer o request ainda não esteja disponível nesse client, idealmente temos que adicionar suporte.</p>
+<p>A ideia desse client é que algumas confogirações já estejam sempre feitas, como por exemplo timeout da conexão TCP e do request HTTP.</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">asgard.http.client.</code><code class="descname">HttpClient</code><span class="sig-paren">(</span><em>headers: Dict[str</em>, <em>str] = {}</em>, <em>timeout: aiohttp.client.ClientTimeout = ClientTimeout(total=30</em>, <em>connect=1</em>, <em>sock_read=None</em>, <em>sock_connect=None)</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Wrapper em volta do objeto aiohttp.ClientSession. Possui a seguintes features:</p>
+<ul class="simple">
+<li><p>Já lança exception em caso de response <code class="docutils literal notranslate"><span class="pre">4xx</span></code> e <code class="docutils literal notranslate"><span class="pre">5xx</span></code>. Esse comportamento pode ser sobrescrito, a cada request, passando o argumento <code class="docutils literal notranslate"><span class="pre">raise_for_status=True</span></code>.</p></li>
+<li><p>Já segue redirect dos requests.</p></li>
+<li><dl class="simple">
+<dt>Headers que podem ser passados ao instanciar um objeto HttpClient</dt><dd><ul>
+<li><p>Esses headers serão mesclados com quaisquer outros headers que forem passados no momento em que um request HTTP for feito.</p></li>
+<li><p>Em caso de headers de nomes iguais, os headers passados ao request terão maior precedência</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Timeout já configurado. Se nada for passado no construtor um timeout padrão já estará configurado. Esse timeout tem seus valores nas configs: <code class="xref py py-const docutils literal notranslate"><span class="pre">asgard.conf.ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT</span></code> e <code class="xref py py-const docutils literal notranslate"><span class="pre">asgard.conf.ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT</span></code>. Esses valores podem ser sobrescritos com as envs <code class="docutils literal notranslate"><span class="pre">ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT</span></code> e <code class="docutils literal notranslate"><span class="pre">ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT</span></code>.</p></li>
+</ul>
+<dl class="method">
+<dt>
+<code class="descname">_request</code><span class="sig-paren">(</span><em>method: str</em>, <em>url: str</em>, <em>headers: Dict[str</em>, <em>str] = {}</em>, <em>timeout: aiohttp.client.ClientTimeout = None</em>, <em>raise_for_status: bool = True</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient._request"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Método que é usado por todos os outros métodos para fazer um request.
+O parametros recebidos por esse métodos definem os parametros recebidos pelo client de uma forma geral.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">delete</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.delete"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Alias coroutine para DELETE &lt;url&gt;</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.get"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Alias coroutine para GET &lt;url&gt;</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">patch</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.patch"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Alias coroutine para PATCH &lt;url&gt;</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.post"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Alias coroutine para POST &lt;url&gt;</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">put</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.put"><span class="viewcode-link">[código fonte]</span></a></dt>
+<dd><p>Alias coroutine para PUT &lt;url&gt;</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de desenvolvimento</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="organization.html">Organização do código</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Códigos utilitátios internos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contrib/index.html">Contribuindo com o projeto</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de desenvolvimento</a><ul>
+  <li><a href="index.html">&lt;no title&gt;</a><ul>
+      <li>Previous: <a href="models.html" title="capítulo anterior">Models</a></li>
+      <li>Next: <a href="../contrib/index.html" title="próximo capítulo">Contribuindo com o projeto</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/devguide/code/internal-utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
