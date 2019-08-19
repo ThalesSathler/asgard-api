@@ -1,4 +1,5 @@
 import abc
+from enum import Enum
 from typing import List, Optional
 
 from asgard.models.account import Account
@@ -8,10 +9,15 @@ from asgard.models.task import Task
 from asgard.models.user import User
 
 
+class Interval(str, Enum):
+    ONE_HOUR = "1h"
+    ONE_MINUTE = "1m"
+
+
 class AppsBackend(abc.ABC):
     @abc.abstractmethod
     async def get_app_stats(
-        self, app: App, user: User, account: Account
+        self, app: App, interval: Interval, user: User, account: Account
     ) -> AppStats:
         raise NotImplementedError
 
@@ -74,6 +80,6 @@ class Orchestrator(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     async def get_app_stats(
-        self, app: App, user: User, account: Account
+        self, app: App, interval: Interval, user: User, account: Account
     ) -> AppStats:
         raise NotImplementedError

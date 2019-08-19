@@ -1,0 +1,12 @@
+0.90.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #166 <https://github.com/B2W-BIT/asgard-api/pull/166>`_] Movendo patched_startup para asgard.app
+- [`PR #167 <https://github.com/B2W-BIT/asgard-api/pull/167>`_] Versão inicial do novo client http
+- [`PR #169 <https://github.com/B2W-BIT/asgard-api/pull/169>`_] Feature/app stats avg 1min
+
+Raw Commits: `0.90.0 <https://github.com/B2W-BIT/asgard-api/compare/0.89.0...0.90.0>`_

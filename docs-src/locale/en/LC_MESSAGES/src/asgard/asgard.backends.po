@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 10:55-0300\n"
+"POT-Creation-Date: 2019-08-16 16:21-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,6 +56,14 @@ msgstr ""
 
 #: asgard.backends.base.AgentsBackend.get_by_id:1 of
 msgid "Retorna o agent de id `agentd_id` pertencente à conta `account`"
+msgstr ""
+
+#: asgard.backends.base.Interval:1 of
+msgid "Base: :class:`str`, :class:`enum.Enum`"
+msgstr ""
+
+#: asgard.backends.base.Interval:1 of
+msgid "An enumeration."
 msgstr ""
 
 #: asgard.backends.base.Orchestrator:1 of
