@@ -14,7 +14,7 @@ from hollowman.log import logger
 app = App("", "", "", 123)
 
 
-@app.run_every(60*5)
+@app.run_every(60 * 5)
 async def scale_all_apps(app: App):
     cloud_interface = AsgardInterface()
     state_checker = PeriodicStateChecker(cloud_interface)

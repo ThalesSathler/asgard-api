@@ -79,7 +79,7 @@ class AutoscalerTest(TestCase):
             await cloud_interface.apply_decisions(scaling_decision)
 
             scale_spy = rsps.requests.get(
-                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
         self.assertEqual(1, len(scaling_decision))
@@ -153,7 +153,7 @@ class AutoscalerTest(TestCase):
             await cloud_interface.apply_decisions(scaling_decision)
 
             scale_spy = rsps.requests.get(
-                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
         self.assertEqual(len(apps_stats), len(scaling_decision))
@@ -240,7 +240,7 @@ class AutoscalerTest(TestCase):
             await cloud_interface.apply_decisions(scaling_decision)
 
             scale_spy = rsps.requests.get(
-                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
         self.assertEqual(2, len(scaling_decision))
@@ -439,7 +439,7 @@ class AutoscalerTest(TestCase):
             scaling_decision = decision_maker.decide_scaling_actions(apps_stats)
             await cloud_interface.apply_decisions(scaling_decision)
             scale_spy = rsps.requests.get(
-                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
         self.assertEqual(1, len(apps_stats), "didn't fetch one app")
@@ -523,9 +523,8 @@ class AutoscalerTest(TestCase):
             await scale_all_apps(None)
 
             scale_spy = rsps.requests.get(
-                ("PUT", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
             )
 
         self.assertIsNotNone(scale_spy)
         self.assertEqual(body_fixture, scale_spy[0].kwargs.get("json"))
-        self.assertEqual(headers_fixture, scale_spy[0].kwargs.get("headers"))

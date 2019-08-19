@@ -13,7 +13,6 @@ from asgard.workers.models.scalable_app import ScalableApp
 
 
 class AsgardInterface(CloudInterface):
-
     def __init__(self):
         self._asgard_client = AppsClient()
 
