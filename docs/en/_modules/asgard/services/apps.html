@@ -31,7 +31,7 @@
           <div class="body" role="main">
             
   <h1>Source code for asgard.services.apps</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">asgard.backends.base</span> <span class="k">import</span> <span class="n">Orchestrator</span>
+<span></span><span class="kn">from</span> <span class="nn">asgard.backends.base</span> <span class="k">import</span> <span class="n">Orchestrator</span><span class="p">,</span> <span class="n">Interval</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.mesos.models.app</span> <span class="k">import</span> <span class="n">MesosApp</span>
 <span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
 <span class="kn">from</span> <span class="nn">asgard.models.app</span> <span class="k">import</span> <span class="n">AppStats</span>
@@ -41,14 +41,18 @@
 <div class="viewcode-block" id="AppsService"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.apps.AppsService">[docs]</a><span class="k">class</span> <span class="nc">AppsService</span><span class="p">:</span>
 <div class="viewcode-block" id="AppsService.get_app_stats"><a class="viewcode-back" href="../../../src/asgard/asgard.services.html#asgard.services.apps.AppsService.get_app_stats">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_app_stats</span><span class="p">(</span>
-        <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">,</span> <span class="n">orchestrator</span><span class="p">:</span> <span class="n">Orchestrator</span>
+        <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">interval</span><span class="p">:</span> <span class="n">Interval</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span>
+        <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">,</span>
+        <span class="n">orchestrator</span><span class="p">:</span> <span class="n">Orchestrator</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppStats</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retorna estatísticas de uso de CPU/RAM/CPU thr de uma app. O Cálculo considera todas as instâncias dessa app.</span>
 <span class="sd">        Retorna um objeto :py:class:`AppStats &lt;asgard.models.app.AppStats&gt;`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">MesosApp</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">app_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">get_app_stats</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">orchestrator</span><span class="o">.</span><span class="n">get_app_stats</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">account</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

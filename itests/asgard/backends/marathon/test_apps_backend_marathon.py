@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from aioelasticsearch import Elasticsearch
 
+from asgard.backends.base import Interval
 from asgard.backends.marathon.impl import MarathonAppsBackend
 from asgard.backends.mesos.models.app import MesosApp
 from asgard.conf import settings
@@ -24,6 +25,7 @@ class MarathonAppsBackendTest(BaseTestCase):
         self.INDEX_NAME = (
             f"asgard-app-stats-{self.utc_now.strftime('%Y-%m-%d-%H')}"
         )
+        self.interval = Interval.ONE_HOUR
 
     async def tearDown(self):
         await self.esclient.indices.delete(
@@ -59,7 +61,9 @@ class MarathonAppsBackendTest(BaseTestCase):
             self.assertEqual(5, len(cpu_pcts))
             self.assertEqual(5, len(mem_pcts))
 
-        app_stats = await backend.get_app_stats(app, user, account)
+        app_stats = await backend.get_app_stats(
+            app, self.interval, user, account
+        )
         self.assertEqual(
             AppStats(cpu_pct="0.25", ram_pct="15.05", cpu_thr_pct="1.00"),
             app_stats,
@@ -82,7 +86,9 @@ class MarathonAppsBackendTest(BaseTestCase):
         backend = MarathonAppsBackend()
         user = User(**USER_WITH_MULTIPLE_ACCOUNTS_DICT)
         account = Account(**ACCOUNT_DEV_DICT)
-        app_stats = await backend.get_app_stats(app, user, account)
+        app_stats = await backend.get_app_stats(
+            app, self.interval, user, account
+        )
         self.assertEqual(
             AppStats(cpu_pct="0", ram_pct="0", cpu_thr_pct="0"), app_stats
         )

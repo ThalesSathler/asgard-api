@@ -4,7 +4,7 @@ from decimal import Decimal
 from aioelasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q, A
 
-from asgard.backends.base import AppsBackend
+from asgard.backends.base import AppsBackend, Interval
 from asgard.conf import settings
 from asgard.math import round_up
 from asgard.models.account import Account
@@ -14,7 +14,7 @@ from asgard.models.user import User
 
 class MarathonAppsBackend(AppsBackend):
     async def get_app_stats(
-        self, app: App, user: User, account: Account
+        self, app: App, interval: Interval, user: User, account: Account
     ) -> AppStats:
         utc_now = datetime.utcnow().replace(tzinfo=timezone.utc)
         index_name = f"asgard-app-stats-{utc_now.strftime('%Y-%m-%d')}-*"
@@ -23,7 +23,7 @@ class MarathonAppsBackend(AppsBackend):
             "bool",
             must=[
                 Q("term", appname__keyword=f"/{account.namespace}/{app.id}"),
-                Q("range", timestamp={"gte": "now-1h"}),
+                Q("range", timestamp={"gte": f"now-{interval}"}),
             ],
         )
         query = Search().query(bool_query).extra(size=2)

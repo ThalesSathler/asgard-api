@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from asgard.backends.base import Orchestrator, AgentsBackend
+from asgard.backends.base import Orchestrator, AgentsBackend, Interval
 from asgard.backends.mesos.client.impl import MesosClient
 from asgard.backends.mesos.models.agent import MesosAgent
 from asgard.backends.mesos.models.app import MesosApp
@@ -80,6 +80,8 @@ class MesosOrchestrator(Orchestrator):
         return await self.agents_backend.get_apps_running(user, agent)
 
     async def get_app_stats(
-        self, app: App, user: User, account: Account
+        self, app: App, interval: Interval, user: User, account: Account
     ) -> AppStats:
-        return await self.apps_backend.get_app_stats(app, user, account)
+        return await self.apps_backend.get_app_stats(
+            app, interval, user, account
+        )

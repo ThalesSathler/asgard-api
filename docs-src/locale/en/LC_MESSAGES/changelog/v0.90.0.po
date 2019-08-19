@@ -49,3 +49,14 @@ msgid ""
 "api/compare/0.89.0...0.90.0>`_"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#~ msgid "Commits: https://github.com/B2W-BIT/asgard-api/compare/0.88.0...0.89.0"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Raw Commits: `0.90.0 <https://github.com/B2W-"
+#~ "BIT/asgard-api/compare/0.88.0...0.89.0>`_"
+#~ msgstr ""
+
+>>>>>>> master

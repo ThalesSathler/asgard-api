@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-19 11:48-0300\n"
+=======
+"POT-Creation-Date: 2019-08-16 16:21-0300\n"
+>>>>>>> master
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,6 +41,7 @@ msgstr ""
 msgid "Base: :class:`object`"
 msgstr ""
 
+<<<<<<< HEAD
 #: asgard.http.client.HttpClient:1 of
 msgid ""
 "Wrapper em volta do objeto aiohttp.ClientSession. Possui a seguintes "
@@ -100,6 +105,8 @@ msgstr ""
 msgid "Alias coroutine para PUT <url>"
 msgstr ""
 
+=======
+>>>>>>> master
 #: ../../src/asgard/asgard.http.rst:24
 msgid "Module contents"
 msgstr ""

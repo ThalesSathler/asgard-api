@@ -1,9 +1,8 @@
 from asynctest import TestCase
 from asynctest.mock import CoroutineMock
 
-from asgard.backends.base import Orchestrator
-from asgard.backends.marathon.impl import MarathonAppsBackend
-from asgard.backends.mesos.impl import MesosOrchestrator, MesosAgentsBackend
+from asgard.backends.base import Orchestrator, Interval
+from asgard.backends.mesos.impl import MesosOrchestrator
 from asgard.backends.mesos.models.app import MesosApp
 from asgard.models.account import Account
 from asgard.models.user import User
@@ -21,8 +20,8 @@ class AppsServiceTest(TestCase):
         app_id = "infra/app/nodes"
         app = MesosApp(id=app_id)
         await AppsService.get_app_stats(
-            app_id, self.user, self.account, orchestrator
+            app_id, Interval.ONE_HOUR, self.user, self.account, orchestrator
         )
         orchestrator.get_app_stats.assert_awaited_with(
-            app, self.user, self.account
+            app, Interval.ONE_HOUR, self.user, self.account
         )
