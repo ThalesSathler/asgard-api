@@ -33,7 +33,7 @@
   <h1>Source code for asgard.http.client</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">http</span> <span class="k">import</span> <span class="n">HTTPStatus</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">ClientTimeout</span><span class="p">,</span> <span class="n">ClientResponse</span>  <span class="c1"># type: ignore</span>
 <span class="kn">from</span> <span class="nn">aiohttp.client_exceptions</span> <span class="k">import</span> <span class="n">ClientResponseError</span>
@@ -51,114 +51,17 @@
 <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_HttpClient</span><span class="p">:</span>
-    <span class="n">_session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientSession</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">session_class</span><span class="p">,</span>
-        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">session_class_args</span><span class="o">=</span><span class="p">[],</span>
-        <span class="n">session_class_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span> <span class="o">=</span> <span class="n">session_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="n">url</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_method</span> <span class="o">=</span> <span class="n">method</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span> <span class="o">=</span> <span class="n">session_class_args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span> <span class="o">=</span> <span class="n">session_class_kwargs</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">(</span>
-                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_session_method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method</span><span class="p">)(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_return_session_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">method_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-
-<span class="k">class</span> <span class="nc">_HttpClientMaker</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span> <span class="o">=</span> <span class="n">session_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span> <span class="o">=</span> <span class="n">args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
-
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_HttpClient</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">,</span>
-            <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_HttpClient</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">,</span>
-            <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_HttpClient</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">,</span>
-            <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_HttpClient</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">,</span>
-            <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_args</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_session_class_kwargs</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_class</span><span class="p">(</span>
-                <span class="n">timeout</span><span class="o">=</span><span class="n">default_http_client_timeout</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
-
-
-<span class="n">http_client</span> <span class="o">=</span> <span class="n">_HttpClientMaker</span><span class="p">(</span>
-    <span class="n">ClientSession</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">default_http_client_timeout</span>
-<span class="p">)</span>
-
-
 <div class="viewcode-block" id="HttpClient"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient">[docs]</a><span class="k">class</span> <span class="nc">HttpClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper em volta do objeto aiohttp.ClientSession. Possui a seguintes features:</span>
+
+<span class="sd">    - Já lança exception em caso de response ``4xx`` e ``5xx``. Esse comportamento pode ser sobrescrito, a cada request, passando o argumento ``raise_for_status=True``.</span>
+<span class="sd">    - Já segue redirect dos requests. </span>
+<span class="sd">    - Headers que podem ser passados ao instanciar um objeto HttpClient</span>
+<span class="sd">        - Esses headers serão mesclados com quaisquer outros headers que forem passados no momento em que um request HTTP for feito.</span>
+<span class="sd">        - Em caso de headers de nomes iguais, os headers passados ao request terão maior precedência</span>
+<span class="sd">    - Timeout já configurado. Se nada for passado no construtor um timeout padrão já estará configurado. Esse timeout tem seus valores nas configs: :py:const:`asgard.conf.ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT` e :py:const:`asgard.conf.ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT`. Esses valores podem ser sobrescritos com as envs ``ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT`` e ``ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_session</span><span class="p">:</span> <span class="n">ClientSession</span>
 
@@ -187,7 +90,7 @@
 
         <span class="k">return</span> <span class="n">_handler</span>
 
-    <span class="nd">@_ensure_session</span>
+<div class="viewcode-block" id="HttpClient._request"><a class="viewcode-back" href="../../../devguide/code/internal-utils.html#asgard.http.client.HttpClient._request">[docs]</a>    <span class="nd">@_ensure_session</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_request</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -197,6 +100,10 @@
         <span class="n">raise_for_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Método que é usado por todos os outros métodos para fazer um request.</span>
+<span class="sd">        O parametros recebidos por esse métodos definem os parametros recebidos pelo client de uma forma geral.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
                 <span class="n">method</span><span class="p">,</span>
@@ -216,23 +123,38 @@
                 <span class="k">raise</span> <span class="n">HTTPBadRequest</span><span class="p">(</span><span class="n">request_info</span><span class="o">=</span><span class="n">ce</span><span class="o">.</span><span class="n">request_info</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">ce</span>
 
-        <span class="k">return</span> <span class="n">resp</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
 
 <div class="viewcode-block" id="HttpClient.get"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient.get">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias coroutine para GET &lt;url&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HttpClient.post"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient.post">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias coroutine para POST &lt;url&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HttpClient.put"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient.put">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias coroutine para PUT &lt;url&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HttpClient.patch"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient.patch">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias coroutine para PATCH &lt;url&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;patch&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HttpClient.delete"><a class="viewcode-back" href="../../../src/asgard/asgard.http.html#asgard.http.client.HttpClient.delete">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClientResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Alias coroutine para DELETE &lt;url&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 

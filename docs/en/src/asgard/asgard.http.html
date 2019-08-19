@@ -55,30 +55,49 @@
 <dt id="asgard.http.client.HttpClient">
 <em class="property">class </em><code class="descclassname">asgard.http.client.</code><code class="descname">HttpClient</code><span class="sig-paren">(</span><em>headers: Dict[str</em>, <em>str] = {}</em>, <em>timeout: aiohttp.client.ClientTimeout = ClientTimeout(total=30</em>, <em>connect=1</em>, <em>sock_read=None</em>, <em>sock_connect=None)</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper em volta do objeto aiohttp.ClientSession. Possui a seguintes features:</p>
+<ul class="simple">
+<li><p>Já lança exception em caso de response <code class="docutils literal notranslate"><span class="pre">4xx</span></code> e <code class="docutils literal notranslate"><span class="pre">5xx</span></code>. Esse comportamento pode ser sobrescrito, a cada request, passando o argumento <code class="docutils literal notranslate"><span class="pre">raise_for_status=True</span></code>.</p></li>
+<li><p>Já segue redirect dos requests.</p></li>
+<li><dl class="simple">
+<dt>Headers que podem ser passados ao instanciar um objeto HttpClient</dt><dd><ul>
+<li><p>Esses headers serão mesclados com quaisquer outros headers que forem passados no momento em que um request HTTP for feito.</p></li>
+<li><p>Em caso de headers de nomes iguais, os headers passados ao request terão maior precedência</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Timeout já configurado. Se nada for passado no construtor um timeout padrão já estará configurado. Esse timeout tem seus valores nas configs: <code class="xref py py-const docutils literal notranslate"><span class="pre">asgard.conf.ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT</span></code> e <code class="xref py py-const docutils literal notranslate"><span class="pre">asgard.conf.ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT</span></code>. Esses valores podem ser sobrescritos com as envs <code class="docutils literal notranslate"><span class="pre">ASGARD_HTTP_CLIENT_TOTAL_TIMEOUT</span></code> e <code class="docutils literal notranslate"><span class="pre">ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT</span></code>.</p></li>
+</ul>
 <dl class="method">
 <dt id="asgard.http.client.HttpClient.delete">
 <code class="descname">delete</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Alias coroutine para DELETE &lt;url&gt;</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="asgard.http.client.HttpClient.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Alias coroutine para GET &lt;url&gt;</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="asgard.http.client.HttpClient.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient.patch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Alias coroutine para PATCH &lt;url&gt;</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="asgard.http.client.HttpClient.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient.post" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Alias coroutine para POST &lt;url&gt;</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="asgard.http.client.HttpClient.put">
 <code class="descname">put</code><span class="sig-paren">(</span><em>url: str</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; aiohttp.client_reqrep.ClientResponse<a class="reference internal" href="../../_modules/asgard/http/client.html#HttpClient.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.http.client.HttpClient.put" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Alias coroutine para PUT &lt;url&gt;</p>
+</dd></dl>
 
 </dd></dl>
 

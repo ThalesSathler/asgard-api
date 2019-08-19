@@ -8,11 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
 "POT-Creation-Date: 2019-08-19 11:48-0300\n"
-=======
-"POT-Creation-Date: 2019-08-16 16:21-0300\n"
->>>>>>> master
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,27 +17,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
-#: ../../src/asgard/asgard.http.rst:2
-msgid "asgard.http package"
+#: ../../devguide/code/internal-utils.rst:2
+msgid "Códigos utilitátios internos"
 msgstr ""
 
-#: ../../src/asgard/asgard.http.rst:5
-msgid "Subpackages"
+#: ../../devguide/code/internal-utils.rst:6
+msgid "HttpClient"
 msgstr ""
 
-#: ../../src/asgard/asgard.http.rst:12
-msgid "Submodules"
+#: ../../devguide/code/internal-utils.rst:8
+msgid ""
+"Esse é um cliente que deve ser usado em todos os momentos em que qualquer"
+" código precisar fazer uma requisição HTTP/HTTPS."
 msgstr ""
 
-#: ../../src/asgard/asgard.http.rst:15
-msgid "asgard.http.client module"
+#: ../../devguide/code/internal-utils.rst:11
+msgid ""
+"Caso alguma funcionalidade necessária para fazer o request ainda não "
+"esteja disponível nesse client, idealmente temos que adicionar suporte."
 msgstr ""
 
-#: asgard.http.client.HttpClient:1 of
-msgid "Base: :class:`object`"
+#: ../../devguide/code/internal-utils.rst:13
+msgid ""
+"A ideia desse client é que algumas confogirações já estejam sempre "
+"feitas, como por exemplo timeout da conexão TCP e do request HTTP."
 msgstr ""
 
-<<<<<<< HEAD
 #: asgard.http.client.HttpClient:1 of
 msgid ""
 "Wrapper em volta do objeto aiohttp.ClientSession. Possui a seguintes "
@@ -85,6 +86,13 @@ msgid ""
 "e ``ASGARD_HTTP_CLIENT_CONNECT_TIMEOUT``."
 msgstr ""
 
+#: asgard.http.client.HttpClient._request:1 of
+msgid ""
+"Método que é usado por todos os outros métodos para fazer um request. O "
+"parametros recebidos por esse métodos definem os parametros recebidos "
+"pelo client de uma forma geral."
+msgstr ""
+
 #: asgard.http.client.HttpClient.delete:1 of
 msgid "Alias coroutine para DELETE <url>"
 msgstr ""
@@ -103,12 +111,6 @@ msgstr ""
 
 #: asgard.http.client.HttpClient.put:1 of
 msgid "Alias coroutine para PUT <url>"
-msgstr ""
-
-=======
->>>>>>> master
-#: ../../src/asgard/asgard.http.rst:24
-msgid "Module contents"
 msgstr ""
 
 #~ msgid ""
