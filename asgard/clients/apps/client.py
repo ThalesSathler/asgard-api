@@ -9,8 +9,10 @@ from asgard.http.client import HttpClient
 
 def _truncate_decision(decisionDto: DecisionDto) -> DecisionDto:
     truncated_decision = decisionDto.copy()
-    truncated_decision.cpus = round(3, decisionDto.cpus)
-    truncated_decision.mem = round(0, decisionDto.mem)
+    if decisionDto.cpus:
+        truncated_decision.cpus = round(decisionDto.cpus, 3)
+    if decisionDto.mem:
+        truncated_decision.mem = round(decisionDto.mem, 0)
 
     return truncated_decision
 

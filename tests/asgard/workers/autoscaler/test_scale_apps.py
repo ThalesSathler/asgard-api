@@ -134,3 +134,63 @@ class TestScaleApps(TestCase):
                 headers_fixture,
                 interface._asgard_client._http_client.default_headers,
             )
+
+    async def test_mem_decision_is_rounded_to_0_decimal_places(self):
+        interface = AsgardInterface()
+
+        decisions = [Decision("test", mem=64.26707)]
+
+        body_fixture = [{"id": "test", "mem": 64}]
+        headers_fixture = {
+            "Content-Type": "application/json",
+            "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}",
+        }
+
+        with aioresponses() as rsps:
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
+            await interface.apply_decisions(decisions)
+            calls = rsps.requests.get(
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+            self.assertIsNotNone(calls)
+            self.assertEqual(body_fixture, calls[0].kwargs.get("json"))
+            self.assertEqual(
+                headers_fixture,
+                interface._asgard_client._http_client.default_headers,
+            )
+
+    async def test_cpu_decision_is_rounded_to_3_decimal_places(self):
+        interface = AsgardInterface()
+
+        decisions = [Decision("test", cpu=0.436_721_072_367)]
+
+        body_fixture = [{"id": "test", "cpus": 0.437}]
+        headers_fixture = {
+            "Content-Type": "application/json",
+            "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}",
+        }
+
+        with aioresponses() as rsps:
+            rsps.put(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={"deploymentId": "test", "version": "1.0"},
+            )
+
+            await interface.apply_decisions(decisions)
+            calls = rsps.requests.get(
+                ("put", URL(f"{settings.ASGARD_API_ADDRESS}/v2/apps"))
+            )
+
+            self.assertIsNotNone(calls)
+            self.assertEqual(body_fixture, calls[0].kwargs.get("json"))
+            self.assertEqual(
+                headers_fixture,
+                interface._asgard_client._http_client.default_headers,
+            )
