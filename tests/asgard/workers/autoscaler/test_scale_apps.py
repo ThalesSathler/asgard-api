@@ -130,4 +130,7 @@ class TestScaleApps(TestCase):
 
             self.assertIsNotNone(calls)
             self.assertEqual(body_fixture, calls[0].kwargs.get("json"))
-            # self.assertEqual(headers_fixture, calls[0].kwargs.get("headers"))
+            self.assertEqual(
+                headers_fixture,
+                interface._asgard_client._http_client.default_headers,
+            )

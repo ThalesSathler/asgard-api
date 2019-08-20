@@ -1,6 +1,5 @@
 from aioresponses import aioresponses
 from asynctest import TestCase
-from yarl import URL
 
 from asgard.conf import settings
 from asgard.workers.autoscaler.asgard_cloudinterface import AsgardInterface
@@ -360,41 +359,14 @@ class TestFetchAppsData(TestCase):
             self.assertEqual(None, stats)
             self.assertEqual(None, app.app_stats)
 
-    # async def test_sending_auth_in_headers(self):
-    #     scaler = AsgardInterface()
-    #
-    #     with aioresponses() as rsps:
-    #         payload = {
-    #             "stats": {
-    #                 "type": "ASGARD",
-    #                 "errors": {},
-    #                 "cpu_pct": "0.93",
-    #                 "ram_pct": "8.91",
-    #                 "cpu_thr_pct": "0.06",
-    #             }
-    #         }
-    #         app = ScalableApp("app_test1")
-    #
-    #         headers_fixture = {
-    #             "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}"
-    #         }
-    #
-    #         rsps.get(
-    #             f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min",
-    #             status=200,
-    #             payload=payload,
-    #         )
-    #
-    #         app_with_stats = await scaler.get_app_stats(app)
-    #
-    #         calls = rsps.requests.get(
-    #             (
-    #                 "GET",
-    #                 URL(
-    #                     f"{settings.ASGARD_API_ADDRESS}/apps/{app.id}/stats/avg-1min"
-    #                 ),
-    #             )
-    #         )
-    #
-    #         self.assertIsNotNone(calls)
-    #         self.assertEqual(headers_fixture, calls[0].kwargs.get("headers"))
+    async def test_sending_auth_in_headers(self):
+        headers_fixture = {
+            "Content-Type": "application/json",
+            "Authorization": f"Token {settings.AUTOSCALER_AUTH_TOKEN}",
+        }
+
+        scaler = AsgardInterface()
+
+        self.assertEqual(
+            scaler._asgard_client._http_client.default_headers, headers_fixture
+        )
