@@ -7,6 +7,18 @@ from asgard.conf import settings
 from asgard.http.client import HttpClient
 
 
+def _truncate_decision(decisionDto: DecisionDto) -> DecisionDto:
+    truncated_decision = decisionDto.copy()
+    truncated_decision.cpus = round(3, decisionDto.cpus)
+    truncated_decision.mem = round(0, decisionDto.mem)
+
+    return truncated_decision
+
+
+def _truncate_and_convert_to_dict(decisionDto: DecisionDto) -> Dict[str, str]:
+    return _truncate_decision(decisionDto).dict()
+
+
 class AppsClient:
     def __init__(self):
         self._http_client = HttpClient(
@@ -39,7 +51,7 @@ class AppsClient:
     async def post_scaling_decisions(
         self, decisions: List[DecisionDto]
     ) -> List[Dict]:
-        post_body = list(map(DecisionDto.dict, decisions))
+        post_body = list(map(_truncate_and_convert_to_dict, decisions))
 
         await self._http_client.put(
             url=f"{settings.ASGARD_API_ADDRESS}/v2/apps", json=post_body
