@@ -10,6 +10,10 @@ class ScalableApp:
         cpu_threshold: float = None,
         mem_threshold: float = None,
         app_stats: AppStats = None,
+        min_cpu_scale_limit: float = None,
+        max_cpu_scale_limit: float = None,
+        min_mem_scale_limit: float = None,
+        max_mem_scale_limit: float = None,
     ):
         self.id = appid
         self.cpu_allocated = cpu_allocated
@@ -17,6 +21,10 @@ class ScalableApp:
         self.cpu_threshold = cpu_threshold
         self.mem_threshold = mem_threshold
         self.app_stats = app_stats
+        self.min_cpu_scale_limit = min_cpu_scale_limit
+        self.max_cpu_scale_limit = max_cpu_scale_limit
+        self.min_mem_scale_limit = min_mem_scale_limit
+        self.max_mem_scale_limit = max_mem_scale_limit
 
     def is_set_to_scale_cpu(self) -> bool:
         return self.cpu_threshold is not None

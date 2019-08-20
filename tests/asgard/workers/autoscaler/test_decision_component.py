@@ -160,3 +160,99 @@ class TestDecisionComponent(TestCase):
 
         self.assertEqual(1, len(decisions), "did not return any decisions")
         self.assertEqual(400.768, decisions[0].mem)
+
+    async def test_scaling_cpu_less_than_min_scale_limit(self):
+        min_cpu_limit = 0.4
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=0.6,
+                mem_threshold=None,
+                app_stats=AppStats(cpu_usage=41.29, mem_usage=62.62),
+                min_cpu_scale_limit=min_cpu_limit,
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(1, len(decisions), "did not return any decisions")
+        self.assertEqual(
+            min_cpu_limit,
+            decisions[0].cpu,
+            "cpu value is greater than the min limit",
+        )
+
+    async def test_scaling_mem_less_than_min_scale_limit(self):
+        min_mem_limit = 100
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=None,
+                mem_threshold=0.5,
+                app_stats=AppStats(cpu_usage=41.29, mem_usage=35.0),
+                min_mem_scale_limit=min_mem_limit,
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(1, len(decisions), "did not return any decisions")
+        self.assertEqual(
+            min_mem_limit,
+            decisions[0].mem,
+            "mem value is greater than the min limit",
+        )
+
+    async def test_scaling_mem_greater_than_max_scale_limit(self):
+        max_mem_limit = 200
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=None,
+                mem_threshold=0.5,
+                app_stats=AppStats(cpu_usage=41.29, mem_usage=80.0),
+                max_mem_scale_limit=max_mem_limit,
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(1, len(decisions), "did not return any decisions")
+        self.assertEqual(
+            max_mem_limit,
+            decisions[0].mem,
+            "mem value is greater than the max limit",
+        )
+
+    async def test_scaling_cpu_greater_than_max_scale_limit(self):
+        max_cpu_limit = 1
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=0.2,
+                mem_threshold=None,
+                app_stats=AppStats(cpu_usage=41.29, mem_usage=80.0),
+                max_cpu_scale_limit=max_cpu_limit,
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(1, len(decisions), "did not return any decisions")
+        self.assertEqual(
+            max_cpu_limit,
+            decisions[0].cpu,
+            "cpu value is greater than the max limit",
+        )
