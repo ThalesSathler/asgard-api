@@ -35,9 +35,16 @@ class Settings(BaseSettings):
     MESOS_API_URLS: List[str]
     DB_URL: str
     STATS_API_URL: str
+    ASGARD_API_ADDRESS: str
     SCHEDULED_JOBS_SERVICE_ADDRESS: str
     SCHEDULED_JOBS_SERVICE_AUTH: AuthSpec = AuthSpec()
+    AUTOSCALER_AUTH_TOKEN: str
+    AUTOSCALER_MARGIN_THRESHOLD: float
     SCHEDULED_JOBS_DEFAULT_FETCH_URIS: List[FetchURLSpec] = []
+    MIN_CPU_SCALE_LIMIT: Optional[float] = 0
+    MAX_CPU_SCALE_LIMIT: Optional[float] = float("inf")
+    MIN_MEM_SCALE_LIMIT: Optional[float] = 0
+    MAX_MEM_SCALE_LIMIT: Optional[float] = float("inf")
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"

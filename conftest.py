@@ -21,6 +21,8 @@ VALUES = {
     "SCHEDULED_JOBS_SERVICE_AUTH": json.dumps(
         {"user": "chronos", "password": "secret"}
     ),
+    "AUTOSCALER_AUTH_TOKEN": "anytoken",
+    "AUTOSCALER_MARGIN_THRESHOLD": "0.05",
     "SCHEDULED_JOBS_DEFAULT_FETCH_URIS": json.dumps(
         [
             {"uri": "file:///etc/docker.tar.bz2"},
@@ -32,5 +34,9 @@ VALUES = {
 
 for name, value in VALUES.items():
     os.environ[f"{ENV}_{name}"] = os.getenv(f"{ENV}_{name}", value)
+
+os.environ["TEST_ASGARD_API_ADDRESS"] = os.getenv(
+    "TEST_ASGARD_API_ADDRESS", "http://localhost:5000"
+)
 
 assert os.environ["ENV"] == "TEST"
