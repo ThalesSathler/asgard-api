@@ -149,7 +149,6 @@ class TestDecisionComponent(TestCase):
                 "test",
                 cpu_allocated=0.5,
                 mem_allocated=128,
-                cpu_threshold=None,
                 mem_threshold=0.2,
                 app_stats=AppStats(cpu_usage=41.29, mem_usage=62.62),
             )
@@ -169,7 +168,6 @@ class TestDecisionComponent(TestCase):
                 cpu_allocated=0.5,
                 mem_allocated=128,
                 cpu_threshold=0.6,
-                mem_threshold=None,
                 app_stats=AppStats(cpu_usage=41.29, mem_usage=62.62),
                 min_cpu_scale_limit=min_cpu_limit,
             )
@@ -182,7 +180,7 @@ class TestDecisionComponent(TestCase):
         self.assertEqual(
             min_cpu_limit,
             decisions[0].cpu,
-            "cpu value is greater than the min limit",
+            "cpu value is less than the min limit",
         )
 
     async def test_scaling_mem_less_than_min_scale_limit(self):
@@ -192,7 +190,6 @@ class TestDecisionComponent(TestCase):
                 "test",
                 cpu_allocated=0.5,
                 mem_allocated=128,
-                cpu_threshold=None,
                 mem_threshold=0.5,
                 app_stats=AppStats(cpu_usage=41.29, mem_usage=35.0),
                 min_mem_scale_limit=min_mem_limit,
@@ -206,7 +203,7 @@ class TestDecisionComponent(TestCase):
         self.assertEqual(
             min_mem_limit,
             decisions[0].mem,
-            "mem value is greater than the min limit",
+            "mem value is less than the min limit",
         )
 
     async def test_scaling_mem_greater_than_max_scale_limit(self):
@@ -216,7 +213,6 @@ class TestDecisionComponent(TestCase):
                 "test",
                 cpu_allocated=0.5,
                 mem_allocated=128,
-                cpu_threshold=None,
                 mem_threshold=0.5,
                 app_stats=AppStats(cpu_usage=41.29, mem_usage=80.0),
                 max_mem_scale_limit=max_mem_limit,
@@ -241,7 +237,6 @@ class TestDecisionComponent(TestCase):
                 cpu_allocated=0.5,
                 mem_allocated=128,
                 cpu_threshold=0.2,
-                mem_threshold=None,
                 app_stats=AppStats(cpu_usage=41.29, mem_usage=80.0),
                 max_cpu_scale_limit=max_cpu_limit,
             )

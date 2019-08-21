@@ -35,10 +35,7 @@ class DecisionComponent(DecisionComponentInterface):
                     decision.cpu = (
                         app.min_cpu_scale_limit
                         if new_cpu < app.min_cpu_scale_limit
-                        else new_cpu
-                    )
-                    decision.cpu = (
-                        app.max_cpu_scale_limit
+                        else app.max_cpu_scale_limit
                         if new_cpu > app.max_cpu_scale_limit
                         else new_cpu
                     )
@@ -51,19 +48,16 @@ class DecisionComponent(DecisionComponentInterface):
                     or mem_usage
                     < app.mem_threshold - settings.AUTOSCALER_MARGIN_THRESHOLD
                 ):
-                    decision.mem = (
+                    new_mem = (
                         mem_usage * app.mem_allocated
                     ) / app.mem_threshold
 
                     decision.mem = (
                         app.min_mem_scale_limit
-                        if new_cpu < app.min_mem_scale_limit
-                        else new_cpu
-                    )
-                    decision.mem = (
-                        app.max_mem_scale_limit
-                        if new_cpu > app.max_mem_scale_limit
-                        else new_cpu
+                        if new_mem < app.min_mem_scale_limit
+                        else app.max_mem_scale_limit
+                        if new_mem > app.max_mem_scale_limit
+                        else new_mem
                     )
 
                     deploy_decision = True

@@ -1,3 +1,4 @@
+from asgard.conf import settings
 from asgard.workers.models.app_stats import AppStats
 
 
@@ -10,10 +11,10 @@ class ScalableApp:
         cpu_threshold: float = None,
         mem_threshold: float = None,
         app_stats: AppStats = None,
-        min_cpu_scale_limit: float = None,
-        max_cpu_scale_limit: float = None,
-        min_mem_scale_limit: float = None,
-        max_mem_scale_limit: float = None,
+        min_cpu_scale_limit: float = settings.MIN_CPU_SCALE_LIMIT,
+        max_cpu_scale_limit: float = settings.MAX_CPU_SCALE_LIMIT,
+        min_mem_scale_limit: float = settings.MIN_MEM_SCALE_LIMIT,
+        max_mem_scale_limit: float = settings.MAX_MEM_SCALE_LIMIT,
     ):
         self.id = appid
         self.cpu_allocated = cpu_allocated
