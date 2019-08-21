@@ -1,9 +1,9 @@
 from typing import Dict
 
-from pydantic import BaseModel as PydanticBaseModel
+from pydantic import BaseModel
 
 
-class MesosAgent(PydanticBaseModel):
+class MesosAgent(BaseModel):
     id: str
     hostname: str
     port: int
