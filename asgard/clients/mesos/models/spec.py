@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pydantic import BaseModel
 
 
@@ -15,3 +17,6 @@ class MesosResourcesSpec(BaseModel):
     gpus: int
     cpus: float
     ports: str
+
+
+MesosAttributesSpec = Dict[str, str]
