@@ -1,9 +1,7 @@
 from asynctest import TestCase
 
-from asgard.backends.mesos.client.models.agent import (
-    MesosAgent as MesosClientAgent,
-)
 from asgard.backends.mesos.models.agent import MesosAgent
+from asgard.clients.mesos.models.agent import MesosAgent as MesosClientAgent
 
 
 class AgentModelTest(TestCase):

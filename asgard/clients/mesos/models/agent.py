@@ -1,8 +1,6 @@
-from typing import Dict, Type
+from typing import Dict
 
 from pydantic import BaseModel as PydanticBaseModel
-
-from asgard.backends.mesos.models.agent import MesosAgent as AsgardMesosAgent
 
 
 class MesosAgent(PydanticBaseModel):
@@ -15,7 +13,5 @@ class MesosAgent(PydanticBaseModel):
     used_resources: Dict[str, str]
     resources: Dict[str, str]
 
-    def to_asgard_model(
-        self, class_: Type[AsgardMesosAgent]
-    ) -> AsgardMesosAgent:
+    def to_asgard_model(self, class_):
         return class_(**self.dict())

@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 from asgard.backends.base import Orchestrator, AgentsBackend, Interval
-from asgard.backends.mesos.client.impl import MesosClient
 from asgard.backends.mesos.models.agent import MesosAgent
 from asgard.backends.mesos.models.app import MesosApp
+from asgard.clients.mesos.client import MesosClient
 from asgard.conf import settings
 from asgard.models.account import Account
 from asgard.models.agent import Agent
