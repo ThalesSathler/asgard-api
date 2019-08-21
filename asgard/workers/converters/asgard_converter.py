@@ -44,6 +44,23 @@ class AppConverter(Converter[ScalableApp, AppDto]):
                     if "mem" in dto_object.labels["asgard.autoscale.ignore"]:
                         scalable_app.mem_threshold = None
 
+            if "asgard.autoscale.max_cpu_limit" in dto_object.labels:
+                scalable_app.max_cpu_scale_limit = float(
+                    dto_object.labels["asgard.autoscale.max_cpu_limit"]
+                )
+            if "asgard.autoscale.min_cpu_limit" in dto_object.labels:
+                scalable_app.min_cpu_scale_limit = float(
+                    dto_object.labels["asgard.autoscale.min_cpu_limit"]
+                )
+            if "asgard.autoscale.max_mem_limit" in dto_object.labels:
+                scalable_app.max_mem_scale_limit = float(
+                    dto_object.labels["asgard.autoscale.max_mem_limit"]
+                )
+            if "asgard.autoscale.min_mem_limit" in dto_object.labels:
+                scalable_app.min_mem_scale_limit = float(
+                    dto_object.labels["asgard.autoscale.min_mem_limit"]
+                )
+
         return scalable_app
 
     @classmethod

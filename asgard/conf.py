@@ -41,10 +41,10 @@ class Settings(BaseSettings):
     AUTOSCALER_AUTH_TOKEN: str
     AUTOSCALER_MARGIN_THRESHOLD: float
     SCHEDULED_JOBS_DEFAULT_FETCH_URIS: List[FetchURLSpec] = []
-    MIN_CPU_SCALE_LIMIT: Optional[float] = 0.1
-    MAX_CPU_SCALE_LIMIT: Optional[float] = 0.1
-    MIN_MEM_SCALE_LIMIT: Optional[float] = 0.1
-    MAX_MEM_SCALE_LIMIT: Optional[float] = 0.1
+    MIN_CPU_SCALE_LIMIT: Optional[float] = 0
+    MAX_CPU_SCALE_LIMIT: Optional[float] = float("inf")
+    MIN_MEM_SCALE_LIMIT: Optional[float] = 0
+    MAX_MEM_SCALE_LIMIT: Optional[float] = float("inf")
 
     class Config:
         env_prefix = os.getenv("ENV", "ASGARD") + "_"

@@ -29,10 +29,6 @@ VALUES = {
             {"uri": "file:///etc/config.bz2"},
         ]
     ),
-    "MIN_CPU_SCALE_LIMIT": "0.1",
-    "MAX_CPU_SCALE_LIMIT": "10000",
-    "MIN_MEM_SCALE_LIMIT": "1",
-    "MAX_MEM_SCALE_LIMIT": "10000",
 }
 
 
