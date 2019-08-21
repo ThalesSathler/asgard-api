@@ -7,3 +7,11 @@ class MesosUsedResourcesSpec(BaseModel):
     gpus: int
     cpus: float
     ports: str
+
+
+class MesosResourcesSpec(BaseModel):
+    disk: float
+    mem: float
+    gpus: int
+    cpus: float
+    ports: str
