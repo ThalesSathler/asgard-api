@@ -388,3 +388,100 @@ class TestFetchAppsLabels(TestCase):
         self.assertEqual(True, apps[2].is_set_to_scale())
         self.assertEqual(True, apps[2].is_set_to_scale_cpu())
         self.assertEqual(True, apps[2].is_set_to_scale_mem())
+
+    async def test_min_max_cpu_is_defined(self):
+        interface = AsgardInterface()
+
+        with aioresponses() as rsps:
+            rsps.get(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={
+                    "apps": [
+                        {
+                            "id": "/test_app",
+                            "mem": "0.2",
+                            "cpus": "0.5",
+                            "labels": {
+                                "asgard.autoscale.cpu": "0.2",
+                                "asgard.autoscale.mem": "0.2",
+                                "asgard.autoscale.min_cpu_limit": "0.2",
+                                "asgard.autoscale.max_cpu_limit": "2",
+                            },
+                        }
+                    ]
+                },
+            )
+
+            apps = await interface.fetch_all_apps()
+
+        self.assertEqual(1, len(apps))
+
+        self.assertEqual(0.2, apps[0].min_cpu_scale_limit)
+        self.assertEqual(2, apps[0].max_cpu_scale_limit)
+
+    async def test_min_max_mem_is_defined(self):
+        interface = AsgardInterface()
+
+        with aioresponses() as rsps:
+            rsps.get(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={
+                    "apps": [
+                        {
+                            "id": "/test_app",
+                            "mem": "0.2",
+                            "cpus": "0.5",
+                            "labels": {
+                                "asgard.autoscale.cpu": "0.2",
+                                "asgard.autoscale.mem": "0.2",
+                                "asgard.autoscale.min_mem_limit": "0.2",
+                                "asgard.autoscale.max_mem_limit": "2",
+                            },
+                        }
+                    ]
+                },
+            )
+
+            apps = await interface.fetch_all_apps()
+
+        self.assertEqual(1, len(apps))
+
+        self.assertEqual(0.2, apps[0].min_mem_scale_limit)
+        self.assertEqual(2, apps[0].max_mem_scale_limit)
+
+    async def test_all_limits_are_defined(self):
+        interface = AsgardInterface()
+
+        with aioresponses() as rsps:
+            rsps.get(
+                f"{settings.ASGARD_API_ADDRESS}/v2/apps",
+                status=200,
+                payload={
+                    "apps": [
+                        {
+                            "id": "/test_app",
+                            "mem": "0.2",
+                            "cpus": "0.5",
+                            "labels": {
+                                "asgard.autoscale.cpu": "0.2",
+                                "asgard.autoscale.mem": "0.2",
+                                "asgard.autoscale.min_cpu_limit": "0.2",
+                                "asgard.autoscale.max_cpu_limit": "2",
+                                "asgard.autoscale.min_mem_limit": "0.2",
+                                "asgard.autoscale.max_mem_limit": "2",
+                            },
+                        }
+                    ]
+                },
+            )
+
+            apps = await interface.fetch_all_apps()
+
+        self.assertEqual(1, len(apps))
+
+        self.assertEqual(0.2, apps[0].min_cpu_scale_limit)
+        self.assertEqual(2, apps[0].max_cpu_scale_limit)
+        self.assertEqual(0.2, apps[0].min_mem_scale_limit)
+        self.assertEqual(2, apps[0].max_mem_scale_limit)
