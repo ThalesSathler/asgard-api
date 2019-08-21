@@ -13,9 +13,9 @@ Para cada sub-rota de um endpoint, por exemplo, ``/agents/with-attrs`` temos def
 
 Pegando então o exemplo do endpoint ``/agents/with-attrs``, esse é modelo serializado por esse endpoint:
 
-.. literalinclude:: ../../asgard/api/resources/agents.py
+.. literalinclude:: ../../../asgard/api/resources/agents.py
 
-Perceba que esse modelo faz referência a outros modelos. Já o código da view que vai serializar esse modelo vai apenas construir esse objeto usando os outros objetos menionados acima, ex:
+Perceba que esse modelo faz referência a outros modelos. Já o código da view que vai serializar esse modelo vai apenas construir esse objeto usando os outros objetos mencionados acima, ex:
 
 .. code:: python
 
