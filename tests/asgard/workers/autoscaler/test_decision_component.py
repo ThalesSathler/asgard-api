@@ -259,3 +259,19 @@ class TestDecisionComponent(TestCase):
             decisions[0].cpu,
             "cpu value is greater than the max limit",
         )
+
+    async def test_does_not_make_decision_when_there_are_no_stats(self):
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                cpu_threshold=0.2,
+                app_stats=None,
+            )
+        ]
+
+        decider = DecisionComponent()
+        decisions = decider.decide_scaling_actions(apps)
+
+        self.assertEqual(0, len(decisions), "decision was made")
