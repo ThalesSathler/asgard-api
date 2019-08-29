@@ -1,10 +1,10 @@
 from asynctest import TestCase
-from tests.utils import with_json_fixture
 
 from asgard.backends.mesos.models.converters import (
     MesosUsedResourcesSpecConverter,
 )
 from asgard.clients.mesos.models.spec import MesosUsedResourcesSpec
+from tests.utils import with_json_fixture
 
 
 class MesosUsedResourcesSpecConverterTest(TestCase):

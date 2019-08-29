@@ -1,8 +1,8 @@
 from asynctest import TestCase
-from tests.utils import with_json_fixture
 
 from asgard.backends.mesos.models.converters import MesosAttrbutesSpecConverter
 from asgard.clients.mesos.models.spec import MesosAttributesSpec
+from tests.utils import with_json_fixture
 
 
 class MesosAttrbutesSpecConverterTest(TestCase):

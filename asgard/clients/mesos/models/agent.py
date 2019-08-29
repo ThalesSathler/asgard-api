@@ -16,6 +16,3 @@ class MesosAgent(BaseModel):
     active: bool
     used_resources: MesosUsedResourcesSpec
     resources: MesosResourcesSpec
-
-    def to_asgard_model(self, class_):
-        return class_(**self.dict())

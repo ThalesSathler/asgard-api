@@ -1,10 +1,10 @@
 from aioresponses import aioresponses
 from asynctest import TestCase, skip
-from tests.utils import build_mesos_cluster, get_fixture
 
 from asgard.clients.mesos.client import MesosClient
 from asgard.clients.mesos.models.agent import MesosAgent
 from asgard.conf import settings
+from tests.utils import build_mesos_cluster, get_fixture
 
 
 class MesosClientTestCase(TestCase):
@@ -15,9 +15,7 @@ class MesosClientTestCase(TestCase):
         agent_id = "ead07ffb-5a61-42c9-9386-21b680597e6c-S0"
         async with MesosClient(*settings.MESOS_API_URLS) as mesos:
             with aioresponses() as rsps:
-                build_mesos_cluster(
-                    rsps, "ead07ffb-5a61-42c9-9386-21b680597e6c-S0"
-                )
+                build_mesos_cluster(rsps, agent_id)
 
                 agent = await mesos.get_agent_by_id(agent_id=agent_id)
                 self.assertTrue(isinstance(agent, MesosAgent))
@@ -37,22 +35,23 @@ class MesosClientTestCase(TestCase):
                 self.assertEqual("1.4.1", agent.version)
                 self.assertEqual(
                     {
-                        "disk": "0",
-                        "mem": "1724.032",
-                        "gpus": "0",
-                        "cpus": "1.374",
+                        "disk": 0.0,
+                        "mem": 1724.032,
+                        "gpus": 0.0,
+                        "cpus": 1.374,
+                        "ports": "[31000-32000]",
                     },
-                    agent.used_resources,
+                    agent.used_resources.dict(),
                 )
                 self.assertEqual(
                     {
-                        "disk": "26877",
-                        "mem": "2560",
-                        "gpus": "0",
-                        "cpus": "2.5",
+                        "disk": 26877.0,
+                        "mem": 2560.0,
+                        "gpus": 0.0,
+                        "cpus": 2.5,
                         "ports": "[30000-31999]",
                     },
-                    agent.resources,
+                    agent.resources.dict(),
                 )
 
     async def test_mesos_client_get_agents(self):
