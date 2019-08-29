@@ -1,17 +1,21 @@
-from typing import Dict
-
 from pydantic import BaseModel
+
+from asgard.clients.mesos.models.spec import (
+    MesosAttributesSpec,
+    MesosResourcesSpec,
+    MesosUsedResourcesSpec,
+)
 
 
 class MesosAgent(BaseModel):
     id: str
     hostname: str
     port: int
-    attributes: Dict[str, str]
+    attributes: MesosAttributesSpec
     version: str
     active: bool
-    used_resources: Dict[str, str]
-    resources: Dict[str, str]
+    used_resources: MesosUsedResourcesSpec
+    resources: MesosResourcesSpec
 
     def to_asgard_model(self, class_):
         return class_(**self.dict())

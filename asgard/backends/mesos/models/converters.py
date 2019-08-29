@@ -1,4 +1,6 @@
+from asgard.backends.mesos.models.agent import MesosAgent
 from asgard.backends.models.converters import ModelConverterInterface
+from asgard.clients.mesos.models.agent import MesosAgent as MesosClientAgent
 from asgard.clients.mesos.models.spec import (
     MesosUsedResourcesSpec,
     MesosResourcesSpec,
@@ -45,4 +47,31 @@ class MesosAttrbutesSpecConverter(
 
     @staticmethod
     def to_client_model(other: AttributesSpec) -> MesosAttributesSpec:
+        raise NotImplementedError
+
+
+class MesosAgentConverter(
+    ModelConverterInterface[MesosAgent, MesosClientAgent]
+):
+    @staticmethod
+    def to_asgard_model(other: MesosClientAgent) -> MesosAgent:
+        return MesosAgent(
+            id=other.id,
+            hostname=other.hostname,
+            port=other.port,
+            attributes=MesosAttrbutesSpecConverter.to_asgard_model(
+                other.attributes
+            ),
+            version=other.version,
+            active=other.active,
+            used_resources=MesosUsedResourcesSpecConverter.to_asgard_model(
+                other.used_resources
+            ),
+            resources=MesosResourcesSpecConverter.to_asgard_model(
+                other.resources
+            ),
+        )
+
+    @staticmethod
+    def to_client_model(other: MesosAgent) -> MesosClientAgent:
         raise NotImplementedError
