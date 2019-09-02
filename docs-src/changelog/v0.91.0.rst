@@ -1,0 +1,14 @@
+0.91.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #171 <https://github.com/B2W-BIT/asgard-api/pull/171>`_] Feature/document http client
+- [`PR #174 <https://github.com/B2W-BIT/asgard-api/pull/174>`_] Feature/clean root files
+- [`PR #175 <https://github.com/B2W-BIT/asgard-api/pull/175>`_] Fix#173: Alterado DecisionComponent para não processar apps sem stats
+- [`PR #178 <https://github.com/B2W-BIT/asgard-api/pull/178>`_] Feature/migrate mesos backend to new model converter
+- [`PR #117 <https://github.com/B2W-BIT/asgard-api/pull/117>`_] Feat/autoscaler worker
+
+Raw Commits: `0.91.0 <https://github.com/B2W-BIT/asgard-api/compare/0.90.0...0.91.0>`_
