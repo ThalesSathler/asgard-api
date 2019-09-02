@@ -19,7 +19,8 @@
         "disk": 0,
         "mem": 603.315,
         "gpus": 0,
-        "cpus": 0.864
+        "cpus": 0.864,
+        "ports": "[30000-31999]"
       },
       "active": true,
       "version": "1.4.1"

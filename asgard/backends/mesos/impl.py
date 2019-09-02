@@ -1,9 +1,10 @@
 from typing import List, Optional
 
 from asgard.backends.base import Orchestrator, AgentsBackend, Interval
-from asgard.backends.mesos.client.impl import MesosClient
 from asgard.backends.mesos.models.agent import MesosAgent
 from asgard.backends.mesos.models.app import MesosApp
+from asgard.backends.mesos.models.converters import MesosAgentConverter
+from asgard.clients.mesos.client import MesosClient
 from asgard.conf import settings
 from asgard.models.account import Account
 from asgard.models.agent import Agent
@@ -35,7 +36,7 @@ class MesosAgentsBackend(AgentsBackend):
             filtered_agents: List[MesosAgent] = []
             client_agents = await mesos.get_agents()
             for client_agent in client_agents:
-                agent = client_agent.to_asgard_model(MesosAgent)
+                agent = MesosAgentConverter.to_asgard_model(client_agent)
                 if not agent.attr_has_value("owner", account.owner):
                     continue
                 await populate_apps(agent)
@@ -49,7 +50,7 @@ class MesosAgentsBackend(AgentsBackend):
         async with MesosClient(*settings.MESOS_API_URLS) as mesos:
             client_agent = await mesos.get_agent_by_id(agent_id=agent_id)
             if client_agent:
-                agent = client_agent.to_asgard_model(MesosAgent)
+                agent = MesosAgentConverter.to_asgard_model(client_agent)
 
                 if agent.attr_has_value("owner", account.owner):
                     await populate_apps(agent)
