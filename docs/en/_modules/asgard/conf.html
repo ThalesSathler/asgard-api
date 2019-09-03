@@ -68,9 +68,16 @@
     <span class="n">MESOS_API_URLS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">DB_URL</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">STATS_API_URL</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ASGARD_API_ADDRESS</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">SCHEDULED_JOBS_SERVICE_ADDRESS</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">SCHEDULED_JOBS_SERVICE_AUTH</span><span class="p">:</span> <span class="n">AuthSpec</span> <span class="o">=</span> <span class="n">AuthSpec</span><span class="p">()</span>
+    <span class="n">AUTOSCALER_AUTH_TOKEN</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">AUTOSCALER_MARGIN_THRESHOLD</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">SCHEDULED_JOBS_DEFAULT_FETCH_URIS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FetchURLSpec</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">MIN_CPU_SCALE_LIMIT</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">MAX_CPU_SCALE_LIMIT</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">MIN_MEM_SCALE_LIMIT</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">MAX_MEM_SCALE_LIMIT</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Settings.Config"><a class="viewcode-back" href="../../src/asgard/asgard.html#asgard.conf.Settings.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
         <span class="n">env_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ENV&quot;</span><span class="p">,</span> <span class="s2">&quot;ASGARD&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span></div></div>
