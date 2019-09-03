@@ -34,9 +34,10 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">asgard.backends.base</span> <span class="k">import</span> <span class="n">Orchestrator</span><span class="p">,</span> <span class="n">AgentsBackend</span><span class="p">,</span> <span class="n">Interval</span>
-<span class="kn">from</span> <span class="nn">asgard.backends.mesos.client.impl</span> <span class="k">import</span> <span class="n">MesosClient</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.mesos.models.agent</span> <span class="k">import</span> <span class="n">MesosAgent</span>
 <span class="kn">from</span> <span class="nn">asgard.backends.mesos.models.app</span> <span class="k">import</span> <span class="n">MesosApp</span>
+<span class="kn">from</span> <span class="nn">asgard.backends.mesos.models.converters</span> <span class="k">import</span> <span class="n">MesosAgentConverter</span>
+<span class="kn">from</span> <span class="nn">asgard.clients.mesos.client</span> <span class="k">import</span> <span class="n">MesosClient</span>
 <span class="kn">from</span> <span class="nn">asgard.conf</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">Account</span>
 <span class="kn">from</span> <span class="nn">asgard.models.agent</span> <span class="k">import</span> <span class="n">Agent</span>
@@ -68,7 +69,7 @@
             <span class="n">filtered_agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MesosAgent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">client_agents</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mesos</span><span class="o">.</span><span class="n">get_agents</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">client_agent</span> <span class="ow">in</span> <span class="n">client_agents</span><span class="p">:</span>
-                <span class="n">agent</span> <span class="o">=</span> <span class="n">client_agent</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">MesosAgent</span><span class="p">)</span>
+                <span class="n">agent</span> <span class="o">=</span> <span class="n">MesosAgentConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">client_agent</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">agent</span><span class="o">.</span><span class="n">attr_has_value</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="n">account</span><span class="o">.</span><span class="n">owner</span><span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="k">await</span> <span class="n">populate_apps</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
@@ -82,7 +83,7 @@
         <span class="k">async</span> <span class="k">with</span> <span class="n">MesosClient</span><span class="p">(</span><span class="o">*</span><span class="n">settings</span><span class="o">.</span><span class="n">MESOS_API_URLS</span><span class="p">)</span> <span class="k">as</span> <span class="n">mesos</span><span class="p">:</span>
             <span class="n">client_agent</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mesos</span><span class="o">.</span><span class="n">get_agent_by_id</span><span class="p">(</span><span class="n">agent_id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">client_agent</span><span class="p">:</span>
-                <span class="n">agent</span> <span class="o">=</span> <span class="n">client_agent</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">MesosAgent</span><span class="p">)</span>
+                <span class="n">agent</span> <span class="o">=</span> <span class="n">MesosAgentConverter</span><span class="o">.</span><span class="n">to_asgard_model</span><span class="p">(</span><span class="n">client_agent</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">attr_has_value</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="n">account</span><span class="o">.</span><span class="n">owner</span><span class="p">):</span>
                     <span class="k">await</span> <span class="n">populate_apps</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>

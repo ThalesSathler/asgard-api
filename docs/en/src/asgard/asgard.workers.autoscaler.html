@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>asgard.workers.autoscaler package &#8212; Asgard API  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="asgard-workers-autoscaler-package">
+<h1>asgard.workers.autoscaler package<a class="headerlink" href="#asgard-workers-autoscaler-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.app">
+<span id="asgard-workers-autoscaler-app-module"></span><h2>asgard.workers.autoscaler.app module<a class="headerlink" href="#module-asgard.workers.autoscaler.app" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="asgard.workers.autoscaler.app.scale_all_apps">
+<code class="descclassname">asgard.workers.autoscaler.app.</code><code class="descname">scale_all_apps</code><span class="sig-paren">(</span><em>app: asyncworker.App</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/app.html#scale_all_apps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.app.scale_all_apps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.asgard_cloudinterface">
+<span id="asgard-workers-autoscaler-asgard-cloudinterface-module"></span><h2>asgard.workers.autoscaler.asgard_cloudinterface module<a class="headerlink" href="#module-asgard.workers.autoscaler.asgard_cloudinterface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface">
+<em class="property">class </em><code class="descclassname">asgard.workers.autoscaler.asgard_cloudinterface.</code><code class="descname">AsgardInterface</code><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/asgard_cloudinterface.html#AsgardInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface" title="asgard.workers.autoscaler.cloudinterface.CloudInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.workers.autoscaler.cloudinterface.CloudInterface</span></code></a></p>
+<dl class="method">
+<dt id="asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.apply_decisions">
+<code class="descname">apply_decisions</code><span class="sig-paren">(</span><em>scaling_decisions: List[asgard.workers.models.decision.Decision]</em><span class="sig-paren">)</span> &#x2192; List[Dict]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/asgard_cloudinterface.html#AsgardInterface.apply_decisions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.apply_decisions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.fetch_all_apps">
+<code class="descname">fetch_all_apps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.scalable_app.ScalableApp]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/asgard_cloudinterface.html#AsgardInterface.fetch_all_apps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.fetch_all_apps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.get_all_scalable_apps">
+<code class="descname">get_all_scalable_apps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.scalable_app.ScalableApp]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/asgard_cloudinterface.html#AsgardInterface.get_all_scalable_apps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.get_all_scalable_apps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.get_app_stats">
+<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.workers.models.scalable_app.ScalableApp</em><span class="sig-paren">)</span> &#x2192; asgard.workers.models.app_stats.AppStats<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/asgard_cloudinterface.html#AsgardInterface.get_app_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.asgard_cloudinterface.AsgardInterface.get_app_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.cloudinterface">
+<span id="asgard-workers-autoscaler-cloudinterface-module"></span><h2>asgard.workers.autoscaler.cloudinterface module<a class="headerlink" href="#module-asgard.workers.autoscaler.cloudinterface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="asgard.workers.autoscaler.cloudinterface.CloudInterface">
+<em class="property">class </em><code class="descclassname">asgard.workers.autoscaler.cloudinterface.</code><code class="descname">CloudInterface</code><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/cloudinterface.html#CloudInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="asgard.workers.autoscaler.cloudinterface.CloudInterface.apply_decisions">
+<code class="descname">apply_decisions</code><span class="sig-paren">(</span><em>scaling_decisions: asgard.workers.models.decision.Decision</em><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.decision.Decision]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/cloudinterface.html#CloudInterface.apply_decisions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface.apply_decisions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.cloudinterface.CloudInterface.fetch_all_apps">
+<code class="descname">fetch_all_apps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.scalable_app.ScalableApp]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/cloudinterface.html#CloudInterface.fetch_all_apps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface.fetch_all_apps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.cloudinterface.CloudInterface.get_all_scalable_apps">
+<code class="descname">get_all_scalable_apps</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.scalable_app.ScalableApp]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/cloudinterface.html#CloudInterface.get_all_scalable_apps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface.get_all_scalable_apps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="asgard.workers.autoscaler.cloudinterface.CloudInterface.get_app_stats">
+<code class="descname">get_app_stats</code><span class="sig-paren">(</span><em>app: asgard.workers.models.scalable_app.ScalableApp</em><span class="sig-paren">)</span> &#x2192; asgard.workers.models.app_stats.AppStats<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/cloudinterface.html#CloudInterface.get_app_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.cloudinterface.CloudInterface.get_app_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.decision_component_interface">
+<span id="asgard-workers-autoscaler-decision-component-interface-module"></span><h2>asgard.workers.autoscaler.decision_component_interface module<a class="headerlink" href="#module-asgard.workers.autoscaler.decision_component_interface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface">
+<em class="property">class </em><code class="descclassname">asgard.workers.autoscaler.decision_component_interface.</code><code class="descname">DecisionComponentInterface</code><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/decision_component_interface.html#DecisionComponentInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface.decide_scaling_actions">
+<code class="descname">decide_scaling_actions</code><span class="sig-paren">(</span><em>apps_stats: List[asgard.workers.models.scalable_app.ScalableApp]</em><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.decision.Decision]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/decision_component_interface.html#DecisionComponentInterface.decide_scaling_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface.decide_scaling_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.periodicstatechecker">
+<span id="asgard-workers-autoscaler-periodicstatechecker-module"></span><h2>asgard.workers.autoscaler.periodicstatechecker module<a class="headerlink" href="#module-asgard.workers.autoscaler.periodicstatechecker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="asgard.workers.autoscaler.periodicstatechecker.PeriodicStateChecker">
+<em class="property">class </em><code class="descclassname">asgard.workers.autoscaler.periodicstatechecker.</code><code class="descname">PeriodicStateChecker</code><span class="sig-paren">(</span><em>cloudinterface: asgard.workers.autoscaler.cloudinterface.CloudInterface</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/periodicstatechecker.html#PeriodicStateChecker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.periodicstatechecker.PeriodicStateChecker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="asgard.workers.autoscaler.periodicstatechecker.PeriodicStateChecker.get_scalable_apps_stats">
+<code class="descname">get_scalable_apps_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.scalable_app.ScalableApp]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/periodicstatechecker.html#PeriodicStateChecker.get_scalable_apps_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.periodicstatechecker.PeriodicStateChecker.get_scalable_apps_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler.simple_decision_component">
+<span id="asgard-workers-autoscaler-simple-decision-component-module"></span><h2>asgard.workers.autoscaler.simple_decision_component module<a class="headerlink" href="#module-asgard.workers.autoscaler.simple_decision_component" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="asgard.workers.autoscaler.simple_decision_component.DecisionComponent">
+<em class="property">class </em><code class="descclassname">asgard.workers.autoscaler.simple_decision_component.</code><code class="descname">DecisionComponent</code><a class="reference internal" href="../../_modules/asgard/workers/autoscaler/simple_decision_component.html#DecisionComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.simple_decision_component.DecisionComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface" title="asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.workers.autoscaler.decision_component_interface.DecisionComponentInterface</span></code></a></p>
+<dl class="method">
+<dt id="asgard.workers.autoscaler.simple_decision_component.DecisionComponent.decide_scaling_actions">
+<code class="descname">decide_scaling_actions</code><span class="sig-paren">(</span><em>apps: List[asgard.workers.models.scalable_app.ScalableApp]</em><span class="sig-paren">)</span> &#x2192; List[asgard.workers.models.decision.Decision]<a class="reference internal" href="../../_modules/asgard/workers/autoscaler/simple_decision_component.html#DecisionComponent.decide_scaling_actions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#asgard.workers.autoscaler.simple_decision_component.DecisionComponent.decide_scaling_actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-asgard.workers.autoscaler">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-asgard.workers.autoscaler" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide/index.html">Guia de Usuário</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devguide/index.html">Guia de desenvolvimento</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/src/asgard/asgard.workers.autoscaler.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

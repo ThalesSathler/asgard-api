@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 10:55-0300\n"
+"POT-Creation-Date: 2019-09-03 09:20-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,10 +27,6 @@ msgstr ""
 
 #: ../../src/asgard/asgard.backends.mesos.client.models.rst:8
 msgid "asgard.backends.mesos.client.models.agent module"
-msgstr ""
-
-#: asgard.backends.mesos.client.models.agent.MesosAgent:1 of
-msgid "Base: :class:`pydantic.main.BaseModel`"
 msgstr ""
 
 #: ../../src/asgard/asgard.backends.mesos.client.models.rst:17
