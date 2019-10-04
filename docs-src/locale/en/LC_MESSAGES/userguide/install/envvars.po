@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-05 12:20-0300\n"
+"POT-Creation-Date: 2019-10-04 10:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
-#: ../../userguide/install/envvars.rst:2
+#: ../../userguide/install/envvars.rst:4
 msgid "Variáveis de Ambiente"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:5
+#: ../../userguide/install/envvars.rst:7
 msgid ""
 "Toda a parametrização da asgard API é feita via variáveis de ambiente. "
 "Nesse documento vamos explicar cada uma das variáveis de ambiente (ENVs) "
 "que a Asgard API conhece."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:7
+#: ../../userguide/install/envvars.rst:9
 msgid ""
 "Todas as ENVs são lidas no arquivo :py:mod:`asgard.conf`. Todas as envs "
 "estão sendo movidas para o objeto :py:class:`asgard.conf.Settings`, que é"
@@ -36,92 +36,127 @@ msgid ""
 "docs.helpmanual.io/#settings>`_)."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:10
+#: ../../userguide/install/envvars.rst:12
 msgid ""
 "As envs estão sempre prefixadas com algum valor. O prefixo padrão, caso "
 "você não escolhada nada é ``ASGARD_``."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:12
+#: ../../userguide/install/envvars.rst:14
 msgid "Abaixo está a transcrição completa do modulo :py:mod:`asgard.conf`."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:18
+#: ../../userguide/install/envvars.rst:20
 msgid ""
 "Todos os atributos da classe :py:class:`asgard.conf.Settings` já lêm seus"
 " valores de envs **com prefixo**."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:22
+#: ../../userguide/install/envvars.rst:24
 msgid "Lista de ENVs conhecidas pela Asgard API"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:24
+#: ../../userguide/install/envvars.rst:26
 msgid ""
 "**Nota**: Todos nomes descritos aqui devem receber o prefixo ``ASGARD_`` "
-"quando forem cridas as ENVs no momento de rodar a Asgard API."
+"quando forem criadas as ENVs no momento de rodar a Asgard API."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:26
+#: ../../userguide/install/envvars.rst:28
+msgid "``ASGARD_API_ADDRESS``"
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:29
+msgid ""
+"Obrigatório. Recebe o endereço onde a Asgard API responde. Essa env é "
+"usada pelo código que faz o auto-tuning das aplicações. Ex: "
+"``https://api.asgard.server.com``"
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:30
+msgid "``AUTOSCALER_AUTH_TOKEN``"
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:31
+msgid ""
+"Obrigatório. Recebe o token de autenticação que será usado para falar com"
+" a Asgard API no momento de aplicar as alterações de tuning de alguma "
+"app."
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:32
+msgid "``AUTOSCALER_MARGIN_THRESHOLD``"
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:33
+msgid ""
+"Obrigatório. Recebe o percentual que indica se uma app será modificada "
+"pelo tuning ou não. É um float no formato (<margem>/100). Ou seja, se "
+"você quiser uma margem de 10%, deve colocar aqui ``0.10``. Aplicações com"
+" uma diferença de uso de CPU e RAM **menor** que esse threshold não serão"
+" modificadas pelo auto-tunig."
+msgstr ""
+
+#: ../../userguide/install/envvars.rst:34
 msgid "``MESOS_API_URLS``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:27
+#: ../../userguide/install/envvars.rst:35
 msgid ""
 "Obrigatório. Recebe uma lista, contendo os endereços de todos os mesos "
 "que formam o cluster. Ex: ``[\"http://10.0.0.1:5050\", "
 "\"http://10.0.0.2:5050\"]``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:28
+#: ../../userguide/install/envvars.rst:36
 msgid "``DB_URL``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:29
+#: ../../userguide/install/envvars.rst:37
 msgid ""
 "Obrigatório. Recebe a URI de conexão com o banco de dados. Esse banco "
 "guarda os dados relacionaos de usuários e contas. O código da Asgard API "
 "usa `SQLAlchemy <https://www.sqlalchemy.org/>`_."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:30
+#: ../../userguide/install/envvars.rst:38
 msgid "``STATS_API_URL``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:31
+#: ../../userguide/install/envvars.rst:39
 msgid ""
 "Obrigatório. Endereço da API onde as estatísticas de uso de recursos das "
 "apps serão gravadas. Atualmente Asgard API fala com `ElasticSearch "
 "<https://www.elastic.co/pt/products/elasticsearch>`_."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:32
+#: ../../userguide/install/envvars.rst:40
 msgid "``SCHEDULED_JOBS_SERVICE_ADDRESS``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:33
+#: ../../userguide/install/envvars.rst:41
 msgid ""
 "Obrigatório. Endereço da API responsável pela gerência de tarefas "
 "agendadas. Atualmente a asgard API suporta falar com o `Chronos "
 "<https://mesos.github.io/chronos/docs/api.html>`_."
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:34
+#: ../../userguide/install/envvars.rst:42
 msgid "``SCHEDULED_JOBS_SERVICE_AUTH``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:35
+#: ../../userguide/install/envvars.rst:43
 msgid ""
 "Opcional. Dados de autenticação para falar com a API de tarefas "
 "agendadas. Recebe um objeto (:py:class:`asgard.conf.AuthSpec`) com user e"
 " password. Ex: ``{\"user\": \"chronos\", \"password\": \"secret\"}``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:36
+#: ../../userguide/install/envvars.rst:44
 msgid "``SCHEDULED_JOBS_DEFAULT_FETCH_URIS``"
 msgstr ""
 
-#: ../../userguide/install/envvars.rst:37
+#: ../../userguide/install/envvars.rst:45
 msgid ""
 "Opcional. Recebe uma lista de objetos "
 ":py:class:`asgard.models.spec.fetch.FetchURLSpec`. Ex: ``[{\"uri\": "
@@ -211,5 +246,41 @@ msgstr ""
 #~ " :py:class:`asgard.models.spec.fetch.FetchURLSpec`. Ex: "
 #~ "``[{\"uri\": \"http://static.server.com.br/content.txt\"}, "
 #~ "{\"uri\": \"file:///etc/config.tar.bz2\"}]``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Nota**: Todos nomes descritos aqui "
+#~ "devem receber o prefixo ``ASGARD_`` "
+#~ "quando forem cridas as ENVs no "
+#~ "momento de rodar a Asgard API."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``ASGARD_API_ADDRESS`` Obrigatório. Recebe o "
+#~ "endereço onde a Asgard API responde. "
+#~ "Essa env é usada pelo código que"
+#~ " faz o auto-tuning das aplicações."
+#~ " Ex: ``https://api.asgard.server.com``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``AUTOSCALER_AUTH_TOKEN`` Obrigatório. Recebe o "
+#~ "token de autenticação que será usado "
+#~ "para falar com a Asgard API no "
+#~ "momento de aplicar as alterações de "
+#~ "tuning de alguma app."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``AUTOSCALER_MARGIN_THRESHOLD`` Obrigatório. Recebe "
+#~ "o percentual que indica se uma app"
+#~ " será modificada pelo tuning ou não."
+#~ " É um float no formato "
+#~ "(<margem>/100). Ou seja, se você quiser"
+#~ " uma margem de 10%, deve colocar "
+#~ "aqui ``0.10``. Aplicações com uma "
+#~ "diferença de uso de CPU e RAM "
+#~ "**menor** que esse threshold não serão"
+#~ " modificadas pelo auto-tunig."
 #~ msgstr ""
 
