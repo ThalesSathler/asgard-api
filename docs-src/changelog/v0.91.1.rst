@@ -1,0 +1,16 @@
+0.91.1
+======
+
+Asgard API
+----------
+
+
+- [`PR #180 <https://github.com/B2W-BIT/asgard-api/pull/180>`_] Tornando o ``used_resources.ports`` opcional
+- [`PR #182 <https://github.com/B2W-BIT/asgard-api/pull/182>`_] Feature/migration to 0.91.0
+
+Raw Commits: `0.91.1 <https://github.com/B2W-BIT/asgard-api/compare/0.91.0...0.91.1>`_
+
+Atualização
+-----------
+
+Nenhuma mudança incompatível nessa versão.
