@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <div class="section" id="variaveis-de-ambiente">
-<h1>Variáveis de Ambiente<a class="headerlink" href="#variaveis-de-ambiente" title="Permalink to this headline">¶</a></h1>
+<span id="asgard-envvars"></span><h1>Variáveis de Ambiente<a class="headerlink" href="#variaveis-de-ambiente" title="Permalink to this headline">¶</a></h1>
 <p>Toda a parametrização da asgard API é feita via variáveis de ambiente. Nesse documento vamos explicar cada uma das variáveis de ambiente (ENVs) que a Asgard API conhece.</p>
 <p>Todas as ENVs são lidas no arquivo <a class="reference internal" href="../../src/asgard/asgard.html#module-asgard.conf" title="asgard.conf"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asgard.conf</span></code></a>. Todas as envs estão sendo movidas para o objeto <a class="reference internal" href="../../src/asgard/asgard.html#asgard.conf.Settings" title="asgard.conf.Settings"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.conf.Settings</span></code></a>, que é um objeto <code class="docutils literal notranslate"><span class="pre">BaseSettings</span></code> do pydantic (<a class="reference external" href="https://pydantic-docs.helpmanual.io/#settings">docs</a>).</p>
 <p>As envs estão sempre prefixadas com algum valor. O prefixo padrão, caso você não escolhada nada é <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code>.</p>
@@ -148,9 +148,27 @@
 <p>Todos os atributos da classe <a class="reference internal" href="../../src/asgard/asgard.html#asgard.conf.Settings" title="asgard.conf.Settings"><code class="xref py py-class docutils literal notranslate"><span class="pre">asgard.conf.Settings</span></code></a> já lêm seus valores de envs <strong>com prefixo</strong>.</p>
 <div class="section" id="lista-de-envs-conhecidas-pela-asgard-api">
 <h2>Lista de ENVs conhecidas pela Asgard API<a class="headerlink" href="#lista-de-envs-conhecidas-pela-asgard-api" title="Permalink to this headline">¶</a></h2>
-<p><strong>Nota</strong>: Todos nomes descritos aqui devem receber o prefixo <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code> quando forem cridas as ENVs no momento de rodar a Asgard API.</p>
+<p><strong>Nota</strong>: Todos nomes descritos aqui devem receber o prefixo <code class="docutils literal notranslate"><span class="pre">ASGARD_</span></code> quando forem criadas as ENVs no momento de rodar a Asgard API.</p>
 <blockquote>
 <div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_API_ADDRESS</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Recebe o endereço onde a Asgard API responde. Essa env é usada pelo código que faz o auto-tuning das aplicações. Ex: <code class="docutils literal notranslate"><span class="pre">https://api.asgard.server.com</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTOSCALER_AUTH_TOKEN</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Recebe o token de autenticação que será usado para falar com a Asgard API no momento de aplicar as alterações de tuning de alguma app.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTOSCALER_MARGIN_THRESHOLD</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Obrigatório. Recebe o percentual que indica se uma app será modificada pelo tuning ou não. É um float no formato (&lt;margem&gt;/100). Ou seja, se você quiser uma margem de 10%, deve colocar aqui <code class="docutils literal notranslate"><span class="pre">0.10</span></code>. Aplicações com uma diferença de uso de CPU e RAM <strong>menor</strong> que esse threshold não serão modificadas pelo auto-tunig.</p>
+</div></blockquote>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">MESOS_API_URLS</span></code></p></li>
 </ul>
 <blockquote>
