@@ -1,3 +1,5 @@
+.. _asgard.envvars:
+
 Variáveis de Ambiente
 =====================
 
@@ -21,8 +23,14 @@ Todos os atributos da classe :py:class:`asgard.conf.Settings` já lêm seus valo
 Lista de ENVs conhecidas pela Asgard API
 ----------------------------------------
 
-**Nota**: Todos nomes descritos aqui devem receber o prefixo ``ASGARD_`` quando forem cridas as ENVs no momento de rodar a Asgard API.
+**Nota**: Todos nomes descritos aqui devem receber o prefixo ``ASGARD_`` quando forem criadas as ENVs no momento de rodar a Asgard API.
 
+ - ``ASGARD_API_ADDRESS``
+  Obrigatório. Recebe o endereço onde a Asgard API responde. Essa env é usada pelo código que faz o auto-tuning das aplicações. Ex: ``https://api.asgard.server.com``
+ - ``AUTOSCALER_AUTH_TOKEN``
+  Obrigatório. Recebe o token de autenticação que será usado para falar com a Asgard API no momento de aplicar as alterações de tuning de alguma app.
+ - ``AUTOSCALER_MARGIN_THRESHOLD``
+  Obrigatório. Recebe o percentual que indica se uma app será modificada pelo tuning ou não. É um float no formato (<margem>/100). Ou seja, se você quiser uma margem de 10%, deve colocar aqui ``0.10``. Aplicações com uma diferença de uso de CPU e RAM **menor** que esse threshold não serão modificadas pelo auto-tunig.
  - ``MESOS_API_URLS``
   Obrigatório. Recebe uma lista, contendo os endereços de todos os mesos que formam o cluster. Ex: ``["http://10.0.0.1:5050", "http://10.0.0.2:5050"]``
  - ``DB_URL``
