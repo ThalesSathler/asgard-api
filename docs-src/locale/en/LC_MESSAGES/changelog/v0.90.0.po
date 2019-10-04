@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-04 10:26-0300\n"
+"POT-Creation-Date: 2019-10-04 14:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,34 +49,6 @@ msgid ""
 "api/compare/0.89.0...0.90.0>`_"
 msgstr ""
 
-#: ../../changelog/v0.90.0.rst:15
-msgid "Atualização"
-msgstr ""
-
-#: ../../changelog/v0.90.0.rst:17
-msgid ""
-"3 novas variavies de ambiente foram criadas nessa versão e precisam ser "
-"preenchidas:"
-msgstr ""
-
-#: ../../changelog/v0.90.0.rst:19
-msgid "ASGARD_ASGARD_API_ADDRESS"
-msgstr ""
-
-#: ../../changelog/v0.90.0.rst:20
-msgid "ASGARD_AUTOSCALER_AUTH_TOKEN"
-msgstr ""
-
-#: ../../changelog/v0.90.0.rst:21
-msgid "ASGARD_AUTOSCALER_MARGIN_THRESHOLD"
-msgstr ""
-
-#: ../../changelog/v0.90.0.rst:23
-msgid ""
-"Mais detalhes sobre essas variávels podem ser encontrados :ref:`aqui "
-"<asgard.envvars>`."
-msgstr ""
-
 #~ msgid "Commits: https://github.com/B2W-BIT/asgard-api/compare/0.88.0...0.89.0"
 #~ msgstr ""
 
@@ -101,5 +73,29 @@ msgstr ""
 #~ "Mais detalhes sobre essas variávels "
 #~ "podem ser encontrados aqui: "
 #~ ":ref:`<asgard.envvars>`."
+#~ msgstr ""
+
+#~ msgid "Atualização"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "3 novas variavies de ambiente foram "
+#~ "criadas nessa versão e precisam ser "
+#~ "preenchidas:"
+#~ msgstr ""
+
+#~ msgid "ASGARD_ASGARD_API_ADDRESS"
+#~ msgstr ""
+
+#~ msgid "ASGARD_AUTOSCALER_AUTH_TOKEN"
+#~ msgstr ""
+
+#~ msgid "ASGARD_AUTOSCALER_MARGIN_THRESHOLD"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Mais detalhes sobre essas variávels "
+#~ "podem ser encontrados :ref:`aqui "
+#~ "<asgard.envvars>`."
 #~ msgstr ""
 
