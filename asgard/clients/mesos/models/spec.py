@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from pydantic import BaseModel
 
@@ -8,7 +8,7 @@ class MesosUsedResourcesSpec(BaseModel):
     mem: float
     gpus: int
     cpus: float
-    ports: str
+    ports: Optional[str]
 
 
 class MesosResourcesSpec(BaseModel):
