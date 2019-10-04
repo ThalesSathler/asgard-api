@@ -19,8 +19,7 @@
         "disk": 0,
         "mem": 512,
         "gpus": 0,
-        "cpus": 0.5,
-        "ports": "[31858-31858]"
+        "cpus": 0.5
       },
       "active": true,
       "version": "1.4.1",

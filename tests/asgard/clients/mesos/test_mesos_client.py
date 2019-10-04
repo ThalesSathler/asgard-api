@@ -62,12 +62,13 @@ class MesosClientTestCase(TestCase):
             "ead07ffb-5a61-42c9-9386-21b680597e6c-S0",
             "ead07ffb-5a61-42c9-9386-21b680597e6c-S10",
             "ead07ffb-5a61-42c9-9386-21b680597e6c-S4",
+            "ead07ffb-5a61-42c9-9386-21b680597e6c-S9",
         ]
         async with MesosClient(*settings.MESOS_API_URLS) as mesos:
             with aioresponses() as rsps:
                 build_mesos_cluster(rsps, *agent_ids)
                 agents = await mesos.get_agents()
-                self.assertEquals(3, len(agents))
+                self.assertEquals(4, len(agents))
                 self.assertEqual(agent_ids, [agent.id for agent in agents])
 
     async def test_mesos_client_get_agents_empty_cluster(self):
