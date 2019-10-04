@@ -12,3 +12,14 @@ Asgard API
 - [`PR #117 <https://github.com/B2W-BIT/asgard-api/pull/117>`_] Feat/autoscaler worker
 
 Raw Commits: `0.91.0 <https://github.com/B2W-BIT/asgard-api/compare/0.90.0...0.91.0>`_
+
+Atualização
+-----------
+
+3 novas variavies de ambiente foram criadas nessa versão e precisam ser preenchidas:
+
+- ASGARD_ASGARD_API_ADDRESS
+- ASGARD_AUTOSCALER_AUTH_TOKEN
+- ASGARD_AUTOSCALER_MARGIN_THRESHOLD
+
+Mais detalhes sobre essas variávels podem ser encontrados :ref:`aqui <asgard.envvars>`.
