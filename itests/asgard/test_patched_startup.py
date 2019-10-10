@@ -11,7 +11,7 @@ from asgard.app import patched_startup
 class PatchedStartupAppTest(TestCase):
     async def test_patched_startup_has_cors_configured(self):
 
-        app = App("", "", "", 1)
+        app = App()
         app._on_startup.clear()
         app._on_startup.append(patched_startup)
 
@@ -37,7 +37,7 @@ class PatchedStartupAppTest(TestCase):
         await app.shutdown()
 
     async def test_patched_startup_app_without_routes(self):
-        app = App("", "", "", 1)
+        app = App()
         app._on_startup.clear()
         app._on_startup.append(patched_startup)
 

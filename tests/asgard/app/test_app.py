@@ -1,6 +1,7 @@
 from importlib import reload
 
 import asynctest
+from asyncworker import RouteTypes
 
 from asgard import app, conf
 
@@ -15,7 +16,9 @@ class AsgardAppTest(asynctest.TestCase):
             ASGARD_RABBITMQ_PREFETCH=64,
         ):
             reload(app)
-            self.assertEqual("10.0.0.1", app.app.host)
-            self.assertEqual("user1", app.app.user)
-            self.assertEqual("pass1", app.app.password)
-            self.assertEqual(64, app.app.prefetch_count)
+            conn = app.app.connections.with_type(RouteTypes.AMQP_RABBITMQ)
+            self.assertEqual(1, len(conn))
+            self.assertEqual("10.0.0.1", conn[0].hostname)
+            self.assertEqual("user1", conn[0].username)
+            self.assertEqual("pass1", conn[0].password)
+            self.assertEqual(64, conn[0].prefetch)

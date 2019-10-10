@@ -2,6 +2,7 @@ from decimal import Decimal
 from typing import Any, Dict, List
 
 from aiohttp import web
+from asyncworker import RouteTypes
 
 from asgard.api.resources.agents import AgentsResource
 from asgard.api.resources.apps import AppsResource
@@ -14,7 +15,6 @@ from asgard.models.agent import Agent
 from asgard.models.app import App
 from asgard.models.user import User
 from asgard.services import agents_service
-from asyncworker import RouteTypes
 
 
 def calculate_stats(agents):
