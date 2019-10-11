@@ -13,7 +13,7 @@ class AccountsBackend:
     async def get_account_by_id(self, acc_id: int) -> Optional[Account]:
         try:
             async with AsgardDBSession() as s:
-                result: Account = (
+                result: AccountDB = (
                     await s.query(AccountDB)
                     .filter(AccountDB.id == acc_id)
                     .one()
@@ -24,7 +24,7 @@ class AccountsBackend:
 
     async def get_accounts(self) -> List[Account]:
         async with AsgardDBSession() as s:
-            result: List[Account] = await s.query(AccountDB).all()
+            result: List[AccountDB] = await s.query(AccountDB).all()
             accounts: List[Account] = [
                 await Account.from_alchemy_obj(item) for item in result
             ]
@@ -32,7 +32,7 @@ class AccountsBackend:
 
     async def get_users_from_account(self, account: Account) -> List[User]:
         async with AsgardDBSession() as s:
-            users: List[User] = (
+            users: List[UserDB] = (
                 await s.query(UserDB)
                 .join(
                     UserHasAccount.join(
