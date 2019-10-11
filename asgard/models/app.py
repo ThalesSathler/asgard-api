@@ -6,8 +6,8 @@ from .base import BaseModel, ModelFactory
 class App(BaseModel, abc.ABC):
     id: str
 
-    @abc.abstractstaticmethod
-    def transform_to_asgard_app_id(name: str) -> str:
+    @abc.abstractclassmethod
+    def transform_to_asgard_app_id(cls, name: str) -> str:
         raise NotImplementedError
 
 
