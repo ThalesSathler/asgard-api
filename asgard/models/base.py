@@ -31,7 +31,7 @@ def ModelFactory(subclass_marker: Type[BaseModel]):
             type_ = kwargs.pop("type")
             for subclass in subclass_marker.__subclasses__():
                 if subclass.__fields__["type"].default == type_:
-                    return subclass(*args, **kwargs)
+                    return subclass(*args, **kwargs)  # type: ignore
             raise ValueError(
                 f"'{type_}' is an invalid {subclass_marker} type. "
             )
