@@ -40,7 +40,7 @@ class MesosAgent(Agent):
             "ram_pct": str(round_up(ram_pct)),
         }
 
-    async def apps(self) -> List[MesosApp]:
+    async def apps(self) -> List[MesosApp]:  # type: ignore
         self_address = f"http://{self.hostname}:{self.port}"
         containers_url = f"{self_address}/containers"
         apps = []

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4cb92a34e85ae9e8650a03aba5dc6df21c86c144c0358bf670ededd1f96a5580"
+            "sha256": "f90b941181ee5d28d0490a38d8bc49800836f6ed7c2309f9f60f286d0c51e6b4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -87,7 +87,7 @@
         },
         "async-worker": {
             "git": "https://github.com/b2w-bit/async-worker",
-            "ref": "9ffdaf4808d826500e5a2378b79b200b2200965a"
+            "ref": "7a85d4af381f34d147de290675af2870c110b3ff"
         },
         "attrs": {
             "hashes": [

@@ -29,9 +29,7 @@ class MesosResourcesSpecConverter(
 ):
     @staticmethod
     def to_asgard_model(other: MesosResourcesSpec) -> ResourcesSpec:
-        return UsedResourcesSpec(
-            disk=other.disk, mem=other.mem, cpus=other.cpus
-        )
+        return ResourcesSpec(disk=other.disk, mem=other.mem, cpus=other.cpus)
 
     @staticmethod
     def to_client_model(other: ResourcesSpec) -> MesosResourcesSpec:
