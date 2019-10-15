@@ -2,15 +2,18 @@ import aiohttp_cors
 from aiohttp import web
 from asyncworker import App, RouteTypes
 from asyncworker.conf import settings
+from asyncworker.connections import AMQPConnection
 
 from asgard import conf
 
-app = App(
-    host=conf.ASGARD_RABBITMQ_HOST,
-    user=conf.ASGARD_RABBITMQ_USER,
+conn = AMQPConnection(
+    hostname=conf.ASGARD_RABBITMQ_HOST,
+    username=conf.ASGARD_RABBITMQ_USER,
     password=conf.ASGARD_RABBITMQ_PASS,
-    prefetch_count=conf.ASGARD_RABBITMQ_PREFETCH,
+    prefetch=conf.ASGARD_RABBITMQ_PREFETCH,
 )
+
+app = App(connections=[conn])
 
 
 async def patched_startup(app):
@@ -20,7 +23,8 @@ async def patched_startup(app):
 
     app[RouteTypes.HTTP]["app"] = http_app = web.Application()
     for route in routes:
-        http_app.router.add_route(**route)
+        for route_def in route.aiohttp_routes():
+            route_def.register(http_app.router)
 
     cors = aiohttp_cors.setup(
         http_app,

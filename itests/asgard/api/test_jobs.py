@@ -378,8 +378,6 @@ class JobsEndpointTestCase(BaseTestCase):
     Retornamos HTTPStatus.BAD_REQUEST caso a entrada não seja um JSON válido
     """
 
-        account = Account(**ACCOUNT_DEV_DICT)
-
         resp = await self.client.post(
             "/jobs",
             headers={

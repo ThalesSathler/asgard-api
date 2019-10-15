@@ -5,7 +5,6 @@ from typing import List, Optional
 from asgard.models.account import Account
 from asgard.models.agent import Agent
 from asgard.models.app import App, AppStats
-from asgard.models.task import Task
 from asgard.models.user import User
 
 

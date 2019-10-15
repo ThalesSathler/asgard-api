@@ -242,8 +242,11 @@ class BaseTestCase(TestCase):
     async def aiohttp_client(self, app: asyncworker.App) -> TestClient:
         routes = app.routes_registry.http_routes
         http_app = web.Application()
+
         for route in routes:
-            http_app.router.add_route(**route)
+            for route_def in route.aiohttp_routes():
+                route_def.register(http_app.router)
+
         self.server = TestServer(
             http_app, port=os.environ["TEST_ASYNCWORKER_HTTP_PORT"]
         )

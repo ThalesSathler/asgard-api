@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from asgard.backends.base import Orchestrator, AgentsBackend, Interval
 from asgard.backends.mesos.models.agent import MesosAgent
-from asgard.backends.mesos.models.app import MesosApp
 from asgard.backends.mesos.models.converters import MesosAgentConverter
 from asgard.clients.mesos.client import MesosClient
 from asgard.conf import settings
@@ -29,7 +28,7 @@ async def populate_apps(agent: MesosAgent):
 
 
 class MesosAgentsBackend(AgentsBackend):
-    async def get_agents(
+    async def get_agents(  # type: ignore
         self, user: User, account: Account
     ) -> List[MesosAgent]:
         async with MesosClient(*settings.MESOS_API_URLS) as mesos:
@@ -65,19 +64,17 @@ class MesosAgentsBackend(AgentsBackend):
 
 
 class MesosOrchestrator(Orchestrator):
-    async def get_agents(
-        self, user: User, account: Account
-    ) -> List[MesosAgent]:
+    async def get_agents(self, user: User, account: Account) -> List[Agent]:
         return await self.agents_backend.get_agents(user, account)
 
     async def get_agent_by_id(
         self, agent_id: str, user: User, account: Account
-    ) -> Optional[MesosAgent]:
+    ) -> Optional[Agent]:
         return await self.agents_backend.get_by_id(agent_id, user, account)
 
     async def get_apps_running_for_agent(
         self, user: User, agent: Agent
-    ) -> List[MesosApp]:
+    ) -> List[App]:
         return await self.agents_backend.get_apps_running(user, agent)
 
     async def get_app_stats(

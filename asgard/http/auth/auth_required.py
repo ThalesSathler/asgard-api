@@ -1,15 +1,15 @@
 from collections import defaultdict
-from functools import wraps
 from typing import Callable, Dict
 
 import jwt
 import sqlalchemy
 from aiohttp import web
+from asyncworker.routes import call_http_handler
 from sqlalchemy.orm.exc import NoResultFound
 
 from asgard import db
-from asgard.models.account import AccountDB
-from asgard.models.user import UserDB
+from asgard.models.account import AccountDB, Account
+from asgard.models.user import UserDB, User
 from asgard.models.user_has_account import UserHasAccount
 from hollowman.conf import SECRET_KEY
 from hollowman.log import logger
@@ -131,7 +131,6 @@ AUTH_TYPES[TokenTypes.JWT] = check_jwt_token
 
 
 def auth_required(fn):
-    @wraps(fn)
     async def wrapper(request: web.Request, *args, **kwargs):
         try:
             user = None
@@ -167,6 +166,10 @@ def auth_required(fn):
 
             request["user"] = user
             request["user"].current_account = request_account_on_db
+            request["types_registry"].set(await User.from_alchemy_obj(user))
+            request["types_registry"].set(
+                await Account.from_alchemy_obj(request_account_on_db)
+            )
 
         except Exception as e:
             logger.exception({"exc": e, "event": "auth-unhandled-error"})
@@ -174,6 +177,6 @@ def auth_required(fn):
 
         user.current_account = request_account_on_db
         request.user = user
-        return await fn(request, *args, **kwargs)
+        return await call_http_handler(request, fn)
 
     return wrapper

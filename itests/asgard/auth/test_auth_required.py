@@ -20,7 +20,7 @@ from itests.util import (
 class AuthRequiredTest(BaseTestCase):
     async def setUp(self):
         await super(AuthRequiredTest, self).setUp()
-        self.app = App("", "", "", 1)
+        self.app = App()
 
         @self.app.route(["/"], methods=["GET"], type=RouteTypes.HTTP)
         @auth_required
