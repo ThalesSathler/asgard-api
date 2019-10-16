@@ -35,15 +35,18 @@
 <span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">web</span>
 <span class="kn">from</span> <span class="nn">asyncworker</span> <span class="k">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">RouteTypes</span>
 <span class="kn">from</span> <span class="nn">asyncworker.conf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">asyncworker.connections</span> <span class="k">import</span> <span class="n">AMQPConnection</span>
 
 <span class="kn">from</span> <span class="nn">asgard</span> <span class="k">import</span> <span class="n">conf</span>
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_HOST</span><span class="p">,</span>
-    <span class="n">user</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_USER</span><span class="p">,</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">AMQPConnection</span><span class="p">(</span>
+    <span class="n">hostname</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_HOST</span><span class="p">,</span>
+    <span class="n">username</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_USER</span><span class="p">,</span>
     <span class="n">password</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_PASS</span><span class="p">,</span>
-    <span class="n">prefetch_count</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_PREFETCH</span><span class="p">,</span>
+    <span class="n">prefetch</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">ASGARD_RABBITMQ_PREFETCH</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">connections</span><span class="o">=</span><span class="p">[</span><span class="n">conn</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="patched_startup"><a class="viewcode-back" href="../../src/asgard/asgard.html#asgard.app.patched_startup">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">patched_startup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
@@ -53,7 +56,8 @@
 
     <span class="n">app</span><span class="p">[</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">][</span><span class="s2">&quot;app&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">http_app</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
-        <span class="n">http_app</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="o">**</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">route_def</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">aiohttp_routes</span><span class="p">():</span>
+            <span class="n">route_def</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">http_app</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
 
     <span class="n">cors</span> <span class="o">=</span> <span class="n">aiohttp_cors</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
         <span class="n">http_app</span><span class="p">,</span>

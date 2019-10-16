@@ -1,0 +1,15 @@
+0.92.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #165 <https://github.com/B2W-BIT/asgard-api/pull/165>`_] Implementa handlers ``jobs/*`` com assinatura dinâmica. Atualiza o pydantic para ``0.28``.
+
+Raw Commits: `0.92.0 <https://github.com/B2W-BIT/asgard-api/compare/0.91.1...0.92.0>`_
+
+Atualização
+-----------
+
+Nenhuma mudança incompatível nessa versão.

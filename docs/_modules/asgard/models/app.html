@@ -40,8 +40,8 @@
 <div class="viewcode-block" id="App"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.app.App">[documentos]</a><span class="k">class</span> <span class="nc">App</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
 
-<div class="viewcode-block" id="App.transform_to_asgard_app_id"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.app.App.transform_to_asgard_app_id">[documentos]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractstaticmethod</span>
-    <span class="k">def</span> <span class="nf">transform_to_asgard_app_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="App.transform_to_asgard_app_id"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.app.App.transform_to_asgard_app_id">[documentos]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractclassmethod</span>
+    <span class="k">def</span> <span class="nf">transform_to_asgard_app_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 

@@ -37,8 +37,8 @@
 
 
 <div class="viewcode-block" id="Task"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.task.Task">[docs]</a><span class="k">class</span> <span class="nc">Task</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-<div class="viewcode-block" id="Task.transform_to_asgard_task_id"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.task.Task.transform_to_asgard_task_id">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractstaticmethod</span>
-    <span class="k">def</span> <span class="nf">transform_to_asgard_task_id</span><span class="p">(</span><span class="n">executor_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Task.transform_to_asgard_task_id"><a class="viewcode-back" href="../../../src/asgard/asgard.models.html#asgard.models.task.Task.transform_to_asgard_task_id">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractclassmethod</span>
+    <span class="k">def</span> <span class="nf">transform_to_asgard_task_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">executor_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 </pre></div>
 
