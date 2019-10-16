@@ -32,17 +32,17 @@
             
   <h1>Source code for asgard.http.auth.auth_required</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">jwt</span>
 <span class="kn">import</span> <span class="nn">sqlalchemy</span>
 <span class="kn">from</span> <span class="nn">aiohttp</span> <span class="k">import</span> <span class="n">web</span>
+<span class="kn">from</span> <span class="nn">asyncworker.routes</span> <span class="k">import</span> <span class="n">call_http_handler</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="k">import</span> <span class="n">NoResultFound</span>
 
 <span class="kn">from</span> <span class="nn">asgard</span> <span class="k">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">AccountDB</span>
-<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">UserDB</span>
+<span class="kn">from</span> <span class="nn">asgard.models.account</span> <span class="k">import</span> <span class="n">AccountDB</span><span class="p">,</span> <span class="n">Account</span>
+<span class="kn">from</span> <span class="nn">asgard.models.user</span> <span class="k">import</span> <span class="n">UserDB</span><span class="p">,</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">asgard.models.user_has_account</span> <span class="k">import</span> <span class="n">UserHasAccount</span>
 <span class="kn">from</span> <span class="nn">hollowman.conf</span> <span class="k">import</span> <span class="n">SECRET_KEY</span>
 <span class="kn">from</span> <span class="nn">hollowman.log</span> <span class="k">import</span> <span class="n">logger</span>
@@ -164,7 +164,6 @@
 
 
 <div class="viewcode-block" id="auth_required"><a class="viewcode-back" href="../../../../src/asgard/asgard.http.auth.html#asgard.http.auth.auth_required.auth_required">[docs]</a><span class="k">def</span> <span class="nf">auth_required</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
@@ -200,6 +199,10 @@
 
             <span class="n">request</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span>
             <span class="n">request</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">current_account</span> <span class="o">=</span> <span class="n">request_account_on_db</span>
+            <span class="n">request</span><span class="p">[</span><span class="s2">&quot;types_registry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+            <span class="n">request</span><span class="p">[</span><span class="s2">&quot;types_registry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                <span class="k">await</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_alchemy_obj</span><span class="p">(</span><span class="n">request_account_on_db</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">({</span><span class="s2">&quot;exc&quot;</span><span class="p">:</span> <span class="n">e</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;auth-unhandled-error&quot;</span><span class="p">})</span>
@@ -207,7 +210,7 @@
 
         <span class="n">user</span><span class="o">.</span><span class="n">current_account</span> <span class="o">=</span> <span class="n">request_account_on_db</span>
         <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">fn</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">call_http_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
 </pre></div>
