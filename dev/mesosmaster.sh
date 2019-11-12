@@ -24,6 +24,3 @@ function mesos_master_start() {
 }
 
 mesos_master_start 1 ${MESOS_MASTER_1_IP}
-mesos_master_start 2 ${MESOS_MASTER_2_IP}
-mesos_master_start 3 ${MESOS_MASTER_3_IP}
-
