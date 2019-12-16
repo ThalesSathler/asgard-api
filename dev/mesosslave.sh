@@ -17,6 +17,8 @@ function start_mesos_slave() {
       --net ${NETWORK_NAME} \
       --restart always \
       --env-file <(
+    echo MESOS_SYSTEMD_ENABLE_SUPPORT=false
+    echo MESOS_WORK_DIR=/var/lib/mesos
     echo MESOS_IP=${ip}
     echo LIBPROCESS_ADVERTISE_IP=${ip}
     echo MESOS_ATTRIBUTES="${MESOS_ATTRIBUTES};${aditional_attrs};owner:${namespace}"
@@ -28,30 +30,30 @@ function start_mesos_slave() {
       -v /sys/fs/cgroup:/sys/fs/cgroup \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -v $(dirname $(readlink --canonicalize ${0}))/scripts/docker.tar.bz2:/etc/docker.tar.bz2 \
-      b2wasgard/mesos:0.0.3)
+      ${MESOS_IMAGE} /usr/sbin/mesos-agent)
 
     echo "Mesos Slave conatiner_id=${container_id:0:7} ns=${namespace} addr=${ip} attrs=${all_attrs}"
 }
 
 # Slaves do time asgard-infra, datacenters `gcp` e `aws`
 start_mesos_slave "172.18.0.51" "asgard-infra" "extra_attrs=workload:general;dc:gcp"
-start_mesos_slave "172.18.0.52" "asgard-infra" "extra_attrs=workload:general;dc:gcp"
-start_mesos_slave "172.18.4.10" "asgard-infra" "extra_attrs=workload:general;dc:aws"
-start_mesos_slave "172.18.4.11" "asgard-infra" "extra_attrs=workload:general;dc:aws"
-
-# Slaves do time asgard-dev, datacenters `gcp` e `aws`
-start_mesos_slave "172.18.2.10" "asgard-dev" "extra_attrs=workload:general;dc:gcp"
-start_mesos_slave "172.18.2.11" "asgard-dev" "extra_attrs=workload:general;dc:gcp"
-start_mesos_slave "172.18.3.20" "asgard-dev" "extra_attrs=workload:general;dc:aws"
-start_mesos_slave "172.18.3.30" "asgard-dev" "extra_attrs=workload:general;dc:aws"
-
-# MysQL
-start_mesos_slave "172.18.5.1" "asgard-dev" "extra_attrs=workload:mysql-wordpress;dc:aws"
-
-
-# Slaves do Core do Asgard
-start_mesos_slave "172.18.0.18" "asgard" "extra_attrs=workload:general;dc:aws"
-start_mesos_slave "172.18.0.19" "asgard" "extra_attrs=workload:general;dc:aws"
-start_mesos_slave "172.18.0.20" "asgard" "extra_attrs=workload:asgard-cache;dc:aws"
-start_mesos_slave "172.18.0.21" "asgard" "extra_attrs=workload:asgard-log-ingest-rabbitmq;dc:aws"
-
+#start_mesos_slave "172.18.0.52" "asgard-infra" "extra_attrs=workload:general;dc:gcp"
+#start_mesos_slave "172.18.4.10" "asgard-infra" "extra_attrs=workload:general;dc:aws"
+#start_mesos_slave "172.18.4.11" "asgard-infra" "extra_attrs=workload:general;dc:aws"
+#
+## Slaves do time asgard-dev, datacenters `gcp` e `aws`
+#start_mesos_slave "172.18.2.10" "asgard-dev" "extra_attrs=workload:general;dc:gcp"
+#start_mesos_slave "172.18.2.11" "asgard-dev" "extra_attrs=workload:general;dc:gcp"
+#start_mesos_slave "172.18.3.20" "asgard-dev" "extra_attrs=workload:general;dc:aws"
+#start_mesos_slave "172.18.3.30" "asgard-dev" "extra_attrs=workload:general;dc:aws"
+#
+## MysQL
+#start_mesos_slave "172.18.5.1" "asgard-dev" "extra_attrs=workload:mysql-wordpress;dc:aws"
+#
+#
+## Slaves do Core do Asgard
+#start_mesos_slave "172.18.0.18" "asgard" "extra_attrs=workload:general;dc:aws"
+#start_mesos_slave "172.18.0.19" "asgard" "extra_attrs=workload:general;dc:aws"
+#start_mesos_slave "172.18.0.20" "asgard" "extra_attrs=workload:asgard-cache;dc:aws"
+#start_mesos_slave "172.18.0.21" "asgard" "extra_attrs=workload:asgard-log-ingest-rabbitmq;dc:aws"
+#

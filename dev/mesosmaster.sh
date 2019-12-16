@@ -20,7 +20,7 @@ function mesos_master_start() {
       echo MESOS_WORK_DIR=${MESOS_WORK_DIR}
       echo MESOS_HOSTNAME_LOOKUP=${MESOS_HOSTNAME_LOOKUP}
       echo MESOS_ZK=${MESOS_ZK}
-      ) b2wasgard/mesos:0.0.3 /usr/sbin/mesos-master
+      ) ${MESOS_IMAGE} /usr/sbin/mesos-master
 }
 
 mesos_master_start 1 ${MESOS_MASTER_1_IP}
