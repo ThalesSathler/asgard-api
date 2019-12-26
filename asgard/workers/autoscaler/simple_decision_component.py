@@ -7,8 +7,14 @@ from asgard.workers.autoscaler.decision_component_interface import (
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
 
+from hollowman.log import logger as default_logger
+
 
 class DecisionComponent(DecisionComponentInterface):
+    def __init__(self, logger=default_logger):
+        self.logger = logger
+
+
     def decide_scaling_actions(self, apps: List[ScalableApp]) -> List[Decision]:
         decisions = []
         for app in apps:
@@ -41,6 +47,13 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_cpu
                         )
 
+                        self.logger.info({
+                            "appid": app.id,
+                            "event": "CPU_SCALE",
+                            "previous_value": app.cpu_allocated,
+                            "new_value": decision.cpu
+                        })
+
                         deploy_decision = True
                 if app.is_set_to_scale_mem():
                     if (
@@ -62,6 +75,13 @@ class DecisionComponent(DecisionComponentInterface):
                             if new_mem > app.max_mem_scale_limit
                             else new_mem
                         )
+
+                        self.logger.info({
+                            "appid": app.id,
+                            "event": "MEM_SCALE",
+                            "previous_value": app.mem_allocated,
+                            "new_value": decision.mem
+                        })
 
                         deploy_decision = True
 

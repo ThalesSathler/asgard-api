@@ -21,5 +21,4 @@ async def scale_all_apps(app: App):
     apps_stats = await state_checker.get_scalable_apps_stats()
     logger.info({"FETCH_APPS": [app.id for app in apps_stats]})
     scaling_decisions = decision_maker.decide_scaling_actions(apps_stats)
-    logger.info({"DECISIONS": DecisionConverter.all_to_dto(scaling_decisions)})
     await cloud_interface.apply_decisions(scaling_decisions)
