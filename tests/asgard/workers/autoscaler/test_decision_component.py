@@ -278,7 +278,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertEqual(0, len(decisions), "decision was made")
 
-    async def test_logs_cpu_scaling_decisions(self):
+    async def test_logs_cpu_upscaling_decisions(self):
         apps = [
             ScalableApp(
                 "test",
@@ -297,33 +297,33 @@ class TestDecisionComponent(TestCase):
 
         logged_dict = mock_logger.info.call_args[0][0]
 
-        self.assertIn("appid", logged_dict, "did not log correct app id")
+        self.assertIn("appname", logged_dict, "did not log correct app id")
         self.assertEqual(
-            logged_dict["appid"], apps[0].id, "did not log correct app id"
+            apps[0].id, logged_dict["appname"], "did not log correct app id"
         )
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            logged_dict["event"], "CPU_SCALE", "did not log correct event"
+            logged_dict["event"], "CPU_SCALE_UP", "did not log correct event"
         )
 
         self.assertIn(
             "previous_value", logged_dict, "did not log previous CPU value"
         )
         self.assertEqual(
-            logged_dict["previous_value"],
             apps[0].cpu_allocated,
+            logged_dict["previous_value"],
             "did not log correct previous CPU value",
         )
 
         self.assertIn("new_value", logged_dict, "did not log new CPU value")
         self.assertEqual(
-            logged_dict["new_value"],
             decisions[0].cpu,
+            logged_dict["new_value"],
             "did not log correct new CPU value",
         )
 
-    async def test_logs_memory_scaling_decisions(self):
+    async def test_logs_memory_upscaling_decisions(self):
         apps = [
             ScalableApp(
                 "test",
@@ -342,41 +342,131 @@ class TestDecisionComponent(TestCase):
 
         logged_dict = mock_logger.info.call_args[0][0]
 
-        self.assertIn("appid", logged_dict, "did not log correct app id")
+        self.assertIn("appname", logged_dict, "did not log correct app id")
         self.assertEqual(
-            logged_dict["appid"], apps[0].id, "did not log correct app id"
+            apps[0].id, logged_dict["appname"], "did not log correct app id"
         )
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            logged_dict["event"], "MEM_SCALE", "did not log correct event"
+            "MEM_SCALE_UP", logged_dict["event"], "did not log correct event"
         )
 
         self.assertIn(
             "previous_value", logged_dict, "did not log previous memory value"
         )
         self.assertEqual(
-            logged_dict["previous_value"],
             apps[0].mem_allocated,
+            logged_dict["previous_value"],
             "did not log correct previous memory value",
         )
 
         self.assertIn("new_value", logged_dict, "did not log new memory value")
         self.assertEqual(
-            logged_dict["new_value"],
             decisions[0].mem,
+            logged_dict["new_value"],
             "did not log correct new memory value",
         )
 
-    async def test_logs_cpu_and_memory_scaling_decisions(self):
+    def test_logs_cpu_downscaling_decisions(self):
         apps = [
             ScalableApp(
                 "test",
                 cpu_allocated=0.5,
                 mem_allocated=128,
-                mem_threshold=0.2,
+                cpu_threshold=1,
+                app_stats=AppStats(cpu_usage=1, mem_usage=1),
+            )
+        ]
+        mock_logger = NonCallableMock()
+
+        decider = DecisionComponent(logger=mock_logger)
+        decisions = decider.decide_scaling_actions(apps)
+
+        mock_logger.info.assert_called()
+
+        logged_dict = mock_logger.info.call_args[0][0]
+
+        self.assertIn("appname", logged_dict, "did not log correct app id")
+        self.assertEqual(
+            apps[0].id, logged_dict["appname"], "did not log correct app id"
+        )
+
+        self.assertIn("event", logged_dict, "did not log an event")
+        self.assertEqual(
+            "CPU_SCALE_DOWN", logged_dict["event"], "did not log correct event"
+        )
+
+        self.assertIn(
+            "previous_value", logged_dict, "did not log previous CPU value"
+        )
+        self.assertEqual(
+            apps[0].cpu_allocated,
+            logged_dict["previous_value"],
+            "did not log correct previous CPU value",
+        )
+
+        self.assertIn("new_value", logged_dict, "did not log new CPU value")
+        self.assertEqual(
+            decisions[0].cpu,
+            logged_dict["new_value"],
+            "did not log correct new CPU value",
+        )
+
+    def test_logs_memory_downcaling_decisions(self):
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                mem_threshold=1,
+                app_stats=AppStats(cpu_usage=1, mem_usage=1),
+            )
+        ]
+        mock_logger = NonCallableMock()
+
+        decider = DecisionComponent(logger=mock_logger)
+        decisions = decider.decide_scaling_actions(apps)
+
+        mock_logger.info.assert_called()
+
+        logged_dict = mock_logger.info.call_args[0][0]
+
+        self.assertIn("appname", logged_dict, "did not log correct app id")
+        self.assertEqual(
+            apps[0].id, logged_dict["appname"], "did not log correct app id"
+        )
+
+        self.assertIn("event", logged_dict, "did not log an event")
+        self.assertEqual(
+            "MEM_SCALE_DOWN", logged_dict["event"], "did not log correct event"
+        )
+
+        self.assertIn(
+            "previous_value", logged_dict, "did not log previous memory value"
+        )
+        self.assertEqual(
+            apps[0].mem_allocated,
+            logged_dict["previous_value"],
+            "did not log correct previous memory value",
+        )
+
+        self.assertIn("new_value", logged_dict, "did not log new memory value")
+        self.assertEqual(
+            decisions[0].mem,
+            logged_dict["new_value"],
+            "did not log correct new memory value",
+        )
+
+    def test_logs_cpu_and_memory_scaling_decisions(self):
+        apps = [
+            ScalableApp(
+                "test",
+                cpu_allocated=0.5,
+                mem_allocated=128,
+                mem_threshold=1,
                 cpu_threshold=0.2,
-                app_stats=AppStats(cpu_usage=100, mem_usage=100),
+                app_stats=AppStats(cpu_usage=100, mem_usage=1),
             )
         ]
         mock_logger = NonCallableMock()
@@ -395,54 +485,54 @@ class TestDecisionComponent(TestCase):
         cpu_log_dict = logger_calls[0]
         mem_log_dict = logger_calls[1]
 
-        self.assertIn("appid", cpu_log_dict, "did not log correct app id")
+        self.assertIn("appname", cpu_log_dict, "did not log correct app id")
         self.assertEqual(
-            mem_log_dict["appid"], apps[0].id, "did not log correct app id"
+            mem_log_dict["appname"], apps[0].id, "did not log correct app id"
         )
 
         self.assertIn("event", cpu_log_dict, "did not log an event")
         self.assertEqual(
-            cpu_log_dict["event"], "CPU_SCALE", "did not log correct event"
+            "CPU_SCALE_UP", cpu_log_dict["event"], "did not log correct event"
         )
 
         self.assertIn(
             "previous_value", cpu_log_dict, "did not log previous memory value"
         )
         self.assertEqual(
-            cpu_log_dict["previous_value"],
             0.5,
+            cpu_log_dict["previous_value"],
             "did not log correct previous memory value",
         )
 
         self.assertIn("new_value", cpu_log_dict, "did not log new memory value")
         self.assertEqual(
-            cpu_log_dict["new_value"],
             decisions[0].cpu,
+            cpu_log_dict["new_value"],
             "did not log correct new memory value",
         )
 
-        self.assertIn("appid", mem_log_dict, "did not log correct app id")
+        self.assertIn("appname", mem_log_dict, "did not log correct app id")
         self.assertEqual(
-            mem_log_dict["appid"], apps[0].id, "did not log correct app id"
+            apps[0].id, mem_log_dict["appname"], "did not log correct app id"
         )
 
         self.assertIn("event", mem_log_dict, "did not log an event")
         self.assertEqual(
-            mem_log_dict["event"], "MEM_SCALE", "did not log correct event"
+           "MEM_SCALE_DOWN",  mem_log_dict["event"], "did not log correct event"
         )
 
         self.assertIn(
             "previous_value", mem_log_dict, "did not log previous memory value"
         )
         self.assertEqual(
-            mem_log_dict["previous_value"],
             apps[0].mem_allocated,
+            mem_log_dict["previous_value"],
             "did not log correct previous memory value",
         )
 
         self.assertIn("new_value", mem_log_dict, "did not log new memory value")
         self.assertEqual(
-            mem_log_dict["new_value"],
             decisions[0].mem,
+            mem_log_dict["new_value"],
             "did not log correct new memory value",
         )

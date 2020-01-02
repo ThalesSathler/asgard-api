@@ -45,10 +45,11 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_cpu
                         )
 
+                        cpu_change = "DOWN" if app.cpu_allocated > decision.cpu else "UP"
                         self.logger.info(
                             {
-                                "appid": app.id,
-                                "event": "CPU_SCALE",
+                                "appname": app.id,
+                                "event": f"CPU_SCALE_{cpu_change}",
                                 "previous_value": app.cpu_allocated,
                                 "new_value": decision.cpu,
                             }
@@ -76,10 +77,11 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_mem
                         )
 
+                        mem_change = "DOWN" if app.mem_allocated > decision.mem else "UP"
                         self.logger.info(
                             {
-                                "appid": app.id,
-                                "event": "MEM_SCALE",
+                                "appname": app.id,
+                                "event": f"MEM_SCALE_{mem_change}",
                                 "previous_value": app.mem_allocated,
                                 "new_value": decision.mem,
                             }
