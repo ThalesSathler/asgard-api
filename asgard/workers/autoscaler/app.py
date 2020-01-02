@@ -16,8 +16,8 @@ async def scale_all_apps(app: App):
     state_checker = PeriodicStateChecker(cloud_interface)
     decision_maker = DecisionComponent()
 
-    logger.info({"AUTOSCALER": "iniciando autoscaler"})
+    logger.debug({"AUTOSCALER": "iniciando autoscaler"})
     apps_stats = await state_checker.get_scalable_apps_stats()
-    logger.info({"FETCH_APPS": [app.id for app in apps_stats]})
+    logger.debug({"AUTOSCALER_FETCH_APPS": [app.id for app in apps_stats]})
     scaling_decisions = decision_maker.decide_scaling_actions(apps_stats)
     await cloud_interface.apply_decisions(scaling_decisions)

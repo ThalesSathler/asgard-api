@@ -56,6 +56,19 @@ class DecisionComponent(DecisionComponentInterface):
                         )
 
                         deploy_decision = True
+
+                    else:
+                        self.logger.debug(
+                            {
+                                "appname": app.id,
+                                "event": "CPU_SCALE_NONE",
+                                "reason": "usage within accepted margin",
+                                "usage": cpu_usage,
+                                "threshold": app.cpu_threshold,
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD
+                            }
+                        )
+
                 if app.is_set_to_scale_mem():
                     if (
                         mem_usage
@@ -88,6 +101,18 @@ class DecisionComponent(DecisionComponentInterface):
                         )
 
                         deploy_decision = True
+
+                    else:
+                        self.logger.debug(
+                            {
+                                "appname": app.id,
+                                "event": "MEM_SCALE_NONE",
+                                "reason": "usage within accepted margin",
+                                "usage": mem_usage,
+                                "threshold": app.mem_threshold,
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD
+                            }
+                        )
 
                 if deploy_decision:
                     decisions.append(decision)
