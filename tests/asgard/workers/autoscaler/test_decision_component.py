@@ -2,6 +2,7 @@ from unittest.mock import NonCallableMock
 
 from asynctest import TestCase
 
+import asgard.workers.autoscaler.decision_events as events
 from asgard.workers.autoscaler.simple_decision_component import (
     DecisionComponent,
 )
@@ -304,22 +305,24 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            logged_dict["event"], "CPU_SCALE_UP", "did not log correct event"
+            events.CPU_SCALE_UP,
+            logged_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(
             "previous_value", logged_dict, "did not log previous CPU value"
         )
         self.assertEqual(
-            apps[0].cpu_allocated,
             logged_dict["previous_value"],
+            apps[0].cpu_allocated,
             "did not log correct previous CPU value",
         )
 
         self.assertIn("new_value", logged_dict, "did not log new CPU value")
         self.assertEqual(
-            decisions[0].cpu,
             logged_dict["new_value"],
+            decisions[0].cpu,
             "did not log correct new CPU value",
         )
 
@@ -349,7 +352,9 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            "MEM_SCALE_UP", logged_dict["event"], "did not log correct event"
+            events.MEM_SCALE_UP,
+            logged_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(
@@ -394,7 +399,9 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            "CPU_SCALE_DOWN", logged_dict["event"], "did not log correct event"
+            events.CPU_SCALE_DOWN,
+            logged_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(
@@ -413,7 +420,7 @@ class TestDecisionComponent(TestCase):
             "did not log correct new CPU value",
         )
 
-    def test_logs_memory_downcaling_decisions(self):
+    def test_logs_memory_downscaling_decisions(self):
         apps = [
             ScalableApp(
                 "test",
@@ -439,7 +446,9 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            "MEM_SCALE_DOWN", logged_dict["event"], "did not log correct event"
+            events.MEM_SCALE_DOWN,
+            logged_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(
@@ -492,7 +501,9 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", cpu_log_dict, "did not log an event")
         self.assertEqual(
-            "CPU_SCALE_UP", cpu_log_dict["event"], "did not log correct event"
+            events.CPU_SCALE_UP,
+            cpu_log_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(
@@ -518,7 +529,9 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", mem_log_dict, "did not log an event")
         self.assertEqual(
-           "MEM_SCALE_DOWN",  mem_log_dict["event"], "did not log correct event"
+            events.MEM_SCALE_DOWN,
+            mem_log_dict["event"],
+            "did not log correct event",
         )
 
         self.assertIn(

@@ -1,5 +1,6 @@
 from typing import List
 
+import asgard.workers.autoscaler.decision_events as events
 from asgard.conf import settings
 from asgard.workers.autoscaler.decision_component_interface import (
     DecisionComponentInterface,
@@ -45,11 +46,15 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_cpu
                         )
 
-                        cpu_change = "DOWN" if app.cpu_allocated > decision.cpu else "UP"
+                        event = (
+                            events.CPU_SCALE_DOWN
+                            if app.cpu_allocated > decision.cpu
+                            else events.CPU_SCALE_UP
+                        )
                         self.logger.info(
                             {
                                 "appname": app.id,
-                                "event": f"CPU_SCALE_{cpu_change}",
+                                "event": event,
                                 "previous_value": app.cpu_allocated,
                                 "new_value": decision.cpu,
                             }
@@ -61,11 +66,11 @@ class DecisionComponent(DecisionComponentInterface):
                         self.logger.debug(
                             {
                                 "appname": app.id,
-                                "event": "CPU_SCALE_NONE",
+                                "event": events.CPU_SCALE_NONE,
                                 "reason": "usage within accepted margin",
                                 "usage": cpu_usage,
                                 "threshold": app.cpu_threshold,
-                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD,
                             }
                         )
 
@@ -90,11 +95,15 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_mem
                         )
 
-                        mem_change = "DOWN" if app.mem_allocated > decision.mem else "UP"
+                        event = (
+                            events.MEM_SCALE_DOWN
+                            if app.mem_allocated > decision.mem
+                            else events.MEM_SCALE_UP
+                        )
                         self.logger.info(
                             {
                                 "appname": app.id,
-                                "event": f"MEM_SCALE_{mem_change}",
+                                "event": event,
                                 "previous_value": app.mem_allocated,
                                 "new_value": decision.mem,
                             }
@@ -106,11 +115,11 @@ class DecisionComponent(DecisionComponentInterface):
                         self.logger.debug(
                             {
                                 "appname": app.id,
-                                "event": "MEM_SCALE_NONE",
+                                "event": events.MEM_SCALE_NONE,
                                 "reason": "usage within accepted margin",
                                 "usage": mem_usage,
                                 "threshold": app.mem_threshold,
-                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD,
                             }
                         )
 
