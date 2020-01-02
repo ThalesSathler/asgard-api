@@ -26,14 +26,7 @@ class DecisionComponent(DecisionComponentInterface):
 
                 if app.is_set_to_scale_cpu():
 
-                    if (
-                        cpu_usage
-                        > app.cpu_threshold
-                        + settings.AUTOSCALER_MARGIN_THRESHOLD
-                        or cpu_usage
-                        < app.cpu_threshold
-                        - settings.AUTOSCALER_MARGIN_THRESHOLD
-                    ):
+                    if abs(cpu_usage - app.cpu_threshold) > settings.AUTOSCALER_MARGIN_THRESHOLD:
                         new_cpu = (
                             cpu_usage * app.cpu_allocated
                         ) / app.cpu_threshold
@@ -75,14 +68,7 @@ class DecisionComponent(DecisionComponentInterface):
                         )
 
                 if app.is_set_to_scale_mem():
-                    if (
-                        mem_usage
-                        > app.mem_threshold
-                        + settings.AUTOSCALER_MARGIN_THRESHOLD
-                        or mem_usage
-                        < app.mem_threshold
-                        - settings.AUTOSCALER_MARGIN_THRESHOLD
-                    ):
+                    if abs(mem_usage - app.mem_threshold) > settings.AUTOSCALER_MARGIN_THRESHOLD:
                         new_mem = (
                             mem_usage * app.mem_allocated
                         ) / app.mem_threshold
