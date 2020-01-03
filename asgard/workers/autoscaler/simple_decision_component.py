@@ -1,6 +1,6 @@
 from typing import List
 
-import asgard.workers.autoscaler.decision_events as events
+from asgard.workers.autoscaler.decision_events import DecisionEvents
 from asgard.conf import settings
 from asgard.workers.autoscaler.decision_component_interface import (
     DecisionComponentInterface,
@@ -43,9 +43,9 @@ class DecisionComponent(DecisionComponentInterface):
                         )
 
                         event = (
-                            events.CPU_SCALE_DOWN
+                            DecisionEvents.CPU_SCALE_DOWN
                             if app.cpu_allocated > decision.cpu
-                            else events.CPU_SCALE_UP
+                            else DecisionEvents.CPU_SCALE_UP
                         )
                         self.logger.info(
                             {
@@ -62,7 +62,7 @@ class DecisionComponent(DecisionComponentInterface):
                         self.logger.debug(
                             {
                                 "appname": app.id,
-                                "event": events.CPU_SCALE_NONE,
+                                "event": DecisionEvents.CPU_SCALE_NONE,
                                 "reason": "usage within accepted margin",
                                 "usage": cpu_usage,
                                 "threshold": app.cpu_threshold,
@@ -88,9 +88,9 @@ class DecisionComponent(DecisionComponentInterface):
                         )
 
                         event = (
-                            events.MEM_SCALE_DOWN
+                            DecisionEvents.MEM_SCALE_DOWN
                             if app.mem_allocated > decision.mem
-                            else events.MEM_SCALE_UP
+                            else DecisionEvents.MEM_SCALE_UP
                         )
                         self.logger.info(
                             {
@@ -107,7 +107,7 @@ class DecisionComponent(DecisionComponentInterface):
                         self.logger.debug(
                             {
                                 "appname": app.id,
-                                "event": events.MEM_SCALE_NONE,
+                                "event": DecisionEvents.MEM_SCALE_NONE,
                                 "reason": "usage within accepted margin",
                                 "usage": mem_usage,
                                 "threshold": app.mem_threshold,

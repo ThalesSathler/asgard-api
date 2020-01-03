@@ -2,7 +2,7 @@ from unittest.mock import NonCallableMock
 
 from asynctest import TestCase
 
-import asgard.workers.autoscaler.decision_events as events
+from asgard.workers.autoscaler.decision_events import DecisionEvents
 from asgard.workers.autoscaler.simple_decision_component import (
     DecisionComponent,
 )
@@ -305,7 +305,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            events.CPU_SCALE_UP,
+            DecisionEvents.CPU_SCALE_UP,
             logged_dict["event"],
             "did not log correct event",
         )
@@ -352,7 +352,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            events.MEM_SCALE_UP,
+            DecisionEvents.MEM_SCALE_UP,
             logged_dict["event"],
             "did not log correct event",
         )
@@ -399,7 +399,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            events.CPU_SCALE_DOWN,
+            DecisionEvents.CPU_SCALE_DOWN,
             logged_dict["event"],
             "did not log correct event",
         )
@@ -446,7 +446,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", logged_dict, "did not log an event")
         self.assertEqual(
-            events.MEM_SCALE_DOWN,
+            DecisionEvents.MEM_SCALE_DOWN,
             logged_dict["event"],
             "did not log correct event",
         )
@@ -501,7 +501,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", cpu_log_dict, "did not log an event")
         self.assertEqual(
-            events.CPU_SCALE_UP,
+            DecisionEvents.CPU_SCALE_UP,
             cpu_log_dict["event"],
             "did not log correct event",
         )
@@ -529,7 +529,7 @@ class TestDecisionComponent(TestCase):
 
         self.assertIn("event", mem_log_dict, "did not log an event")
         self.assertEqual(
-            events.MEM_SCALE_DOWN,
+            DecisionEvents.MEM_SCALE_DOWN,
             mem_log_dict["event"],
             "did not log correct event",
         )
