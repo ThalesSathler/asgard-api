@@ -1,10 +1,10 @@
 from typing import List
 
-from asgard.workers.autoscaler.decision_events import DecisionEvents
 from asgard.conf import settings
 from asgard.workers.autoscaler.decision_component_interface import (
     DecisionComponentInterface,
 )
+from asgard.workers.autoscaler.decision_events import DecisionEvents
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
 from hollowman.log import logger as default_logger
