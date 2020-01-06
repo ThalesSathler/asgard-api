@@ -10,6 +10,46 @@ Cada aplicação é configurada por meio da parametrização de porcentages de u
 
 Por exemplo: se uma aplicação está configurada para manter o uso de memória em 50% e ocorre um spike de requests que aumenta o uso de memória para 80%, o autoscaler irá aumentar a quantidade de memória disponível para a aplicação de maneira que ela volte a utilizar 50% de memória. Quando o fluxo de requests voltar ao normal, o autoscaler notará uma redução no uso de memória e configurará a aplicação para usar a quantidade de memória habitual.
 
+Instalando Autoscaler no Asgard
+========================
+
+O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem configurada com o entrypoint correto e algumas varíaveis de ambiente.
+
+Entrypoint
+===============
+
+O entrypoint da imagem deve ser:
+
+```Bash
+python -m asgard.workers.autoscaler
+```
+
+Dentro do Asgard isso pode ser feito adicionando o seguinte parâmetro no primeiro nível do JSON de configuração da aplicação:
+
+```JSON
+"args": [
+    "python",
+    "-m",
+    "asgard.workers.autoscaler"
+  ]
+```
+
+Variáveis de Ambiente Obrigatórias
+===================================
+
+- `ASGARD_ASGARD_API_ADDRESS`: endereço da API do Asgard;
+- `ASGARD_AUTOSCALER_AUTH_TOKEN`: token para autenticacao na API do Asgard. Esse token deve ser criado diretamente na base de dados do Asgard e é feita para um único usuário de uma única conta;
+- `ASGARD_AUTOSCALER_MARGIN_THRESHOLD`: valor entre 0 e 1 indicando a margem de erro que Autoscaler considera aceitável ao avaliar as aplicações.
+    Eg.: Se uma aplicação está configurada para utilizar 80% de um recurso e a margem é de 0.05 o Autoscaler não tomará nenhuma ação caso o uso da aplicação esteja entre 75-85%
+
+Variáveis de Ambiente Opcionais
+================================
+
+- `ASGARD_MAX_CPU_SCALE_LIMIT`: valor padrão para `asgard.autoscale.max_cpu_limit` caso este não seja especificado pela aplicação;
+- `ASGARD_MIN_CPU_SCALE_LIMIT`: valor padrão para `asgard.autoscale.min_cpu_limit` caso este não seja especificado pela aplicação;
+- `ASGARD_MAX_MEM_SCALE_LIMIT`: valor padrão para `asgard.autoscale.max_mem_limit` caso este não seja especificado pela aplicação;
+- `ASGARD_MIN_MEM_SCALE_LIMIT`: valor padrão para `asgard.autoscale.min_mem_limit` caso este não seja especificado pela aplicação;
+
 Configurando aplicações
 =======================
 
@@ -27,4 +67,3 @@ A configuração é feita individualmente para cada aplicação, por meio das se
 - `asgard.autoscale.min_mem_limit`: valor mínimo que o autoscaler pode aplicar como parâmetro para memória
 
 Aplicações que não possuam as labels `asgard.autoscale.cpu` ou `asgard.autoscale.mem` serão ignoradas pelo autoscaler.
-
