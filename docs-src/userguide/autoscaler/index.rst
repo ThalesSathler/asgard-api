@@ -8,24 +8,24 @@ Funcionamento básico
 
 Cada aplicação é configurada por meio da parametrização de porcentages de uso de memória e CPU que as aplicações devem manter. O Autoscaler fará polling dos status das aplicações e, caso verifique que o uso de recursos de uma aplicação não esteja de acordo com os parâmetros configurados, fará ajustes das configurações e solicitará um redeploy.
 
-Por exemplo: se uma aplicação está configurada para manter o uso de memória em 50% e ocorre um spike de requests que aumenta o uso de memória para 80%, o autoscaler irá aumentar a quantidade de memória disponível para a aplicação de maneira que ela volte a utilizar 50% de memória. Quando o fluxo de requests voltar ao normal, o autoscaler notará uma redução no uso de memória e configurará a aplicação para usar a quantidade de memória habitual.
+Por exemplo: se uma aplicação está configurada para manter o uso de memória em 50% e ocorre um spike de requests que aumenta o uso de memória para 80%, o autoscaler irá aumentar a quantidade de memória disponível para a aplicação de maneira que ela volte a utilizar 50% de memória. Quando o uso de memória voltar ao valor anterior, o autoscaler notará e reduzirá a memória disponível para a aplicação.
 
 Instalando Autoscaler no Asgard
 --------------------------------
 
-O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem configurada com o entrypoint correto e algumas varíaveis de ambiente.
+O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.
 
-Entrypoint
+Comando de Inicialização
 --------------------------------
 
-O entrypoint da imagem deve ser:
+O seguinte comando deve ser passado para a imagem no momento de sua inicialização:
 
 .. code:: bash
 
  python -m asgard.workers.autoscaler
 
 
-Dentro do Asgard isso pode ser feito adicionando o seguinte parâmetro no primeiro nível do JSON de configuração da aplicação:
+Dentro do Asgard, isso pode ser feito adicionando o seguinte parâmetro no primeiro nível do JSON de configuração da aplicação:
 
 .. code:: javascript
 
@@ -41,7 +41,7 @@ Variáveis de Ambiente Obrigatórias
 - ``ASGARD_ASGARD_API_ADDRESS``: endereço da API do Asgard;
 - ``ASGARD_AUTOSCALER_AUTH_TOKEN``: token para autenticacao na API do Asgard. Esse token deve ser criado diretamente na base de dados do Asgard e é feita para um único usuário de uma única conta;
 - ``ASGARD_AUTOSCALER_MARGIN_THRESHOLD``: valor entre 0 e 1 indicando a margem de erro que Autoscaler considera aceitável ao avaliar as aplicações.
-    Eg.: Se uma aplicação está configurada para utilizar 80% de um recurso e a margem é de 0.05 o Autoscaler não tomará nenhuma ação caso o uso da aplicação esteja entre 75-85%
+    Eg.: Se uma aplicação está configurada para utilizar 80% de um recurso (CPU ou memória) e a margem é de 0.05 o Autoscaler não tomará nenhuma ação caso o uso da aplicação esteja entre 75-85%
 
 Variáveis de Ambiente Opcionais
 --------------------------------
@@ -66,5 +66,7 @@ A configuração é feita individualmente para cada aplicação, por meio das se
 - ``asgard.autoscale.min_cpu_limit``: valor mínimo que o autoscaler pode aplicar como parâmetro para CPU
 - ``asgard.autoscale.max_mem_limit``: valor máximo que o autoscaler pode aplicar como parâmetro para memória
 - ``asgard.autoscale.min_mem_limit``: valor mínimo que o autoscaler pode aplicar como parâmetro para memória
+
+Os valores para limite mínimo e máximo utilizam as mesmas unidades de medida utilizadas para configuração dos recursos na interface do Asgard.
 
 Aplicações que não possuam as labels ``asgard.autoscale.cpu`` ou ``asgard.autoscale.mem`` serão ignoradas pelo autoscaler.
