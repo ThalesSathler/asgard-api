@@ -1,0 +1,22 @@
+0.93.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #192 <https://github.com/B2W-BIT/asgard-api/pull/192>`_] Autoscaler :: Adicionados logs mais detalhados
+- [`PR #190 <https://github.com/B2W-BIT/asgard-api/pull/190>`_] Documentação do autoscaler
+
+Raw Commits: `0.93.0 <https://github.com/B2W-BIT/asgard-api/compare/0.92.0...0.93.0>`_
+
+Atualização
+-----------
+
+Três novas variáveis de ambiente foram criadas e são obrigatórias:
+
+- ``ASGARD_API_ADDRESS``
+- ``AUTOSCALER_AUTH_TOKEN``
+- ``AUTOSCALER_MARGIN_THRESHOLD``
+
+Mais detalhes na página que :ref:`documenta todas as env vars <asgard.envvars>`.
