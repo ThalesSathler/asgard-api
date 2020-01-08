@@ -39,7 +39,6 @@
 <span class="kn">from</span> <span class="nn">asgard.workers.autoscaler.simple_decision_component</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DecisionComponent</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">asgard.workers.converters.asgard_converter</span> <span class="k">import</span> <span class="n">DecisionConverter</span>
 <span class="kn">from</span> <span class="nn">hollowman.log</span> <span class="k">import</span> <span class="n">logger</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
@@ -51,11 +50,10 @@
     <span class="n">state_checker</span> <span class="o">=</span> <span class="n">PeriodicStateChecker</span><span class="p">(</span><span class="n">cloud_interface</span><span class="p">)</span>
     <span class="n">decision_maker</span> <span class="o">=</span> <span class="n">DecisionComponent</span><span class="p">()</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">({</span><span class="s2">&quot;AUTOSCALER&quot;</span><span class="p">:</span> <span class="s2">&quot;iniciando autoscaler&quot;</span><span class="p">})</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">({</span><span class="s2">&quot;AUTOSCALER&quot;</span><span class="p">:</span> <span class="s2">&quot;iniciando autoscaler&quot;</span><span class="p">})</span>
     <span class="n">apps_stats</span> <span class="o">=</span> <span class="k">await</span> <span class="n">state_checker</span><span class="o">.</span><span class="n">get_scalable_apps_stats</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">({</span><span class="s2">&quot;FETCH_APPS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">app</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">apps_stats</span><span class="p">]})</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">({</span><span class="s2">&quot;AUTOSCALER_FETCH_APPS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">app</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">apps_stats</span><span class="p">]})</span>
     <span class="n">scaling_decisions</span> <span class="o">=</span> <span class="n">decision_maker</span><span class="o">.</span><span class="n">decide_scaling_actions</span><span class="p">(</span><span class="n">apps_stats</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">({</span><span class="s2">&quot;DECISIONS&quot;</span><span class="p">:</span> <span class="n">DecisionConverter</span><span class="o">.</span><span class="n">all_to_dto</span><span class="p">(</span><span class="n">scaling_decisions</span><span class="p">)})</span>
     <span class="k">await</span> <span class="n">cloud_interface</span><span class="o">.</span><span class="n">apply_decisions</span><span class="p">(</span><span class="n">scaling_decisions</span><span class="p">)</span></div>
 </pre></div>
 

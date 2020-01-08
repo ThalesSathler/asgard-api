@@ -56,22 +56,22 @@
     <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">json_response</span><span class="p">(</span><span class="n">AppStatsResource</span><span class="p">(</span><span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">)</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="app_stats"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.apps.app_stats">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span>
     <span class="p">[</span><span class="s2">&quot;/apps/{app_id:[.a-z0-9/-]+}/stats&quot;</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 <span class="nd">@auth_required</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">app_stats</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="k">await</span> <span class="n">get_app_stats</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">Interval</span><span class="o">.</span><span class="n">ONE_HOUR</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">get_app_stats</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">Interval</span><span class="o">.</span><span class="n">ONE_HOUR</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="app_stats_avg_1min"><a class="viewcode-back" href="../../../src/asgard/asgard.api.html#asgard.api.apps.app_stats_avg_1min">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span>
     <span class="p">[</span><span class="s2">&quot;/apps/{app_id:[.a-z0-9/-]+}/stats/avg-1min&quot;</span><span class="p">],</span>
     <span class="nb">type</span><span class="o">=</span><span class="n">RouteTypes</span><span class="o">.</span><span class="n">HTTP</span><span class="p">,</span>
     <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 <span class="nd">@auth_required</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">app_stats_avg_1min</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">web</span><span class="o">.</span><span class="n">Request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="k">await</span> <span class="n">get_app_stats</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">Interval</span><span class="o">.</span><span class="n">ONE_MINUTE</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">get_app_stats</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">Interval</span><span class="o">.</span><span class="n">ONE_MINUTE</span><span class="p">)</span>
 </pre></div>
 
           </div>
