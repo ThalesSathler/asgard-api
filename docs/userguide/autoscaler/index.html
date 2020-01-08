@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Utilizando o Autoscaler &#8212; documentação Asgard API </title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" />
+    <link rel="next" title="Guia de desenvolvimento" href="../../devguide/index.html" />
+    <link rel="prev" title="Variáveis de Ambiente" href="../install/envvars.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="utilizando-o-autoscaler">
+<h1>Utilizando o Autoscaler<a class="headerlink" href="#utilizando-o-autoscaler" title="Link permanente para este título">¶</a></h1>
+<p>O Autoscaler é um worker que coleta e processa métricas de aplicações para determinar os parâmetros de CPU e memória que devem ser configurados para cada aplicação dentro do Asgard. Atualmente o Autoscaler só é capaz de ajustar a quantidade de CPU e memória das instâncias mas não o número de instâncias.</p>
+<div class="section" id="funcionamento-basico">
+<h2>Funcionamento básico<a class="headerlink" href="#funcionamento-basico" title="Link permanente para este título">¶</a></h2>
+<p>Cada aplicação é configurada por meio da parametrização de porcentages de uso de memória e CPU que as aplicações devem manter. O Autoscaler fará polling dos status das aplicações e, caso verifique que o uso de recursos de uma aplicação não esteja de acordo com os parâmetros configurados, fará ajustes das configurações e solicitará um redeploy.</p>
+<p>Por exemplo: se uma aplicação está configurada para manter o uso de memória em 50% e ocorre um spike de requests que aumenta o uso de memória para 80%, o autoscaler irá aumentar a quantidade de memória disponível para a aplicação de maneira que ela volte a utilizar 50% de memória. Quando o uso de memória voltar ao valor anterior, o autoscaler notará e reduzirá a memória disponível para a aplicação.</p>
+</div>
+<div class="section" id="instalando-autoscaler-no-asgard">
+<h2>Instalando Autoscaler no Asgard<a class="headerlink" href="#instalando-autoscaler-no-asgard" title="Link permanente para este título">¶</a></h2>
+<p>O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.</p>
+</div>
+<div class="section" id="comando-de-inicializacao">
+<h2>Comando de Inicialização<a class="headerlink" href="#comando-de-inicializacao" title="Link permanente para este título">¶</a></h2>
+<p>O seguinte comando deve ser passado para a imagem no momento de sua inicialização:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m asgard.workers.autoscaler
+</pre></div>
+</div>
+<p>Dentro do Asgard, isso pode ser feito adicionando o seguinte parâmetro no primeiro nível do JSON de configuração da aplicação:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;args&quot;</span><span class="o">:</span> <span class="p">[</span>
+  <span class="s2">&quot;python&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;asgard.workers.autoscaler&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="variaveis-de-ambiente-obrigatorias">
+<h2>Variáveis de Ambiente Obrigatórias<a class="headerlink" href="#variaveis-de-ambiente-obrigatorias" title="Link permanente para este título">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_ASGARD_API_ADDRESS</span></code>: endereço da API do Asgard;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_AUTOSCALER_AUTH_TOKEN</span></code>: token para autenticacao na API do Asgard. Esse token deve ser criado diretamente na base de dados do Asgard e é feita para um único usuário de uma única conta;</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ASGARD_AUTOSCALER_MARGIN_THRESHOLD</span></code>: valor entre 0 e 1 indicando a margem de erro que Autoscaler considera aceitável ao avaliar as aplicações.</dt><dd><p>Eg.: Se uma aplicação está configurada para utilizar 80% de um recurso (CPU ou memória) e a margem é de 0.05 o Autoscaler não tomará nenhuma ação caso o uso da aplicação esteja entre 75-85%</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="variaveis-de-ambiente-opcionais">
+<h2>Variáveis de Ambiente Opcionais<a class="headerlink" href="#variaveis-de-ambiente-opcionais" title="Link permanente para este título">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_MAX_CPU_SCALE_LIMIT</span></code>: valor padrão para <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.max_cpu_limit</span></code> caso este não seja especificado pela aplicação;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_MIN_CPU_SCALE_LIMIT</span></code>: valor padrão para <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.min_cpu_limit</span></code> caso este não seja especificado pela aplicação;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_MAX_MEM_SCALE_LIMIT</span></code>: valor padrão para <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.max_mem_limit</span></code> caso este não seja especificado pela aplicação;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ASGARD_MIN_MEM_SCALE_LIMIT</span></code>: valor padrão para <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.min_mem_limit</span></code> caso este não seja especificado pela aplicação;</p></li>
+</ul>
+</div>
+<div class="section" id="configurando-aplicacoes">
+<h2>Configurando aplicações<a class="headerlink" href="#configurando-aplicacoes" title="Link permanente para este título">¶</a></h2>
+<p>A configuração é feita individualmente para cada aplicação, por meio das seguintes labels:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.cpu</span></code>: um valor entre 0 e 1 que indica a porcentagem de uso de CPU que o autoscaler deve manter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.mem</span></code>: um valor entre 0 e 1 que indica a porcentagem de uso de memória que o autoscaler deve manter</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.ignore</span></code>: lista separada por ponto e vírgula indicando parâmetros que o autoscaler deve ignorar. Essa label serve para que features do autoscaler possam ser desativadas sem a necessidade de alteração de outras labels. São itens válidos para a lista:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpu</span></code>: Desativar autoscaling de CPU para a aplicação;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code>: Desativar autoscaling de memória para a aplicação;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code>: Desativar completamente autoscaling para a aplicação</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.max_cpu_limit</span></code>: valor máximo que o autoscaler pode aplicar como parâmetro para CPU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.min_cpu_limit</span></code>: valor mínimo que o autoscaler pode aplicar como parâmetro para CPU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.max_mem_limit</span></code>: valor máximo que o autoscaler pode aplicar como parâmetro para memória</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asgard.autoscale.min_mem_limit</span></code>: valor mínimo que o autoscaler pode aplicar como parâmetro para memória</p></li>
+</ul>
+<p>Os valores para limite mínimo e máximo utilizam as mesmas unidades de medida utilizadas para configuração dos recursos na interface do Asgard.</p>
+<p>Aplicações que não possuam as labels <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.cpu</span></code> ou <code class="docutils literal notranslate"><span class="pre">asgard.autoscale.mem</span></code> serão ignoradas pelo autoscaler.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Asgard API</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introdução</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Guia de Usuário</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html">Instalando a Asgard API</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilizando o Autoscaler</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../devguide/index.html">Guia de desenvolvimento</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Guia de Usuário</a><ul>
+      <li>Previous: <a href="../install/envvars.html" title="capítulo anterior">Variáveis de Ambiente</a></li>
+      <li>Next: <a href="../../devguide/index.html" title="próximo capítulo">Guia de desenvolvimento</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, B2W Digital.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/userguide/autoscaler/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

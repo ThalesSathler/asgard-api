@@ -5,3 +5,4 @@ Guia de Usuário
     :maxdepth: 2
 
     install/index.rst
+    autoscaler/index.rst

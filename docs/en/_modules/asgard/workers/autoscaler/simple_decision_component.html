@@ -37,11 +37,16 @@
 <span class="kn">from</span> <span class="nn">asgard.workers.autoscaler.decision_component_interface</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">DecisionComponentInterface</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">asgard.workers.autoscaler.decision_events</span> <span class="k">import</span> <span class="n">DecisionEvents</span>
 <span class="kn">from</span> <span class="nn">asgard.workers.models.decision</span> <span class="k">import</span> <span class="n">Decision</span>
 <span class="kn">from</span> <span class="nn">asgard.workers.models.scalable_app</span> <span class="k">import</span> <span class="n">ScalableApp</span>
+<span class="kn">from</span> <span class="nn">hollowman.log</span> <span class="k">import</span> <span class="n">logger</span> <span class="k">as</span> <span class="n">default_logger</span>
 
 
 <div class="viewcode-block" id="DecisionComponent"><a class="viewcode-back" href="../../../../src/asgard/asgard.workers.autoscaler.html#asgard.workers.autoscaler.simple_decision_component.DecisionComponent">[docs]</a><span class="k">class</span> <span class="nc">DecisionComponent</span><span class="p">(</span><span class="n">DecisionComponentInterface</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">default_logger</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
 <div class="viewcode-block" id="DecisionComponent.decide_scaling_actions"><a class="viewcode-back" href="../../../../src/asgard/asgard.workers.autoscaler.html#asgard.workers.autoscaler.simple_decision_component.DecisionComponent.decide_scaling_actions">[docs]</a>    <span class="k">def</span> <span class="nf">decide_scaling_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ScalableApp</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Decision</span><span class="p">]:</span>
         <span class="n">decisions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">apps</span><span class="p">:</span>
@@ -55,12 +60,8 @@
                 <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">is_set_to_scale_cpu</span><span class="p">():</span>
 
                     <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">cpu_usage</span>
-                        <span class="o">&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_threshold</span>
-                        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
-                        <span class="ow">or</span> <span class="n">cpu_usage</span>
-                        <span class="o">&lt;</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_threshold</span>
-                        <span class="o">-</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
+                        <span class="nb">abs</span><span class="p">(</span><span class="n">cpu_usage</span> <span class="o">-</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_threshold</span><span class="p">)</span>
+                        <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
                     <span class="p">):</span>
                         <span class="n">new_cpu</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="n">cpu_usage</span> <span class="o">*</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_allocated</span>
@@ -74,15 +75,38 @@
                             <span class="k">else</span> <span class="n">new_cpu</span>
                         <span class="p">)</span>
 
+                        <span class="n">event</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">CPU_SCALE_DOWN</span>
+                            <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_allocated</span> <span class="o">&gt;</span> <span class="n">decision</span><span class="o">.</span><span class="n">cpu</span>
+                            <span class="k">else</span> <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">CPU_SCALE_UP</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;appname&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+                                <span class="s2">&quot;previous_value&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_allocated</span><span class="p">,</span>
+                                <span class="s2">&quot;new_value&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="o">.</span><span class="n">cpu</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">)</span>
+
                         <span class="n">deploy_decision</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;appname&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">CPU_SCALE_NONE</span><span class="p">,</span>
+                                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;usage within accepted margin&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;usage&quot;</span><span class="p">:</span> <span class="n">cpu_usage</span><span class="p">,</span>
+                                <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">cpu_threshold</span><span class="p">,</span>
+                                <span class="s2">&quot;accepted_margin&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">)</span>
+
                 <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">is_set_to_scale_mem</span><span class="p">():</span>
                     <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">mem_usage</span>
-                        <span class="o">&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_threshold</span>
-                        <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
-                        <span class="ow">or</span> <span class="n">mem_usage</span>
-                        <span class="o">&lt;</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_threshold</span>
-                        <span class="o">-</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
+                        <span class="nb">abs</span><span class="p">(</span><span class="n">mem_usage</span> <span class="o">-</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_threshold</span><span class="p">)</span>
+                        <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span>
                     <span class="p">):</span>
                         <span class="n">new_mem</span> <span class="o">=</span> <span class="p">(</span>
                             <span class="n">mem_usage</span> <span class="o">*</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_allocated</span>
@@ -96,7 +120,33 @@
                             <span class="k">else</span> <span class="n">new_mem</span>
                         <span class="p">)</span>
 
+                        <span class="n">event</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">MEM_SCALE_DOWN</span>
+                            <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_allocated</span> <span class="o">&gt;</span> <span class="n">decision</span><span class="o">.</span><span class="n">mem</span>
+                            <span class="k">else</span> <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">MEM_SCALE_UP</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;appname&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+                                <span class="s2">&quot;previous_value&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_allocated</span><span class="p">,</span>
+                                <span class="s2">&quot;new_value&quot;</span><span class="p">:</span> <span class="n">decision</span><span class="o">.</span><span class="n">mem</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">)</span>
+
                         <span class="n">deploy_decision</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;appname&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">DecisionEvents</span><span class="o">.</span><span class="n">MEM_SCALE_NONE</span><span class="p">,</span>
+                                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;usage within accepted margin&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;usage&quot;</span><span class="p">:</span> <span class="n">mem_usage</span><span class="p">,</span>
+                                <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">mem_threshold</span><span class="p">,</span>
+                                <span class="s2">&quot;accepted_margin&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTOSCALER_MARGIN_THRESHOLD</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">deploy_decision</span><span class="p">:</span>
                     <span class="n">decisions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decision</span><span class="p">)</span>
