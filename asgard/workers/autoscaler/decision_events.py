@@ -1,0 +1,8 @@
+class DecisionEvents:
+    CPU_SCALE_UP: str = "CPU_SCALE_UP"
+    CPU_SCALE_DOWN: str = "CPU_SCALE_DOWN"
+    CPU_SCALE_NONE: str = "CPU_SCALE_NONE"
+
+    MEM_SCALE_UP: str = "MEM_SCALE_UP"
+    MEM_SCALE_DOWN: str = "MEM_SCALE_DOWN"
+    MEM_SCALE_NONE: str = "MEM_SCALE_NONE"

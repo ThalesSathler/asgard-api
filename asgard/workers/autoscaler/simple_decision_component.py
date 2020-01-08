@@ -4,11 +4,16 @@ from asgard.conf import settings
 from asgard.workers.autoscaler.decision_component_interface import (
     DecisionComponentInterface,
 )
+from asgard.workers.autoscaler.decision_events import DecisionEvents
 from asgard.workers.models.decision import Decision
 from asgard.workers.models.scalable_app import ScalableApp
+from hollowman.log import logger as default_logger
 
 
 class DecisionComponent(DecisionComponentInterface):
+    def __init__(self, logger=default_logger):
+        self.logger = logger
+
     def decide_scaling_actions(self, apps: List[ScalableApp]) -> List[Decision]:
         decisions = []
         for app in apps:
@@ -22,12 +27,8 @@ class DecisionComponent(DecisionComponentInterface):
                 if app.is_set_to_scale_cpu():
 
                     if (
-                        cpu_usage
-                        > app.cpu_threshold
-                        + settings.AUTOSCALER_MARGIN_THRESHOLD
-                        or cpu_usage
-                        < app.cpu_threshold
-                        - settings.AUTOSCALER_MARGIN_THRESHOLD
+                        abs(cpu_usage - app.cpu_threshold)
+                        > settings.AUTOSCALER_MARGIN_THRESHOLD
                     ):
                         new_cpu = (
                             cpu_usage * app.cpu_allocated
@@ -41,15 +42,38 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_cpu
                         )
 
+                        event = (
+                            DecisionEvents.CPU_SCALE_DOWN
+                            if app.cpu_allocated > decision.cpu
+                            else DecisionEvents.CPU_SCALE_UP
+                        )
+                        self.logger.info(
+                            {
+                                "appname": app.id,
+                                "event": event,
+                                "previous_value": app.cpu_allocated,
+                                "new_value": decision.cpu,
+                            }
+                        )
+
                         deploy_decision = True
+
+                    else:
+                        self.logger.debug(
+                            {
+                                "appname": app.id,
+                                "event": DecisionEvents.CPU_SCALE_NONE,
+                                "reason": "usage within accepted margin",
+                                "usage": cpu_usage,
+                                "threshold": app.cpu_threshold,
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD,
+                            }
+                        )
+
                 if app.is_set_to_scale_mem():
                     if (
-                        mem_usage
-                        > app.mem_threshold
-                        + settings.AUTOSCALER_MARGIN_THRESHOLD
-                        or mem_usage
-                        < app.mem_threshold
-                        - settings.AUTOSCALER_MARGIN_THRESHOLD
+                        abs(mem_usage - app.mem_threshold)
+                        > settings.AUTOSCALER_MARGIN_THRESHOLD
                     ):
                         new_mem = (
                             mem_usage * app.mem_allocated
@@ -63,7 +87,33 @@ class DecisionComponent(DecisionComponentInterface):
                             else new_mem
                         )
 
+                        event = (
+                            DecisionEvents.MEM_SCALE_DOWN
+                            if app.mem_allocated > decision.mem
+                            else DecisionEvents.MEM_SCALE_UP
+                        )
+                        self.logger.info(
+                            {
+                                "appname": app.id,
+                                "event": event,
+                                "previous_value": app.mem_allocated,
+                                "new_value": decision.mem,
+                            }
+                        )
+
                         deploy_decision = True
+
+                    else:
+                        self.logger.debug(
+                            {
+                                "appname": app.id,
+                                "event": DecisionEvents.MEM_SCALE_NONE,
+                                "reason": "usage within accepted margin",
+                                "usage": mem_usage,
+                                "threshold": app.mem_threshold,
+                                "accepted_margin": settings.AUTOSCALER_MARGIN_THRESHOLD,
+                            }
+                        )
 
                 if deploy_decision:
                     decisions.append(decision)

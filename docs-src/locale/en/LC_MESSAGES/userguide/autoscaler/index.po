@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, B2W Digital
+# This file is distributed under the same license as the Asgard API package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Asgard API \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-01-08 15:04-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../userguide/autoscaler/index.rst:2
+msgid "Utilizando o Autoscaler"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:4
+msgid ""
+"O Autoscaler é um worker que coleta e processa métricas de aplicações "
+"para determinar os parâmetros de CPU e memória que devem ser configurados"
+" para cada aplicação dentro do Asgard. Atualmente o Autoscaler só é capaz"
+" de ajustar a quantidade de CPU e memória das instâncias mas não o número"
+" de instâncias."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:7
+msgid "Funcionamento básico"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:9
+msgid ""
+"Cada aplicação é configurada por meio da parametrização de porcentages de"
+" uso de memória e CPU que as aplicações devem manter. O Autoscaler fará "
+"polling dos status das aplicações e, caso verifique que o uso de recursos"
+" de uma aplicação não esteja de acordo com os parâmetros configurados, "
+"fará ajustes das configurações e solicitará um redeploy."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:11
+#, python-format
+msgid ""
+"Por exemplo: se uma aplicação está configurada para manter o uso de "
+"memória em 50% e ocorre um spike de requests que aumenta o uso de memória"
+" para 80%, o autoscaler irá aumentar a quantidade de memória disponível "
+"para a aplicação de maneira que ela volte a utilizar 50% de memória. "
+"Quando o uso de memória voltar ao valor anterior, o autoscaler notará e "
+"reduzirá a memória disponível para a aplicação."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:14
+msgid "Instalando Autoscaler no Asgard"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:16
+msgid ""
+"O autoscaler está contido na própria imagem docker do Asgard. Para "
+"utilizá-lo é necessário inicializar a imagem passando o comando correto e"
+" configurar algumas varíaveis de ambiente."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:19
+msgid "Comando de Inicialização"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:21
+msgid ""
+"O seguinte comando deve ser passado para a imagem no momento de sua "
+"inicialização:"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:28
+msgid ""
+"Dentro do Asgard, isso pode ser feito adicionando o seguinte parâmetro no"
+" primeiro nível do JSON de configuração da aplicação:"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:39
+msgid "Variáveis de Ambiente Obrigatórias"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:41
+msgid "``ASGARD_ASGARD_API_ADDRESS``: endereço da API do Asgard;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:42
+msgid ""
+"``ASGARD_AUTOSCALER_AUTH_TOKEN``: token para autenticacao na API do "
+"Asgard. Esse token deve ser criado diretamente na base de dados do Asgard"
+" e é feita para um único usuário de uma única conta;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:44
+msgid ""
+"``ASGARD_AUTOSCALER_MARGIN_THRESHOLD``: valor entre 0 e 1 indicando a "
+"margem de erro que Autoscaler considera aceitável ao avaliar as "
+"aplicações."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:44
+#, python-format
+msgid ""
+"Eg.: Se uma aplicação está configurada para utilizar 80% de um recurso "
+"(CPU ou memória) e a margem é de 0.05 o Autoscaler não tomará nenhuma "
+"ação caso o uso da aplicação esteja entre 75-85%"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:47
+msgid "Variáveis de Ambiente Opcionais"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:49
+msgid ""
+"``ASGARD_MAX_CPU_SCALE_LIMIT``: valor padrão para "
+"``asgard.autoscale.max_cpu_limit`` caso este não seja especificado pela "
+"aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:50
+msgid ""
+"``ASGARD_MIN_CPU_SCALE_LIMIT``: valor padrão para "
+"``asgard.autoscale.min_cpu_limit`` caso este não seja especificado pela "
+"aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:51
+msgid ""
+"``ASGARD_MAX_MEM_SCALE_LIMIT``: valor padrão para "
+"``asgard.autoscale.max_mem_limit`` caso este não seja especificado pela "
+"aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:52
+msgid ""
+"``ASGARD_MIN_MEM_SCALE_LIMIT``: valor padrão para "
+"``asgard.autoscale.min_mem_limit`` caso este não seja especificado pela "
+"aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:55
+msgid "Configurando aplicações"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:57
+msgid ""
+"A configuração é feita individualmente para cada aplicação, por meio das "
+"seguintes labels:"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:59
+msgid ""
+"``asgard.autoscale.cpu``: um valor entre 0 e 1 que indica a porcentagem "
+"de uso de CPU que o autoscaler deve manter"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:60
+msgid ""
+"``asgard.autoscale.mem``: um valor entre 0 e 1 que indica a porcentagem "
+"de uso de memória que o autoscaler deve manter"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:63
+msgid ""
+"``asgard.autoscale.ignore``: lista separada por ponto e vírgula indicando"
+" parâmetros que o autoscaler deve ignorar. Essa label serve para que "
+"features do autoscaler possam ser desativadas sem a necessidade de "
+"alteração de outras labels. São itens válidos para a lista:"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:62
+msgid "``cpu``: Desativar autoscaling de CPU para a aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:63
+msgid "``mem``: Desativar autoscaling de memória para a aplicação;"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:64
+msgid "``all``: Desativar completamente autoscaling para a aplicação"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:65
+msgid ""
+"``asgard.autoscale.max_cpu_limit``: valor máximo que o autoscaler pode "
+"aplicar como parâmetro para CPU"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:66
+msgid ""
+"``asgard.autoscale.min_cpu_limit``: valor mínimo que o autoscaler pode "
+"aplicar como parâmetro para CPU"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:67
+msgid ""
+"``asgard.autoscale.max_mem_limit``: valor máximo que o autoscaler pode "
+"aplicar como parâmetro para memória"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:68
+msgid ""
+"``asgard.autoscale.min_mem_limit``: valor mínimo que o autoscaler pode "
+"aplicar como parâmetro para memória"
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:70
+msgid ""
+"Os valores para limite mínimo e máximo utilizam as mesmas unidades de "
+"medida utilizadas para configuração dos recursos na interface do Asgard."
+msgstr ""
+
+#: ../../userguide/autoscaler/index.rst:72
+msgid ""
+"Aplicações que não possuam as labels ``asgard.autoscale.cpu`` ou "
+"``asgard.autoscale.mem`` serão ignoradas pelo autoscaler."
+msgstr ""
+
