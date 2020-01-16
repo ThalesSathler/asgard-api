@@ -35,3 +35,21 @@ class ScalableApp:
 
     def is_set_to_scale(self) -> bool:
         return self.is_set_to_scale_cpu() or self.is_set_to_scale_mem()
+
+    def get_cpu_usage(self) -> float:
+        return self.app_stats.cpu_usage
+
+    def get_mem_usage(self) -> float:
+        return self.app_stats.mem_usage
+
+    def cpu_needs_scaling(self) -> bool:
+        return (
+            abs(self.get_cpu_usage() - self.cpu_threshold)
+            > settings.AUTOSCALER_MARGIN_THRESHOLD
+        )
+
+    def mem_needs_scaling(self) -> bool:
+        return (
+            abs(self.get_mem_usage() - self.mem_threshold)
+            > settings.AUTOSCALER_MARGIN_THRESHOLD
+        )
