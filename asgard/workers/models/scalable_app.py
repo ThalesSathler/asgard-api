@@ -1,5 +1,6 @@
-from asgard.conf import settings
 from typing import Optional
+
+from asgard.conf import settings
 from asgard.workers.models.app_stats import AppStats
 
 
