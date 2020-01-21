@@ -13,7 +13,7 @@ Por exemplo: se uma aplicação está configurada para manter o uso de memória 
 Instalando Autoscaler no Asgard
 --------------------------------
 
-O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.
+O autoscaler está contido na própria `imagem docker do Asgard <https://hub.docker.com/r/b2wasgard/asgard-api>`_. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.
 
 Comando de Inicialização
 --------------------------------
