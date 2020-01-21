@@ -24,7 +24,7 @@ class DecisionComponent(DecisionComponentInterface):
             if app.app_stats:
                 decision = Decision(app.id)
 
-                if app.is_set_to_scale_cpu() and app.cpu_needs_scaling():
+                if app.cpu_needs_scaling():
                     new_cpu = (
                         app.get_cpu_usage() * app.cpu_allocated
                     ) / app.cpu_threshold
@@ -63,7 +63,7 @@ class DecisionComponent(DecisionComponentInterface):
                         }
                     )
 
-                if app.is_set_to_scale_mem() and app.mem_needs_scaling():
+                if app.mem_needs_scaling():
                     new_mem = (
                         app.get_mem_usage() * app.mem_allocated
                     ) / app.mem_threshold

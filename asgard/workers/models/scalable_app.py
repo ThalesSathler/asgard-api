@@ -45,13 +45,13 @@ class ScalableApp:
         return self.app_stats.mem_usage
 
     def cpu_needs_scaling(self) -> bool:
-        return (
+        return self.is_set_to_scale_cpu() and (
             abs(self.get_cpu_usage() - self.cpu_threshold)
             > settings.AUTOSCALER_MARGIN_THRESHOLD
         )
 
     def mem_needs_scaling(self) -> bool:
-        return (
+        return self.is_set_to_scale_mem() and (
             abs(self.get_mem_usage() - self.mem_threshold)
             > settings.AUTOSCALER_MARGIN_THRESHOLD
         )
