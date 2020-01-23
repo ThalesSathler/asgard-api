@@ -313,8 +313,8 @@ class TestFetchAppsData(TestCase):
                 "stats": {
                     "type": "ASGARD",
                     "errors": {},
-                    "cpu_pct": "0.93",
-                    "ram_pct": "8.91",
+                    "cpu_pct": "93",
+                    "ram_pct": "80.9",
                     "cpu_thr_pct": "0.06",
                 }
             }
@@ -326,7 +326,7 @@ class TestFetchAppsData(TestCase):
                 payload=payload,
             )
 
-            fixture = AppStats(cpu_usage=0.93, mem_usage=8.91)
+            fixture = AppStats(cpu_usage=0.93, mem_usage=0.809)
 
             app_stats = await scaler.get_app_stats(app)
 
