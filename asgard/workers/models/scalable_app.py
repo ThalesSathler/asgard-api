@@ -1,3 +1,5 @@
+from typing import Optional
+
 from asgard.conf import settings
 from asgard.workers.models.app_stats import AppStats
 
@@ -6,11 +8,11 @@ class ScalableApp:
     def __init__(
         self,
         appid: str,
-        cpu_allocated: float = None,
-        mem_allocated: float = None,
-        cpu_threshold: float = None,
-        mem_threshold: float = None,
-        app_stats: AppStats = None,
+        cpu_allocated: Optional[float] = None,
+        mem_allocated: Optional[float] = None,
+        cpu_threshold: Optional[float] = None,
+        mem_threshold: Optional[float] = None,
+        app_stats: Optional[AppStats] = None,
         min_cpu_scale_limit: float = settings.MIN_CPU_SCALE_LIMIT,
         max_cpu_scale_limit: float = settings.MAX_CPU_SCALE_LIMIT,
         min_mem_scale_limit: float = settings.MIN_MEM_SCALE_LIMIT,
@@ -35,3 +37,21 @@ class ScalableApp:
 
     def is_set_to_scale(self) -> bool:
         return self.is_set_to_scale_cpu() or self.is_set_to_scale_mem()
+
+    def get_cpu_usage(self) -> Optional[float]:
+        return self.app_stats.cpu_usage
+
+    def get_mem_usage(self) -> Optional[float]:
+        return self.app_stats.mem_usage
+
+    def cpu_needs_scaling(self) -> bool:
+        return self.is_set_to_scale_cpu() and (
+            abs(self.get_cpu_usage() - self.cpu_threshold)
+            > settings.AUTOSCALER_MARGIN_THRESHOLD
+        )
+
+    def mem_needs_scaling(self) -> bool:
+        return self.is_set_to_scale_mem() and (
+            abs(self.get_mem_usage() - self.mem_threshold)
+            > settings.AUTOSCALER_MARGIN_THRESHOLD
+        )

@@ -259,6 +259,7 @@ class ChronosScheduledJobsBackendTest(TestCase):
         returned_job = await self.backend.create_job(
             self.asgard_job, user, account
         )
+        await asyncio.sleep(0.3)
         stored_job = await self.backend.get_job_by_id(
             returned_job.id, user, account
         )
