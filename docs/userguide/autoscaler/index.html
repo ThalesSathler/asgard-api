@@ -44,6 +44,7 @@
 <div class="section" id="instalando-autoscaler-no-asgard">
 <h2>Instalando Autoscaler no Asgard<a class="headerlink" href="#instalando-autoscaler-no-asgard" title="Link permanente para este título">¶</a></h2>
 <p>O autoscaler está contido na própria <a class="reference external" href="https://hub.docker.com/r/b2wasgard/asgard-api">imagem docker do Asgard</a>. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.</p>
+<p>O autoscaler performará de maneira linearmente proporcional ao número de aplicações gerenciadas pelo Asgard e o número de aplicações configuradas para utilizar o autoscaler - tanto em uso de memória quanto de processador. O mínimo recomendado são 128mb de RAM e 10% de um processador moderno para um ambiente com 20 aplicações onde uma delas está configurada para uso do autoscaler. O Autoscaler não é capaz de utilizar mais do que uma unidade de processamento.</p>
 </div>
 <div class="section" id="comando-de-inicializacao">
 <h2>Comando de Inicialização<a class="headerlink" href="#comando-de-inicializacao" title="Link permanente para este título">¶</a></h2>
