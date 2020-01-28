@@ -77,8 +77,8 @@ class AppStatsConverter(Converter[AppStats, AppStatsDto]):
             return None
 
         app_stats = AppStats()
-        app_stats.cpu_usage = float(dto_object.stats.cpu_pct)
-        app_stats.mem_usage = float(dto_object.stats.ram_pct)
+        app_stats.cpu_usage = float(dto_object.stats.cpu_pct) / 100
+        app_stats.mem_usage = float(dto_object.stats.ram_pct) / 100
 
         return app_stats
 
