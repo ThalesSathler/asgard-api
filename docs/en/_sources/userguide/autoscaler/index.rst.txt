@@ -6,14 +6,18 @@ O Autoscaler é um worker que coleta e processa métricas de aplicações para d
 Funcionamento básico
 ---------------------
 
-Cada aplicação é configurada por meio da parametrização de porcentages de uso de memória e CPU que as aplicações devem manter. O Autoscaler fará polling dos status das aplicações e, caso verifique que o uso de recursos de uma aplicação não esteja de acordo com os parâmetros configurados, fará ajustes das configurações e solicitará um redeploy.
+Cada aplicação é configurada por meio da parametrização de porcentages de uso de memória e CPU que as aplicações devem manter. O Autoscaler verificará os status das aplicações a cada 5 minutos e, caso verifique que o uso de recursos de uma aplicação não esteja de acordo com os parâmetros configurados, fará ajustes das configurações e solicitará um redeploy.
 
 Por exemplo: se uma aplicação está configurada para manter o uso de memória em 50% e ocorre um spike de requests que aumenta o uso de memória para 80%, o autoscaler irá aumentar a quantidade de memória disponível para a aplicação de maneira que ela volte a utilizar 50% de memória. Quando o uso de memória voltar ao valor anterior, o autoscaler notará e reduzirá a memória disponível para a aplicação.
 
 Instalando Autoscaler no Asgard
 --------------------------------
 
-O autoscaler está contido na própria imagem docker do Asgard. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.
+O autoscaler está contido na própria `imagem docker do Asgard <https://hub.docker.com/r/b2wasgard/asgard-api>`_. Para utilizá-lo é necessário inicializar a imagem passando o comando correto e configurar algumas varíaveis de ambiente.
+
+Os recursos mínimos testados para funcionamento normal do autoscaler são 128mb de RAM e 10% de um processador moderno para um ambiente com 20 aplicações onde uma delas está configurada para ser escalada. A recomendação é sempre que a performance do autoscaler seja monitorada para garantir que os recursos configurados sejam suficientes para o ambiente específico. O Autoscaler não é capaz de utilizar mais do que uma unidade de processamento.
+
+Importante ressaltar que o Asgard não filtra as aplicações antes de enviar ao autoscaler. Isso significa que o autoscaler deve ser configurado para suportar a filtragem de todas as aplicações gerenciadas pelo Asgard. A `issue #198 <https://github.com/b2wdigital/asgard-api/issues/198>`_ foi aberta para melhoria desse cenário.
 
 Comando de Inicialização
 --------------------------------

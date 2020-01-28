@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 10:55-0300\n"
+"POT-Creation-Date: 2020-01-07 16:19-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,16 +29,8 @@ msgstr ""
 msgid "asgard.http.auth.auth\\_required module"
 msgstr ""
 
-#: asgard.http.auth.auth_required.TokenTypes:1 of
-msgid "Base: :class:`object`"
-msgstr ""
-
 #: ../../src/asgard/asgard.http.auth.rst:16
 msgid "asgard.http.auth.jwt module"
-msgstr ""
-
-#: asgard.http.auth.jwt.jwt_encode:1 of
-msgid "Encodes a new JWT Token https://tools.ietf.org/html/rfc7519#section-4.1.5"
 msgstr ""
 
 #: ../../src/asgard/asgard.http.auth.rst:25
