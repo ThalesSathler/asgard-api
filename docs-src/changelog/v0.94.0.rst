@@ -1,0 +1,11 @@
+0.94.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #197 <https://github.com/B2W-BIT/asgard-api/pull/197>`_] Atualização de documentação do Autoscaler
+- [`PR #196 <https://github.com/B2W-BIT/asgard-api/pull/196>`_] Consertada decisões quando app já está utilizando recurso ao máx/min
+
+Raw Commits: `0.94.0 <https://github.com/B2W-BIT/asgard-api/compare/0.93.0...0.94.0>`_
