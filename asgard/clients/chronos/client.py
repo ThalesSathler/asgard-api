@@ -67,6 +67,11 @@ class ChronosClient:
         return jobs
 
     async def create_job(self, job: ChronosJob) -> ChronosJob:
+        """
+        O Chronos, pelo menos até a versão v3.0.2, tem um problema com jobs que usam timezone diferente de UTC.
+        Quando colocamos, por exemplo, tz=America/Sao_Paulo o jobs fica programado para a hora certa, mas quando o momento
+        chega o job fica com status OVERDUE mas *não roda*, nem aparece nos logs a tentativa de rodar o jobs.
+        """
         await self._request("post", f"{self.base_url}/iso8601", json=job.dict())
         return job
 
