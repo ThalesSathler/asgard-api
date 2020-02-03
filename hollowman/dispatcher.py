@@ -5,6 +5,7 @@ from marathon.models import MarathonDeployment, MarathonQueueItem
 from marathon.models.task import MarathonTask
 
 from hollowman.filters.appname import AddAppNameFilter
+from hollowman.filters.autodisablehttp import AutoDisableHTTPFilter
 from hollowman.filters.basicconstraint import BasicConstraintFilter
 from hollowman.filters.defaultscale import DefaultScaleFilter
 from hollowman.filters.forcepull import ForcePullFilter
@@ -48,6 +49,7 @@ FILTERS_PIPELINE = {
             AddOwnerConstraintFilter(),
             IncompatibleFieldsFilter(),
             LabelsFilter(),
+            AutoDisableHTTPFilter(),
         ),
     },
     FilterType.RESPONSE: {

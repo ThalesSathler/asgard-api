@@ -246,3 +246,39 @@ class DispatchResponse404Test(BaseTestCase):
                 )
                 response = client.get("/v2/apps/foo", headers=auth_header)
                 self.assertEqual(404, response.status_code)
+
+    @with_json_fixture("../fixtures/single_full_app_with_http_labels.json")
+    def test_disables_http_when_suspending_app(self, single_full_app_fixture):
+        auth_header = {
+            "Authorization": "Token 69ed620926be4067a36402c3f7e9ddf0"
+        }
+        app_id = "/dev/my-app"
+        single_full_app_fixture["id"] = app_id
+        single_full_app_fixture["instances"] = 0  # Suspend app
+
+        expected_labels = single_full_app_fixture["labels"].copy()
+        expected_labels["traefik.enable"] = False
+
+        with application.test_client() as client:
+            with RequestsMock() as rsps:
+                rsps.add(
+                    method="GET",
+                    url=conf.MARATHON_ADDRESSES[0] + f"/v2/apps//dev{app_id}",
+                    body=json.dumps({"app": single_full_app_fixture}),
+                    status=200,
+                )
+
+                rsps.add(
+                    method="POST",
+                    url=conf.MARATHON_ADDRESSES[0] + f"/v2/apps{app_id}",
+                    body=json.dumps(
+                        {**single_full_app_fixture, "labels": expected_labels}
+                    ),
+                    status=200,
+                )
+                response = client.post(
+                    f"/v2/apps{app_id}",
+                    headers=auth_header,
+                    json=single_full_app_fixture,
+                )
+                self.assertEqual(200, response.status_code)
