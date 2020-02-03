@@ -37,7 +37,7 @@ class Request(HTTPWrapper):
         A junção das duas apps (request_app (aqui modified_app) e original_app (aqui base_app)) é
         sempre feita pegando todos os dados da original_app e jogando os dados da requst_app "em cima".
         Não podemos usar o `minimal=Fase` na request_app pois para requests que estão *incompletos*, ou seja,
-        sem alguns vampos (já veremos exemplo) se esássemos minimal=False, iríramos apagar esses "campos faltantes"
+        sem alguns vampos (já veremos exemplo) se usássemos minimal=False, iríramos apagar esses "campos faltantes"
         da original_app. Exemplos:
 
             request_app = {"instances": 10}

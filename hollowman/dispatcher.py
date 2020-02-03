@@ -100,6 +100,11 @@ def _get_callable_if_exist(filter_, method_name):
 def _dispatch(
     request_or_response, filters_pipeline, filter_method_name, *filter_args
 ):
+    """
+    Função que chama todos os filtros de uma pipeline.
+    Se o filtro retorna algo que faz evualuate para True a app em questão é incluída no upstream request/response
+    Se o filtro retorna algo que é False, essa app não é incluída no upstream request/response
+    """
     for filter_ in filters_pipeline:
         func = _get_callable_if_exist(filter_, filter_method_name)
         if not func or func(request_or_response.request.user, *filter_args):
