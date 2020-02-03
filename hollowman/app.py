@@ -23,7 +23,6 @@ from hollowman.conf import (
 )
 from hollowman.hollowman_flask import HollowmanFlask
 from hollowman.log import dev_null_logger, logger
-from hollowman.metrics.zk.routes import zk_metrics_blueprint
 from hollowman.plugins import load_all_metrics_plugins, register_plugin
 from hollowman.routes import all_routes
 
@@ -41,10 +40,6 @@ application.secret_key = SECRET_KEY
 application.permanent_session_lifetime = timedelta(minutes=5)
 application.config["JWT_AUTH_URL_RULE"] = None
 application.config["JWT_EXPIRATION_DELTA"] = timedelta(days=7)
-
-application.register_blueprint(
-    zk_metrics_blueprint, url_prefix="/_cat/metrics/zk"
-)
 
 application.register_blueprint(all_routes, url_prefix="")
 application.register_blueprint(account_blueprint, url_prefix="/hollow/account")
