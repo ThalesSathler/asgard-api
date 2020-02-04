@@ -5,9 +5,9 @@ class AutoDisableHTTPFilter:
     def write(self, user, request_app, original_app):
         if self.is_http_app(request_app):
             if request_app.instances == 0:
-                self._set_traefik_label_to(request_app, False)
+                self._set_traefik_label_to(request_app, "false")
             if request_app.instances > 0:
-                self._set_traefik_label_to(request_app, True)
+                self._set_traefik_label_to(request_app, "true")
 
         return request_app
 

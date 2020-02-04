@@ -30,7 +30,7 @@ class TestAutoDisableHTTPFilter(unittest.TestCase):
             self.user, self.request_app, AsgardApp()
         )
 
-        self.assertFalse(filtered_app.labels["traefik.enable"])
+        self.assertEqual("false", filtered_app.labels["traefik.enable"])
 
     def test_should_not_modify_non_http_apps(self):
         self.request_app.instances = 0
@@ -60,7 +60,7 @@ class TestAutoDisableHTTPFilter(unittest.TestCase):
         filtered_app = self.filter.write(
             self.user, self.request_app, self.original_app
         )
-        self.assertFalse(filtered_app.labels["traefik.enable"])
+        self.assertEqual("false", filtered_app.labels["traefik.enable"])
 
     def test_should_enable_http_when_scaling_from_zero_to_some(self):
         self.original_app.instances = 0
