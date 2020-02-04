@@ -72,4 +72,4 @@ class TestAutoDisableHTTPFilter(unittest.TestCase):
         filtered_app = self.filter.write(
             self.user, self.request_app, self.original_app
         )
-        self.assertTrue(self.request_app.labels["traefik.enable"])
+        self.assertEqual("true", self.request_app.labels["traefik.enable"])
