@@ -1,0 +1,12 @@
+0.95.0
+======
+
+Asgard API
+----------
+
+
+- [`PR #200 <https://github.com/B2W-BIT/asgard-api/pull/200>`_] Documentando o bug do Chronos em relação a jobs com tz
+- [`PR #201 <https://github.com/B2W-BIT/asgard-api/pull/201>`_] Feature/autodisablehttp filter
+- [`PR #202 <https://github.com/B2W-BIT/asgard-api/pull/202>`_] Removendo API de métricas do Zookeeper
+
+Raw Commits: `0.95.0 <https://github.com/B2W-BIT/asgard-api/compare/0.94.0...0.95.0>`_
