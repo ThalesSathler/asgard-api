@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-05 11:10-0300\n"
+"POT-Creation-Date: 2020-02-04 14:19-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,16 +40,6 @@ msgid ""
 "em questão expõe. Um exemplo é o client para o chronos:"
 msgstr ""
 
-#: asgard.clients.chronos.ChronosClient.get_job_by_id:1 of
-msgid ""
-"Retorna um Job do Chronos, dado seu id (nome). Raise "
-"asgard.http.exceptions.HTTPNotFound() se o job não existir"
-msgstr ""
-
-#: asgard.clients.chronos.ChronosClient.search:1 of
-msgid "Procura por todos os jobs que contenham o termo `name` em seu nome."
-msgstr ""
-
 #: ../../devguide/code/clients.rst:17
 msgid ""
 "Como exemplo o método "
@@ -73,4 +63,14 @@ msgid ""
 "usar múltiplas ações de um client para exeutar uma de suas próprias "
 "ações."
 msgstr ""
+
+#~ msgid ""
+#~ "Retorna um Job do Chronos, dado "
+#~ "seu id (nome). Raise "
+#~ "asgard.http.exceptions.HTTPNotFound() se o job "
+#~ "não existir"
+#~ msgstr ""
+
+#~ msgid "Procura por todos os jobs que contenham o termo `name` em seu nome."
+#~ msgstr ""
 

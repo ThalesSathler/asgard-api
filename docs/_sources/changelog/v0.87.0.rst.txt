@@ -13,3 +13,15 @@ Asgard API
     - [`PR #140 <https://github.com/B2W-BIT/asgard-api/pull/140>`_] Conversão asgard.models.* -> chronos.models.*
     - [`PR #144 <https://github.com/B2W-BIT/asgard-api/pull/144>`_] Update Docs, explicação sobre ModelConverterInterface
     - [`PR #142 <https://github.com/B2W-BIT/asgard-api/pull/142>`_] GET /jobs/{job_id}
+
+
+
+
+Atualização
+-----------
+
+1 nova variável de ambiente foi criadas nessa versão e precisa ser preenchida:
+
+- ASGARD_SCHEDULED_JOBS_SERVICE_ADDRESS
+
+Mais detalhes sobre essas variávels podem ser encontrados :ref:`aqui <asgard.envvars>`.

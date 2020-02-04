@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 15:50-0300\n"
+"POT-Creation-Date: 2020-02-04 14:19-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,5 +66,25 @@ msgstr ""
 msgid ""
 "[`PR #142 <https://github.com/B2W-BIT/asgard-api/pull/142>`_] GET "
 "/jobs/{job_id}"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:21
+msgid "Atualização"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:23
+msgid ""
+"1 nova variável de ambiente foi criadas nessa versão e precisa ser "
+"preenchida:"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:25
+msgid "ASGARD_SCHEDULED_JOBS_SERVICE_ADDRESS"
+msgstr ""
+
+#: ../../changelog/v0.87.0.rst:27
+msgid ""
+"Mais detalhes sobre essas variávels podem ser encontrados :ref:`aqui "
+"<asgard.envvars>`."
 msgstr ""
 
