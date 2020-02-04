@@ -45,7 +45,7 @@ class AuthenticationTest(BaseTestCase):
     def test_it_creates_a_response_using_a_dict_of_headers(self, fixture):
         """
         O atributo headers de um objeto `request.models.Response` é utilizado
-        para gerar o response do holloman. Por ser do tipo `CaseInsentiveDict`,
+        para gerar o response do hollowman. Por ser do tipo `CaseInsentiveDict`,
         quebra a implementação do flask e faz com que seja necessário o typecast
         para `dict`.
         """

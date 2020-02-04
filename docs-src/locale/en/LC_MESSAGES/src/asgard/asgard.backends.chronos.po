@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-31 15:46-0300\n"
+"POT-Creation-Date: 2020-02-04 14:19-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,17 +33,16 @@ msgstr ""
 msgid "asgard.backends.chronos.impl module"
 msgstr ""
 
-#: asgard.backends.chronos.impl.ChronosScheduledJobsBackend:1 of
-msgid "Base: :class:`asgard.backends.jobs.ScheduledJobsBackend`"
-msgstr ""
-
-#: asgard.backends.chronos.impl.ChronosScheduledJobsBackend.update_job:1 of
-msgid ""
-"Atualiza um Job no Chronos. Se o job não existir, lança exception "
-"NotFoundEntity"
-msgstr ""
-
 #: ../../src/asgard/asgard.backends.chronos.rst:24
 msgid "Module contents"
 msgstr ""
+
+#~ msgid "Base: :class:`asgard.backends.jobs.ScheduledJobsBackend`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Atualiza um Job no Chronos. Se o"
+#~ " job não existir, lança exception "
+#~ "NotFoundEntity"
+#~ msgstr ""
 

@@ -1,0 +1,109 @@
+{
+   "args" : [
+      "sleep",
+      "100"
+   ],
+   "cmd" : "sleep 1000",
+   "constraints" : [
+      [
+         "hostname",
+         "LIKE",
+         "srv2.*"
+      ]
+   ],
+   "container" : {
+      "docker" : {
+         "forcePullImage" : false,
+         "image" : "mesosphere:marathon/latest",
+         "network" : "BRIDGE",
+         "parameters" : [
+            {
+               "key" : "name",
+               "value" : "kdc"
+            }
+         ],
+         "portMappings" : [
+            {
+               "containerPort" : 80,
+               "hostPort" : 0,
+               "labels" : {
+                  "vip" : "192.168.0.1:80"
+               },
+               "name" : "http",
+               "protocol" : "tcp",
+               "servicePort" : 10019
+            }
+         ],
+         "privileged" : false
+      },
+      "type" : "DOCKER",
+      "volumes" : [
+         {
+            "containerPath" : "/docker_storage",
+            "external" : null,
+            "hostPath" : "/hdd/tools/docker/registry",
+            "mode" : "RW",
+            "persistent" : null
+         }
+      ]
+   },
+   "cpus" : 0.1,
+   "dependencies" : [
+      "/prod/group"
+   ],
+   "disk" : 0,
+   "env" : {
+      "XPS1" : "Test",
+      "XPS2" : "Rest"
+   },
+   "fetch" : [
+      {
+         "uri" : "https://foo.com/setup.py"
+      },
+      {
+         "cache" : true,
+         "executable" : false,
+         "extract" : true,
+         "outputFile" : "newname.zip",
+         "uri" : "https://foo.com/archive.zip"
+      }
+   ],
+   "healthChecks" : [
+      {
+         "command" : null,
+         "gracePeriodSeconds" : 30,
+         "ignoreHttp1xx" : false,
+         "intervalSeconds" : 10,
+         "maxConsecutiveFailures" : 3,
+         "path" : "/healthcheck",
+         "portIndex" : 0,
+         "protocol" : "HTTP",
+         "timeoutSeconds" : 5
+      }
+   ],
+   "id" : "/foo",
+   "instances" : 2,
+   "labels" : {
+      "note" : "Away from olympus",
+      "owner" : "zeus",
+      "traefik.enable" : "true",
+      "traefik.frontend.entryPoints" : "https",
+      "traefik.frontend.rule" : "Host:api.hmg.asgard.b2w.io",
+      "traefik.portindex" : "0",
+      "traefik.tags" : "asgard-private"
+   },
+   "mem" : 16,
+   "secrets" : {
+      "secret1" : {
+         "source" : "/db/password"
+      },
+      "secret3" : {
+         "source" : "/foo2"
+      }
+   },
+   "upgradeStrategy" : {
+      "maximumOverCapacity" : 0,
+      "minimumHealthCapacity" : 0
+   },
+   "user" : "root"
+}
