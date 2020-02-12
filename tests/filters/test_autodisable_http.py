@@ -73,3 +73,12 @@ class TestAutoDisableHTTPFilter(unittest.TestCase):
             self.user, self.request_app, self.original_app
         )
         self.assertEqual("true", self.request_app.labels["traefik.enable"])
+
+    def test_shouldnt_modify_app_if_instances_fields_is_not_present(self):
+        self.request_app.instances = None
+        self.original_app = AsgardApp()
+
+        self.request_app.labels["traefik.enable"] = "true"
+
+        self.filter.write(self.user, self.request_app, self.original_app)
+        self.assertEqual("true", self.request_app.labels["traefik.enable"])
