@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Asgard API \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-04 14:19-0300\n"
+"POT-Creation-Date: 2020-02-12 16:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,25 @@ msgstr ""
 msgid ""
 "Todos os clients devem enviar e retornar modelos dos recursos que a API "
 "em questão expõe. Um exemplo é o client para o chronos:"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.create_job:1 of
+msgid ""
+"O Chronos, pelo menos até a versão v3.0.2, tem um problema com jobs que "
+"usam timezone diferente de UTC. Quando colocamos, por exemplo, "
+"tz=America/Sao_Paulo o jobs fica programado para a hora certa, mas quando"
+" o momento chega o job fica com status OVERDUE mas *não roda*, nem "
+"aparece nos logs a tentativa de rodar o jobs."
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.get_job_by_id:1 of
+msgid ""
+"Retorna um Job do Chronos, dado seu id (nome). Raise "
+"asgard.http.exceptions.HTTPNotFound() se o job não existir"
+msgstr ""
+
+#: asgard.clients.chronos.ChronosClient.search:1 of
+msgid "Procura por todos os jobs que contenham o termo `name` em seu nome."
 msgstr ""
 
 #: ../../devguide/code/clients.rst:17

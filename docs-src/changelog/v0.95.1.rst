@@ -1,0 +1,10 @@
+0.95.1
+======
+
+Asgard API
+----------
+
+
+- [`PR #204 <https://github.com/B2W-BIT/asgard-api/pull/204>`_] Não devemos mexer em apps que não possuam o campo instances
+
+Raw Commits: `0.95.1 <https://github.com/B2W-BIT/asgard-api/compare/0.95.0...0.95.1>`_
