@@ -1,6 +1,5 @@
 from aioresponses import aioresponses
 from asynctest import TestCase, mock
-from tests.utils import ClusterOptions, build_mesos_cluster, get_fixture
 
 from asgard.backends.base import Interval
 from asgard.backends.marathon.impl import MarathonAppsBackend
@@ -11,6 +10,7 @@ from asgard.models.account import Account
 from asgard.models.user import User
 from hollowman import log
 from itests.util import USER_WITH_MULTIPLE_ACCOUNTS_DICT, ACCOUNT_DEV_DICT
+from tests.utils import ClusterOptions, build_mesos_cluster, get_fixture
 
 
 class MesosOrchestratorTest(TestCase):

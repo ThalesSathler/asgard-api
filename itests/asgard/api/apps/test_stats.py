@@ -2,17 +2,17 @@ from datetime import datetime, timezone
 from http import HTTPStatus
 
 from aioresponses import aioresponses
-from tests.utils import build_mesos_cluster, get_fixture
+from asyncworker.testing import HttpClientContext
 
 from asgard.api.apps import app
 from asgard.conf import settings
 from asgard.models.app import AppStats
-from asyncworker.testing import HttpClientContext
 from itests.util import (
     BaseTestCase,
     ACCOUNT_DEV_ID,
     USER_WITH_MULTIPLE_ACCOUNTS_AUTH_KEY,
 )
+from tests.utils import build_mesos_cluster, get_fixture
 
 
 class AppStatsTest(BaseTestCase):

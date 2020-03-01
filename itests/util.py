@@ -5,6 +5,7 @@ import string
 from collections import defaultdict
 from typing import Any, Dict, List, Type, Set
 
+import asyncworker
 from aioelasticsearch import Elasticsearch
 from aiohttp import web, ClientSession
 from aiohttp.test_utils import TestClient, TestServer
@@ -14,7 +15,6 @@ from sqlalchemy import Table
 from sqlalchemy.sql.ddl import CreateTable
 
 import asgard.backends.users
-import asyncworker
 from asgard.conf import settings
 from asgard.db import _SessionMaker
 from asgard.http.client import HttpClient

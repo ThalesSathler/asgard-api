@@ -1,12 +1,12 @@
 from aioresponses import aioresponses
-from tests.utils import ClusterOptions, build_mesos_cluster
+from asyncworker.testing import HttpClientContext
 
 from asgard.api.agents import app
 from asgard.models.account import AccountDB
 from asgard.models.user import UserDB
 from asgard.models.user_has_account import UserHasAccount
-from asyncworker.testing import HttpClientContext
 from itests.util import BaseTestCase
+from tests.utils import ClusterOptions, build_mesos_cluster
 
 
 class AgentsApiEndpointTest(BaseTestCase):

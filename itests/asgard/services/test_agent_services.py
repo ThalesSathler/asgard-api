@@ -1,5 +1,5 @@
 from aioresponses import aioresponses
-from tests.utils import build_mesos_cluster
+from asyncworker.testing import HttpClientContext
 
 from asgard.api.apps import app
 from asgard.backends.marathon.impl import MarathonAppsBackend
@@ -7,12 +7,12 @@ from asgard.backends.mesos.impl import MesosAgentsBackend, MesosOrchestrator
 from asgard.models.account import Account
 from asgard.models.user import User
 from asgard.services.agents import AgentsService
-from asyncworker.testing import HttpClientContext
 from itests.util import (
     BaseTestCase,
     USER_WITH_MULTIPLE_ACCOUNTS_DICT,
     ACCOUNT_DEV_DICT,
 )
+from tests.utils import build_mesos_cluster
 
 
 class AgentsServiceTest(BaseTestCase):
