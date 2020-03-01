@@ -51,6 +51,8 @@ jobs:
       - image: b2wasgard/zookeeper:0.0.1
       - <<: *chronos
       - image: postgres:9.4
+        environment:
+          POSTGRES_HOST_AUTH_METHOD: "trust"
       - image: elasticsearch:5.5-alpine
 
     steps:
@@ -83,6 +85,8 @@ jobs:
         - image: b2wasgard/zookeeper:0.0.1
         - <<: *chronos
         - image: postgres:9.4
+          environment:
+            POSTGRES_HOST_AUTH_METHOD: "trust"
         - image: elasticsearch:5.5-alpine
   py36x:
       <<: *template
@@ -92,6 +96,8 @@ jobs:
         - image: b2wasgard/zookeeper:0.0.1
         - <<: *chronos
         - image: postgres:9.4
+          environment:
+            POSTGRES_HOST_AUTH_METHOD: "trust"
         - image: elasticsearch:5.5-alpine
 workflows:
   version: 2
