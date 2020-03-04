@@ -1,9 +1,9 @@
-# Asgard API [![Build Status](https://travis-ci.org/B2W-BIT/asgard-api.svg?branch=master)](https://travis-ci.org/B2W-BIT/asgard-api)
+# Asgard API [![Build Status](https://travis-ci.org/b2wdigital/asgard-api.svg?branch=master)](https://travis-ci.org/b2wdigital/asgard-api)
 
 |   |   |
 |---:|---|
-|Test Coverage   |[![codecov](https://codecov.io/gh/B2W-BIT/asgard-api/branch/master/graph/badge.svg?flag=unittest)](https://codecov.io/gh/B2W-BIT/asgard-api)   |
-|Typehint Coverage  |![codecov](https://codecov.io/gh/B2W-BIT/asgard-api/branch/master/graph/badge.svg?flag=typehint)   |
+|Test Coverage   |[![codecov](https://codecov.io/gh/b2wdigital/asgard-api/branch/master/graph/badge.svg?flag=unittest)](https://codecov.io/gh/b2wdigital/asgard-api)   |
+|Typehint Coverage  |![codecov](https://codecov.io/gh/b2wdigital/asgard-api/branch/master/graph/badge.svg?flag=typehint)   |
 
 
 https://docs.asgard.b2w.io
