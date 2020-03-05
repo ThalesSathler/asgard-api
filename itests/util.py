@@ -248,7 +248,7 @@ class BaseTestCase(TestCase):
                 route_def.register(http_app.router)
 
         self.server = TestServer(
-            http_app, port=os.environ["TEST_ASYNCWORKER_HTTP_PORT"]
+            http_app, port=int(os.getenv("TEST_ASYNCWORKER_HTTP_PORT") or 0)
         )
         client = TestClient(self.server)
         await self.server.start_server()

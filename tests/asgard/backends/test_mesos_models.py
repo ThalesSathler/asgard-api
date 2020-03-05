@@ -3,7 +3,6 @@ from asynctest import TestCase
 
 from asgard.backends.mesos.models.agent import MesosAgent
 from asgard.backends.mesos.models.task import MesosTask
-from tests.conf import TEST_LOCAL_AIOHTTP_ADDRESS
 from tests.utils import build_mesos_cluster, get_fixture
 
 
@@ -25,7 +24,7 @@ class MesosAgentTest(TestCase):
         self.agent = MesosAgent(**agent_info)
 
     async def test_tasks_list_from_one_app_tasks_running(self):
-        with aioresponses(passthrough=[TEST_LOCAL_AIOHTTP_ADDRESS]) as rsps:
+        with aioresponses() as rsps:
             build_mesos_cluster(rsps, self.agent_id)
             app_id = "infra/asgard/api"
             tasks = await self.agent.tasks(app_id=app_id)
@@ -38,7 +37,7 @@ class MesosAgentTest(TestCase):
             self.assertEqual(expected_task_names, [task.name for task in tasks])
 
     async def test_tasks_list_from_one_app_no_tasks_running_on_agent(self):
-        with aioresponses(passthrough=[TEST_LOCAL_AIOHTTP_ADDRESS]) as rsps:
+        with aioresponses() as rsps:
             build_mesos_cluster(rsps, self.agent_id)
             app_id = "apps/http/myapp"
             tasks = await self.agent.tasks(app_id=app_id)
