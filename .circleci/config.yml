@@ -1,6 +1,21 @@
 version: 2.1
 
 commands:
+  cc-download-binary:
+    description: "Code Climate Download Binary"
+    steps:
+      - run:
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+
+  cc-before-build:
+    description: "Code Climate before-build"
+    steps:
+      - run: "./cc-test-reporter before-build"
+
+
   fmt-check:
     description: "Confirma que a formatação do código"
     steps:
@@ -51,6 +66,8 @@ jobs:
       - image: b2wasgard/zookeeper:0.0.1
       - <<: *chronos
       - image: postgres:9.4
+        environment:
+          POSTGRES_HOST_AUTH_METHOD: "trust"
       - image: elasticsearch:5.5-alpine
 
     steps:
@@ -67,14 +84,16 @@ jobs:
           name: Install asgard-api dev-mode
           command: pipenv run pip install -e .
       - run: psql -c 'create database asgard;' -U postgres -p 5432 -h localhost
+      - cc-download-binary
       - fmt-check
       - isort-check
       - lint
       - typehint-cov
+      - cc-before-build
       - all-tests
       - run:
           when: on_success
-          command: pipenv run codecov --flags unittest
+          command: "./cc-test-reporter after-build --coverage-input-type coverage.py"
   py37x:
       <<: *template
       docker:
@@ -83,6 +102,8 @@ jobs:
         - image: b2wasgard/zookeeper:0.0.1
         - <<: *chronos
         - image: postgres:9.4
+          environment:
+            POSTGRES_HOST_AUTH_METHOD: "trust"
         - image: elasticsearch:5.5-alpine
   py36x:
       <<: *template
@@ -92,6 +113,8 @@ jobs:
         - image: b2wasgard/zookeeper:0.0.1
         - <<: *chronos
         - image: postgres:9.4
+          environment:
+            POSTGRES_HOST_AUTH_METHOD: "trust"
         - image: elasticsearch:5.5-alpine
 workflows:
   version: 2
