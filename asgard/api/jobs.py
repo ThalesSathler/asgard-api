@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from json.decoder import JSONDecodeError
 
-from aiohttp import web
+from aiohttp.web import json_response, Response
 from asyncworker import RouteTypes
 from asyncworker.http.decorators import parse_path
 from asyncworker.http.wrapper import RequestWrapper
@@ -33,7 +33,7 @@ async def index_jobs(job_id: str, user: User, account: Account):
         job_id, user, account, ChronosScheduledJobsBackend()
     )
     status_code = HTTPStatus.OK if scheduled_job else HTTPStatus.NOT_FOUND
-    return web.json_response(
+    return json_response(
         ScheduledJobResource(job=scheduled_job).dict(), status=status_code
     )
 
@@ -46,7 +46,7 @@ async def list_jobs(user: User, account: Account):
         user, account, ChronosScheduledJobsBackend()
     )
 
-    return web.json_response(ScheduledJobsListResource(jobs=jobs).dict())
+    return json_response(ScheduledJobsListResource(jobs=jobs).dict())
 
 
 def validate_input(handler):
@@ -54,7 +54,7 @@ def validate_input(handler):
         try:
             req_body = await wrapper.http_request.json()
         except JSONDecodeError as e:
-            return web.json_response(
+            return json_response(
                 ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
                 status=HTTPStatus.BAD_REQUEST,
             )
@@ -62,7 +62,7 @@ def validate_input(handler):
         try:
             job = ScheduledJob(**req_body)
         except ValidationError as e:
-            return web.json_response(
+            return json_response(
                 ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
                 status=HTTPStatus.UNPROCESSABLE_ENTITY,
             )
@@ -83,11 +83,11 @@ async def create_job(job: ScheduledJob, user: User, account: Account):
             job, user, account, ChronosScheduledJobsBackend()
         )
     except DuplicateEntity as e:
-        return web.json_response(
+        return json_response(
             ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
             status=HTTPStatus.UNPROCESSABLE_ENTITY,
         )
-    return web.json_response(
+    return json_response(
         CreateScheduledJobResource(job=created_job).dict(),
         status=HTTPStatus.CREATED,
     )
@@ -95,18 +95,18 @@ async def create_job(job: ScheduledJob, user: User, account: Account):
 
 async def _update_job(
     job: ScheduledJob, user: User, account: Account
-) -> web.Response:
+) -> Response:
     try:
         updated_job = await ScheduledJobsService.update_job(
             job, user, account, ChronosScheduledJobsBackend()
         )
     except NotFoundEntity as e:
-        return web.json_response(
+        return json_response(
             ErrorResource(errors=[ErrorDetail(msg=str(e))]).dict(),
             status=HTTPStatus.NOT_FOUND,
         )
 
-    return web.json_response(
+    return json_response(
         CreateScheduledJobResource(job=updated_job).dict(),
         status=HTTPStatus.ACCEPTED,
     )
@@ -142,6 +142,6 @@ async def delete_job(job_id: str, user: User, account: Account):
         await ScheduledJobsService.delete_job(
             scheduled_job, user, account, ChronosScheduledJobsBackend()
         )
-    return web.json_response(
+    return json_response(
         ScheduledJobResource(job=scheduled_job).dict(), status=status_code
     )
