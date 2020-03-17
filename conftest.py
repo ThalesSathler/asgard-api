@@ -6,7 +6,6 @@ os.environ["ENV"] = ENV
 
 VALUES = {
     # Envs para códigos externos
-    "ASYNCWORKER_HTTP_PORT": "9999",
     # Envs para a asgard API
     "DB_URL": "postgresql://postgres@172.18.0.41/asgard",
     "STATS_API_URL": "http://172.18.70.1:9200",

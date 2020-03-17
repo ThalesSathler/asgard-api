@@ -1,14 +1,13 @@
 import asyncio
 from http import HTTPStatus
 
-from asgard.api import jobs
+from asgard.api.jobs import app
 from asgard.api.resources import ErrorDetail, ErrorResource
 from asgard.api.resources.jobs import (
     ScheduledJobResource,
     ScheduledJobsListResource,
     CreateScheduledJobResource,
 )
-from asgard.app import app
 from asgard.backends.chronos.models.converters import (
     ChronosScheduledJobConverter,
 )
@@ -412,7 +411,7 @@ class JobsEndpointTestCase(BaseTestCase):
         )
         self.assertEqual(HTTPStatus.UNPROCESSABLE_ENTITY, resp.status)
         resp_data = await resp.json()
-        expected_error_msg = """1 validation error\ncontainer\n  field required (type=value_error.missing)"""
+        expected_error_msg = """1 validation error for ScheduledJob\ncontainer\n  field required (type=value_error.missing)"""
         self.assertEqual(
             ErrorResource(errors=[ErrorDetail(msg=expected_error_msg)]).dict(),
             resp_data,
@@ -775,7 +774,7 @@ class JobsEndpointTestCase(BaseTestCase):
         )
         self.assertEqual(HTTPStatus.UNPROCESSABLE_ENTITY, resp.status)
         resp_data = await resp.json()
-        expected_error_msg = """1 validation error\ncontainer\n  field required (type=value_error.missing)"""
+        expected_error_msg = """1 validation error for ScheduledJob\ncontainer\n  field required (type=value_error.missing)"""
         self.assertEqual(
             ErrorResource(errors=[ErrorDetail(msg=expected_error_msg)]).dict(),
             resp_data,
